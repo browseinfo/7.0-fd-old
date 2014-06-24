@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    
+        <record id="view_stock_delivery_order_merge" model="ir.ui.view">
+                <field name="name">delivery.order.merge.form</field>
+                <field name="model">delivery.order.merge</field>
+                <field name="arch" type="xml">
+                    <form string="Merge Delivery Order" version="7.0">
+                    <field name="shipment_ids" nolabel="1" colspan="4" width="550" height="300" >
+                        <tree>
+                            <field name="name"/>
+                            <field name="origin"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>                    
+                    <footer>
+		                <button string="Merge" name="do_merge" type="object" class="oe_highlight"/>
+		                or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>            
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_stock_incoming_shipment_merge" model="ir.ui.view">
+                <field name="name">incoming.shipment.merge.form</field>
+                <field name="model">incoming.shipment.merge</field>
+                <field name="arch" type="xml">
+                    <form string="Merge Incoming Shipment" version="7.0">
+                    <field name="shipment_ids" nolabel="1" colspan="4" width="550" height="300" >
+                        <tree>
+                            <field name="name"/>
+                            <field name="origin"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>                    
+                    <footer>
+		                <button string="Merge" name="do_merge" type="object" class="oe_highlight"/>
+		                or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>            
+                </form>
+            </field>
+        </record>
+        <!-- 
+         <act_window name="Merge Incoming Shipment"            
+            res_model="incoming.shipment.merge"
+            src_model="stock.picking"
+            view_mode="form"
+            multi="True"
+            target="new"        
+            key2="client_action_multi"    
+            id="action_view_incoming_shipment_merge"/>  -->
+            
+        <!--record id="action_view_incoming_shipment_merge" model="ir.actions.act_window">
+            <field name="name">Merge Incoming Shipment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">incoming.shipment.merge</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_stock_incoming_shipment_merge"/>
+        </record-->
+        
+         <act_window name="Merge Delivery Order"
+            res_model="delivery.order.merge"
+            src_model="stock.picking.out"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            multi="True"
+            id="action_view_delivery_order_merge"/>
+            
+        <act_window name="Merge Incoming Shipment"
+            res_model="incoming.shipment.merge"
+            src_model="stock.picking.in"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            multi="True"
+            id="action_view_incoming_shipment_merge"/>
+        
+        
+        <!--record model="ir.ui.view" id="stock_picking_incoming_tree_view_inherit">
+            <field name="name">stock.picking.incoming.tree.inherit</field>
+            <field name="model">stock.picking.in</field>
+            <field name="inherit_id" ref="stock.view_picking_in_tree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="after" >
+                    <button name="%(action_view_incoming_shipment_merge)d" string="Merge Incoming Shipment" icon="terp-stock_effects-object-colorize" type="action" states="assigned,confirmed,draft"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_stock_picking_move_orgin" model="ir.ui.view">
+            <field name="name">stock.picking.move.orgin.tree.inherit</field>
+            <field name="model">stock.picking.out</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="stock.view_picking_in_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page/group/field[@name='state']" position="after">
+                    <button name="%(action_view_incoming_shipment_merge)d" string="Merge Incoming Shipment" icon="terp-stock_effects-object-colorize" type="action" states="assigned,confirmed,draft"/>
+                </xpath>
+     
+                <xpath expr="/form/sheet/notebook/page[@string='General Information']/field[@name='move_lines']/tree/field[@name='product_id']" position="after">
+                    <field name="origin"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="stock_partial_picking_orgin_form_view_inherit">
+            <field name="name">stock.partial.picking.orgin.form.inherit</field>
+            <field name="model">stock.partial.picking</field>
+            <field name="inherit_id" ref="stock.stock_partial_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='move_ids']/tree/field[@name='product_id']" position="after">
+                    <field name="origin"/>
+                </xpath>
+            </field>
+        </record-->
+        
+    </data>
+</openerp>

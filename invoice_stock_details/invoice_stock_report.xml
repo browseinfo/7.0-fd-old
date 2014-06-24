@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+            
+       <report id="report_invoice_stock_details"
+            name="invoice.stock.details"
+            auto="False"
+            model="invoice.stock.details.wizard"
+            file="invoice_stock_details/report/invoice_stock_details.rml"
+            string="LAPORAN POSISI BARANG"
+	    	header="False"/>
+            
+    </data>
+</openerp>

@@ -1,0 +1,103 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    This module uses OpenERP, Open Source Management Solution Framework.
+#    Copyright (C) 2014-Today BrowseInfo (<http://www.browseinfo.in>)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
+#
+##############################################################################
+
+import time
+import operator
+import itertools
+from datetime import datetime
+from dateutil import relativedelta
+from report import report_sxw
+from openerp.tools.amount_to_text_en import amount_to_text
+
+
+class bank_report(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context):
+        super(bank_report, self).__init__(cr, uid, name, context)
+        self.localcontext.update({
+            'get_payslip_lines': self._get_payslip_lines,
+            'sum_total': self._sum_total,
+            'amount_word': self._amount_word,
+            'call_date': self._call_date,
+        })
+        
+    def _sum_total(self):
+        return self.total
+        
+    def _amount_word(self):
+        amount = amount_to_text(self.total)
+        word = str(amount) + ' Only'
+        return word
+        
+    def _call_date(self):
+        print "\nDate", time.strftime('%d/%m/%Y')
+        return time.strftime('%d/%m/%Y')
+        
+    def _get_payslip_lines(self, obj, column_flag=0):
+        bank_wizard_obj = self.pool.get('bank.wizard')
+        payslip_line = self.pool.get('hr.payslip')
+        bank_obj = self.pool.get('res.partner.bank')
+        payslip_lines = []
+        res = []
+        
+        self.total = 0.0
+        self.bank = obj.bank_id.id 
+        self.payment_code = obj.payment_code
+        
+        self.cr.execute("select id from res_partner_bank where bank in (select id from res_bank where id = %s)", (self.bank,))
+        
+        bank_ids = [x[0] for x in self.cr.fetchall()]
+        line_name = []
+        for bank_id in bank_ids:
+            self.cr.execute("select hps.id from hr_payslip_line hp "\
+                    "LEFT JOIN hr_payslip hps on (hp.slip_id = hps.id) "\
+                    "LEFT JOIN hr_employee he on (hp.employee_id = he.id) "\
+                    "where he.bank_name = %s", (bank_id,))
+            temp = self.cr.fetchone()
+            line_name.append(temp[0])
+        
+        
+        for line in payslip_line.browse(self.cr, self.uid, line_name):
+            computation_lines = {}
+            for l in line.line_ids:
+                if l.name == 'Net':
+                    computation_lines[l.name] = l.amount
+                    self.total = self.total + l.amount
+                    
+            address = line.employee_id.bank_name.street  + ' ' + line.employee_id.bank_name.city
+            
+            res.append({
+                            'payment_code': self.payment_code or '',
+                            'computation': computation_lines['Net'] or '',
+                            'employee_name': line.employee_id.name or '',
+                            'acc_number': line.employee_id.bank_name.acc_number or '',
+                            'account_name': line.employee_id.name or '',
+                            'branch_code': line.employee_id.bank_name.sort_code or '',
+                            'bank_name': line.employee_id.bank_name.bank_name or '',
+                            'address': address or '',
+                            'purpose': line.name or '',
+                            })
+                            
+        return res
+
+
+report_sxw.report_sxw('report.purhcase.webkit.report', 'hr.payslip', 'addons/bank_report/report/bank_report.mako', parser=bank_report, header=False)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

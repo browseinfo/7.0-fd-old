@@ -1,0 +1,55 @@
+<html>
+<head>
+    <style type="text/css">
+        ${css}
+		th,td
+		{
+			border:1px solid black;
+			
+		}
+    </style>
+</head>
+<body>
+    <table  width="100%">
+	<h1>PURCHASE Day Book between ${ date_format(data['form']['start_date']) } and ${ date_format(data['form']['end_date']) } </h1>
+	<th>ETA DATE</th><th>INVOICE NUMBER</th><th>DATE INVOICE</th><th>ACCOUNT CODE</th><th>CUSTOMER</th><th>DESCRIPTION</th><th>CURRENCY</th><th>TOTAL (USD)</th>
+	%for cat in get_categ():
+        <th> ${ cat.name } </th>
+	 %endfor
+	 <font color="white"> ${ total_dict() } </font>
+	<th>ACC TOTAL</th>
+	%for o in purchase_details(data['form']):
+		%for line in o.invoice_line:
+		<tr>
+			<td style="white-space: pre;"> ${ date_format(o.date_due) or '' } </td>
+			<td> ${ o.number or '' } </td>
+			<td style="white-space: pre;"> ${ date_format(o.date_invoice) or '' } </td>
+			<td> ${ o.account_id.code or '' } </td>
+			<td style="white-space: pre;"> ${ o.partner_id.name or '' } </td>
+			<td style="white-space: pre;"> ${ line.name or '' } </td>
+			<td> ${ o.currency_id.name or '' } </td>
+			<td> ${ line.price_subtotal } <font color="white"> ${ set_total(line.price_subtotal) } </font></td>
+			%for cat in get_categ():
+				<td> ${ categ_price(line,cat) } </td>
+			%endfor
+			<td style="font-weight:bold;"> ${ get_total() } </td>
+		</tr>
+		%endfor		
+	%endfor
+		<tr>
+			<td></td>
+			<td></td>	
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>	
+			<td></td>
+			<td style="font-weight:bold;"> ${ get_total() } </td>	
+			%for cat in get_categ():
+				<td style="font-weight:bold;"> ${ get_grand_total(cat.id) } </td>
+			%endfor
+			<td style="font-weight:bold;"> ${ get_total() } </td>			
+		</tr>
+	</table>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+ <data>
+   <report id="account_voucher_report"
+           name="account.voucher.extend.report"
+           auto="False"
+           model="account.voucher"
+           file="account_voucher_extended_report/report/account_voucher_report.rml"
+           string="Account Voucher Report"
+           header="False"  
+           />
+           
+           
+       <report id="account_invoice_voucher_report_1"
+            name="account.invoice.report.voucher"
+            auto="False"
+            model="account.voucher.wizard"
+            file="account_voucher_extended_report/report/account_voucher_report.mako"
+            string="Account Voucher Report Monthw"
+	    	header="False"
+            webkit_header="account_voucher_extended_report.ir_header_webkit_account_voucher"
+            report_type="webkit"/>
+ </data>
+</openerp>
+ 
+

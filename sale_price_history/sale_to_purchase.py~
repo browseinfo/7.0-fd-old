@@ -1,0 +1,322 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+import time
+
+from openerp import netsvc
+from openerp.osv import osv, fields
+from datetime import datetime
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
+
+
+class prepurchase_order(osv.osv):
+    _name = 'prepurchase.order'
+    
+    STATE_SELECTION = [
+        ('draft', 'Draft PO'),
+        ('confirm', 'Confirmed')
+    ]
+    
+    def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        cur_obj=self.pool.get('res.currency')
+        for order in self.browse(cr, uid, ids, context=context):
+            res[order.id] = {
+                'amount_untaxed': 0.0,
+                'amount_tax': 0.0,
+                'amount_total': 0.0,
+            }
+            val = val1 = 0.0
+            cur = order.pricelist_id.currency_id
+            for line in order.order_line:
+                val1 += line.price_subtotal
+                for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, line.product_id, order.partner_id)['taxes']:
+                    val += c.get('amount', 0.0)
+            res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
+            res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
+            res[order.id]['amount_total']=res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
+        return res 
+    
+    def _get_order(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('prepurchase.order.line').browse(cr, uid, ids, context=context):
+            result[line.order_id.id] = True
+        return result.keys()
+
+    _columns = {
+        'name': fields.char('Order Reference', size=64, required=True, select=True, help="Unique number of the purchase order, computed automatically when the purchase order is created."),
+        'sale_id': fields.many2one('sale.order', 'Sale.order',),
+        'order_line': fields.one2many('prepurchase.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
+        'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product', readonly=True, states={'draft': [('readonly', False)]}),
+        'date_order':fields.date('Order Date', required=True,  select=True, help="Date on which this document has been created."),
+        'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities.", readonly=True, states={'draft': [('readonly', False)]}),
+        'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency", string="Currency",readonly=True,),
+        'partner_id':fields.many2one('res.partner', 'Supplier', required=True,change_default=True, track_visibility='always', readonly=True, states={'draft': [('readonly', False)]}),
+        'company_id': fields.many2one('res.company','Company',required=True,select=1,),
+        'state': fields.selection(STATE_SELECTION, 'Status', readonly=True, help="The status of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' status. Then the order has to be confirmed by the user, the status switch to 'Confirmed'. Then the supplier must confirm the order to change the status to 'Approved'. When the purchase order is paid and received, the status becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the status becomes in exception.", select=True),
+        'notes': fields.text('Terms and Conditions'),
+        'prepurchase_sale_ids': fields.one2many('prepurchase.order.line.history', 'order_id', 'History Lines', readonly=True),
+        'amount_untaxed': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Untaxed Amount',
+            store={
+                'prepurchase.order.line': (_get_order, None, 10),
+            }, multi="sums", help="The amount without tax", track_visibility='always'),
+        'amount_tax': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Taxes',
+            store={
+                'prepurchase.order.line': (_get_order, None, 10),
+            }, multi="sums", help="The tax amount"),
+        'amount_total': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Total',
+            store={
+                'prepurchase.order.line': (_get_order, None, 10),
+            }, multi="sums",help="The total amount"),
+    }
+    _defaults = {
+        'date_order': fields.date.context_today,
+        'state': 'draft',
+        'name': lambda obj, cr, uid, context: '/',
+        'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase.id,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'prepurchase.order', context=c),
+    }
+    _order = "id desc"
+    
+    def update_sale_order(self, cr, uid, ids, context=None):
+        prepurchase_line_history_obj=self.pool.get('prepurchase.order.line.history')
+        sale_obj=self.pool.get('sale.order')
+        history_ids = prepurchase_line_history_obj.search(cr, uid, [], context=context)
+        if not history_ids:
+            raise osv.except_osv(_('No record'), _('There is no history line found for this sale order.'))
+        for history in prepurchase_line_history_obj.browse(cr, uid, history_ids, context):
+            if history:
+                cr.execute("UPDATE sale_order_line SET purchase_price=%s where product_id=%s and order_id=%s", [history.price_unit, history.product_id.id, history.sale_id.id])
+            sale_obj.write(cr, uid, [history.sale_id.id], {'calculated': False})
+        return True
+prepurchase_order()
+
+class prepurchase_order_line(osv.osv):
+    _name = 'prepurchase.order.line'
+    
+    def _amount_line(self, cr, uid, ids, prop, arg, context=None):
+        res = {}
+        cur_obj=self.pool.get('res.currency')
+        tax_obj = self.pool.get('account.tax')
+        for line in self.browse(cr, uid, ids, context=context):
+            taxes = tax_obj.compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, line.product_id, line.order_id.partner_id)
+            cur = line.order_id.pricelist_id.currency_id
+            res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
+        return res
+    _columns = {
+        'name': fields.text('Description', required=True),
+        'date_planned': fields.date('Scheduled Date', required=True, select=True),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
+        'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
+        'order_id': fields.many2one('prepurchase.order', 'Order Reference', select=True, required=True, ondelete='cascade'),
+        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
+        'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner", store=True),
+        'state': fields.selection([('draft', 'Draft')], 'Status', readonly=True,
+                                  help=' * The \'Draft\' status is set automatically when purchase order in draft status.'),
+        'sale_id': fields.many2one('sale.order', 'Sale.order',),
+        'sale_line_id': fields.many2one('sale.order.line', 'Sale Order',),
+    }
+    
+    _defaults = {
+        'product_qty': lambda *a: 1.0,
+        'state': lambda *args: 'draft',
+    }
+    def button_dummy(self, cr, uid, ids, context=None):
+        return True
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        prepurchase_obj=self.pool.get('prepurchase.order')
+        product_obj=self.pool.get('product.product')
+        product_hist_obj=self.pool.get('product.product.history')
+        prepurchase_line_history_obj=self.pool.get('prepurchase.order.line.history')
+        result = super(prepurchase_order_line, self).write(cr, uid, ids, vals, context=context)
+        history_ids = prepurchase_line_history_obj.search(cr, uid, [], context=context)
+        hist= []
+        today = time.strftime('%Y-%m-%d')
+        if vals.get('price_unit'):
+            for line in self.browse(cr, uid, ids, context):
+                for history in prepurchase_line_history_obj.browse(cr, uid, history_ids, context):
+                    if history:
+                        if history.line_id == line and history.product_id == line.product_id:
+                            prepurchase_line_history_obj.write(cr, uid, [history.id], {'price_unit': line.price_unit})
+                            hist.append(history.id)
+                
+                if not hist:
+                    order_id = line.order_id and line.order_id.id or False,
+                    order_line = {
+                              'product_id': line.product_id and line.product_id.id or False,
+                              'product_qty': line.product_qty,
+                              'product_uom': line.product_uom and line.product_uom.id or False,
+                              'company_id': line.company_id and line.company_id.id or False,
+                              'date_planned': line.date_planned,
+                              'price_unit' : line.price_unit,
+                              'sale_id': line.sale_id and line.sale_id.id or False,
+                              'sale_line_id': line.sale_line_id and line.sale_line_id.id or False,
+                              'order_id': line.order_id and line.order_id.id or False,
+                              'line_id': line and line.id or False,
+                              }
+                    prepurchase_obj.write(cr, uid, [order_id], {'prepurchase_sale_ids': [(0,0,order_line)]})
+                
+                cost_price =  product_obj.browse(cr, uid, [line.product_id.id], context)[0].standard_price
+                product_line = {
+                            'new_price': line.price_unit,
+                            'old_price': cost_price,
+                            'source': line.order_id.name or '/',
+                            'date_planned': today,
+                            'product_id': line.product_id and line.product_id.id or False,
+                        }
+                product_hist_obj.create(cr, uid, product_line, context=context)
+                product_obj.write(cr, uid, [line.product_id.id], {'standard_price': line.price_unit})
+        return result
+prepurchase_order_line()
+
+class prepurchase_order_line_history(osv.osv):
+    _name = 'prepurchase.order.line.history'
+    
+
+    _columns = {
+        'date_planned': fields.date('Scheduled Date', required=True, select=True),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
+        'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
+        'order_id': fields.many2one('prepurchase.order', 'Order Reference', select=True, required=True, ondelete='cascade'),
+        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
+        'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner", store=True),
+        'state': fields.selection([('draft', 'Draft')], 'Status', readonly=True,
+                                  help=' * The \'Draft\' status is set automatically when purchase order in draft status.'),
+        'sale_id': fields.many2one('sale.order', 'Sale.order'),
+        'sale_line_id': fields.many2one('sale.order.line', 'Sale Order'),
+        'line_id': fields.many2one('prepurchase.order.line', 'Purchase Order line'),
+    }
+    
+    _defaults = {
+        'product_qty': lambda *a: 1.0,
+        'state': lambda *args: 'draft',
+    }
+prepurchase_order_line_history()
+
+class product_product_history(osv.osv):
+    _name = 'product.product.history'
+    
+    _columns = {
+        'date_planned': fields.date('Date', required=True, select=True),
+        'new_price': fields.float('New Price', required=True, digits_compute= dp.get_precision('Product Price')),
+        'old_price': fields.float('Old Price', required=True, digits_compute= dp.get_precision('Product Price')),
+        'source': fields.char('Source Document'),
+        'product_id': fields.many2one('product.product', 'Order Reference', select=True, required=True, ondelete='cascade'),
+    }
+
+product_product_history()
+
+class product_product(osv.osv):
+    _inherit = 'product.product'
+
+    _columns = {
+         'product_history_ids': fields.one2many('product.product.history', 'product_id', 'History Lines'),
+    }
+
+product_product()
+
+class sale_order(osv.osv):
+    _inherit = 'sale.order'
+    
+    _columns = {
+         'notes': fields.text('Notes'),
+    }
+
+    def generate_prepurchase_order(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for sale in self.browse(cr, uid, ids, context):
+            order = {
+                          'name': sale.name,
+                          'date_order': sale.date_order,
+                          'company_id': sale.company_id and sale.company_id.id or False,
+                          'pricelist_id': sale.partner_id.property_product_pricelist_purchase.id,
+                          }
+            for line in sale.order_line:
+                cr.execute("select min(sequence) from product_supplierinfo where product_id=%s", [line.product_id.id])
+                seq = cr.fetchone()[0]
+                cr.execute("select name from product_supplierinfo where product_id=%s and sequence=%s", [line.product_id.id, seq])
+                partner_id = cr.fetchone()[0]
+                cr.execute("select id from prepurchase_order where partner_id=%s and sale_id=%s", [partner_id,sale.id])
+                prepurchase_id = cr.fetchone()
+                if prepurchase_id:
+                    cr.execute("select product_id from prepurchase_order_line where sale_id=%s and product_id=%s", [sale.id, line.product_id.id])
+                    product_id = cr.fetchone()
+                    if product_id:
+                        if product_id[0] == line.product_id.id:
+                            cr.execute("select product_qty from prepurchase_order_line where sale_id=%s and product_id=%s", [sale.id,line.product_id.id ])
+                            product_qty = cr.fetchone()
+                            new_qty = product_qty[0] + line.product_uom_qty
+                            cr.execute("update prepurchase_order_line set product_qty = %s where sale_id=%s and product_id=%s", [new_qty,sale.id, line.product_id.id])
+                        else:
+                            order_line = {
+                              'name': line.name,
+                              'product_id': line.product_id.id,
+                              'product_qty': line.product_uom_qty,
+                              'product_uom': line.product_uom.id,
+                              'company_id': line.company_id.id,
+                              'date_planned': sale.date_order,
+                              'price_unit' : line.purchase_price,
+                              }
+                            cr.execute("INSERT INTO prepurchase_order_line(name, order_id, sale_id, sale_line_id, product_id, product_qty,product_uom,company_id, price_unit,date_planned, state) values (%s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s) returning id" 
+                                       ,(order_line['name'],prepurchase_id, sale.id, line.id, order_line['product_id'], order_line['product_qty'], order_line['product_uom'], order_line['company_id'], order_line['price_unit'], order_line['date_planned'], 'draft'))
+                    else:
+                        order_line = {
+                          'name': line.name,
+                          'product_id': line.product_id.id,
+                          'product_qty': line.product_uom_qty,
+                          'product_uom': line.product_uom.id,
+                          'company_id': line.company_id.id,
+                          'date_planned': sale.date_order,
+                          'price_unit' : line.purchase_price,
+                          }
+                        cr.execute("INSERT INTO prepurchase_order_line(name, order_id, sale_id, sale_line_id, product_id, product_qty,product_uom,company_id, price_unit,date_planned, state) values (%s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s) returning id" 
+                                       ,(order_line['name'],prepurchase_id, sale.id, line.id, order_line['product_id'], order_line['product_qty'], order_line['product_uom'], order_line['company_id'], order_line['price_unit'], order_line['date_planned'], 'draft'))
+                else:
+                    cr.execute("INSERT INTO prepurchase_order(name, partner_id, sale_id, date_order,company_id, pricelist_id,  state) values (%s, %s,%s, %s, %s, %s, %s) returning id" 
+                    ,(order['name'], partner_id, sale.id, order['date_order'], order['company_id'], order['pricelist_id'], 'draft'))
+                    order_id = cr.fetchone()[0]
+                    order_line = {
+                              'name': line.name,
+                              'product_id': line.product_id.id,
+                              'product_qty': line.product_uom_qty,
+                              'product_uom': line.product_uom.id,
+                              'company_id': line.company_id.id,
+                              'date_planned': sale.date_order,
+                              'price_unit' : line.purchase_price,
+                              }
+                    cr.execute("INSERT INTO prepurchase_order_line(name, order_id, sale_id, sale_line_id, product_id, product_qty,product_uom,company_id, price_unit,date_planned, state) values (%s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s) returning id" 
+                            ,(order_line['name'],order_id, sale.id, line.id, order_line['product_id'], order_line['product_qty'], order_line['product_uom'], order_line['company_id'], order_line['price_unit'], order_line['date_planned'], 'draft'))
+            
+        return True
+
+sale_order()
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

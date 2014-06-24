@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report 
+        	auto="False" 
+        	id="report_account_supplier_invoice" 
+        	model="account.report.wizard" 
+        	name="account.supplier.invoice.report"
+            rml="account_custom_report_wizard/report/account_supplier_impor_report.rml" 
+            string="Cntoh Impor Report" 
+            header="False" />
+                
+                
+		<report 
+			auto="False" 
+			id="report_account_customer_invoice" 
+			model="account.ekspor.report.wizard" 
+			name="account.customer.invoice.report"
+            rml="account_custom_report_wizard/report/account_customer_impor_report.rml" 
+            string="Cntoh EKSPOR Report" 
+            header="False" />
+            
+       <report id="report_account_customer_invoice_month"
+            name="account.invoice.month.report"
+            auto="False"
+            model="account.monthly.report.wizard"
+            file="account_custom_report_wizard/report/account_month_report.mako"
+            string="LAPORAN BULANAN GB"
+	    	header="False"
+            webkit_header="account_custom_report_wizard.ir_header_webkit_base_account_invoice"
+            report_type="webkit"/>
+            
+    </data>
+</openerp>

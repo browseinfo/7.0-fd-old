@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_date_wizard" model="ir.ui.view">
+            <field name="name">account.date.wizard.view</field>
+            <field name="model">account.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="CONTOH IMPOR REPORT" version="7.0">
+                    <group col='4'>
+                        <field name="start_date" class="oe_inline" />
+                        <field name="end_date" class="oe_inline"/>
+                        <field name="branch_id" />
+                        <field name="authorised_by" />
+                    </group>                  
+                    <footer>
+                        <button string="Print" name="print_report" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+               </form>
+            </field>
+        </record>
+        
+        <record id="action_account_date_wizard" model="ir.actions.act_window">
+            <field name="name">CONTOH IMPOR REPORT</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_date_wizard"/>
+            <field name="target">new</field>
+            <field name="multi">True</field>
+        </record>
+        
+        <record id="view_account_ekspor_report_wizard" model="ir.ui.view">
+            <field name="name">account.ekspor.report.wizard.view</field>
+            <field name="model">account.ekspor.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="CONTOH EKSPOR REPORT" version="7.0">
+                    <group col='4'>
+                        <field name="start_date" class="oe_inline" />
+                        <field name="end_date" class="oe_inline"/>
+                        <field name="year" class="oe_inline"/>
+                        <field name="quater" class="oe_inline"/>
+                        <field name="branch_id" />
+                        <field name="authorised_by" />
+                    </group>                
+                    <footer>
+                        <button string="Print" name="print_report" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_account_ekspor_report_wizard" model="ir.actions.act_window">
+            <field name="name">CONTOH EKSPOR REPORT</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.ekspor.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_ekspor_report_wizard"/>
+            <field name="target">new</field>
+            <field name="multi">True</field>
+        </record>
+
+        
+        <record id="view_account_monthly_report_wizard1" model="ir.ui.view">
+            <field name="name">account.monthly.report.wizard.view</field>
+            <field name="model">account.monthly.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Account Monthly Report Wizard" version="7.0">
+                    <group col='4'>
+                        <field name="start_date" class="oe_inline" />
+                        <field name="end_date" class="oe_inline"/>
+                        <field name="branch_id" class="oe_inline"/>
+                        <field name="company_id" class="oe_inline"/>
+                    </group>                
+                    <footer>
+                        <button string="Print" name="print_report" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+               </form>
+            </field>
+        </record>
+        
+        <record id="action_account_monthly_report_wizard" model="ir.actions.act_window">
+            <field name="name">Monthly Report Wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.monthly.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_monthly_report_wizard1"/>
+            <field name="target">new</field>
+            <field name="multi">True</field>
+        </record>
+		<menuitem id="menu_finance_custom_statement" name="Custom Reports" parent="account.menu_finance_reports"/>
+		<menuitem action="action_account_date_wizard" id="account_date_report_wizard" parent="menu_finance_custom_statement"
+        	name = "CONTOH IMPOR REPORT " />
+       	<menuitem action="action_account_ekspor_report_wizard" id="account_ekspor_report_wizard" parent="menu_finance_custom_statement"
+        	name = "CONTOH EKSPOR REPORT" />        	
+        <menuitem action="action_account_monthly_report_wizard" id="account_monthly_report_wizard1" parent="menu_finance_custom_statement"
+        	name = "LAPORAN BULANAN GB" />
+    </data>
+</openerp>

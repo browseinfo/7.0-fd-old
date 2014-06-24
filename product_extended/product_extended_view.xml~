@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<record id="view_product_product_asset_form1" model="ir.ui.view">
+			<field name="name">product.product.asset.raw.extened</field>
+			<field name="model">product.product</field>
+			<field name="inherit_id" ref="product.product_normal_form_view"/>
+			<field name="arch" type="xml">
+				<div name="options" position="inside">
+		                <field name="raw_material"/>
+		                <label for="raw_material"/>
+						<field name="assets"/>
+						<label for="assets"/>
+						<field name="supply"/>
+						<label for="supply"/>
+						<field name="finish_goods"/>
+						<label for="finish_goods"/>
+		        </div>
+				<xpath expr="//field[@name='standard_price']" position="after">
+		            <field name="pur_cur_id" class="oe_inline"/>
+		        </xpath>
+				<xpath expr="//field[@name='list_price']" position="after">
+		            <field name="sale_cur_id" class="oe_inline"/>
+		        </xpath>
+			</field>
+		</record>
+
+		<record id="view_stock_warehouse_extended_form" model="ir.ui.view">
+			<field name="name">stock.warehouse.form.extend</field>
+			<field name="model">stock.warehouse</field>
+			<field name="inherit_id" ref="stock.view_warehouse" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='partner_id']" position="after">
+			        <field name="branch_id" class="oe_inline"/>
+					<field name="shop_id" class="oe_inline"/>
+			    </xpath>
+			</field>
+		</record>
+
+		<record id="view_sale_shop_extended_form" model="ir.ui.view">
+			<field name="name">sale.shop.form.extend</field>
+			<field name="model">sale.shop</field>
+			<field name="inherit_id" ref="sale.view_shop_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='company_id']" position="after">
+			        <field name="branch_id" class="oe_inline"/>
+			    </xpath>
+			</field>
+		</record>
+
+    </data>
+</openerp>

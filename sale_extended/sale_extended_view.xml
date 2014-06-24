@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+		<record id="view_sale_order_extended_form1" model="ir.ui.view">
+			<field name="name">sale.order.form1.extend</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_form" />
+			<field name="arch" type="xml">
+				<field name="client_order_ref" position="before">
+				    <field name="branch_id" on_change="onchange_branch_id(shop_id,branch_id)"/>
+				</field>
+				<xpath expr="//field[@name='date_order']" position="after">
+		            <field name="date_ext"/>
+		        </xpath>
+			</field>
+		</record>
+
+		<record id="view_sale_oeder_tree_extended" model="ir.ui.view">
+            <field name="name">sale.order.tree.extended</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_quotation_tree"/>
+			<field name="arch" type="xml">
+				<xpath expr="/tree/field[@name='date_order']" position="after">
+                    <field name="date_ext"/>
+                </xpath>
+			</field>
+		</record>
+    </data>
+</openerp>

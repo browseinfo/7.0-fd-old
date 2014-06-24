@@ -1,0 +1,275 @@
+<html>
+<head>
+    <style type="text/css">
+        ${css}
+    </style>
+</head>
+<body>
+    %for o in objects :
+		<table  width="600%">
+		<tr>
+			<td >
+			<table>
+				<tr><td> <font style="font-size:50px; text-align:center;">MINISTRY / DEPARTMENT - FEDERAL JUDICIAL SERVICE COMMISSION </font></td></tr>
+			   	<tr><td><font style="font-size:50px; text-align:center;"> T.F.2 PRB (1973) </font></td></tr> 
+				<tr><td></td></tr> 
+				<tr><td><br/><br/> <font style="font-size:70px; text-align:center;"> <b> ${ get_name(o)}  </b></font></td></tr>
+				
+			</table>
+			</td>
+			<td ><table>
+				<tr><td> <font style="font-size:100px; text-align:center;"> <b>NIGERIA FEDERAL  GOVEREMENT </b></font></td></tr>
+			   	<tr><td><font style="font-size:100px; text-align:center;"><b> PAYROLL</b> </font></td></tr>
+				
+			</table> </td>
+		</tr>
+		
+	</table>
+<br/><br/><br/>
+        <table border="1" width="100%">
+            <thead>
+		<tr>
+			<td colspan="4">  <b><center><font size="8">EARNINGS  </font></center> </b> </td>
+			<td colspan="13">  <b><center><font size="8">DEDUCATION 'A' AND 'B'</font></center> </b> </td>
+			<td colspan="18">  </td>
+		</tr>
+                <tr>
+                    <th style="text-align:left;"> <font size="8"> ${_("BASIC SALARY")}</font></th>
+                    <th style="text-align:left;"><font size="8"> ${_("ACTING ALLOWENCE")}</font></th>
+                    <th style="text-align:left;"><font size="8"> ${_("OVERTIME")}</font></th>
+                    <th style="text-align:right;"><font size="8"> ${_("GROSS EMOLUMENTS")}</font></th>
+                    <th style="text-align:right;"><font size="8"> ${_("TAX THIS MONTH")}</font></th>
+                    <th style="text-align:right;"><font size="8"> ${_("NHF")}</font></th>
+                    <th style="text-align:right;"><font size="8"> ${_("OTHER DEDUCATION")}</font></th>
+                    <th style="text-align:left;"><font size="8"> ${_("PENSION")}</font></th>
+                    <th style="text-align:left;"><font size="8"> ${_("NHIS")}</font></th>
+                    <th style="text-align:left;"><font size="8"> ${_("C.T.L.S")}</font></th>
+                    <th style="text-align:right;" ><font size="8"> ${_("MV ADV INTEREST ")}</font></th>
+                    <th style="text-align:right;" ><font size="8"> ${_("UGV PESNONAL ADVANCE")}</font></th>
+                    <th style="text-align:right;" ><font size="8"> ${_("NIGERIAN REGION")}</font></th>
+                    <th style="text-align:left;"><font size="8"> ${_("FGHB")}</font></th>
+                    <th style="text-align:left;"><font size="8"> ${_("OVER PAYMENT")}</font></th>
+                    <th style="text-align:left;"><font size="8"> ${_("SALARY ADVANCE")}</font></th>
+                    <th style="text-align:right;"><font size="8"> ${_("TOTAL DEDUCATION")}</font></th>
+                    <th style="text-align:right;" ><font size="8"> ${_("NET PAY")}</font></th>
+                    <th style="text-align:right;" ><font size="8"> ${_("MEAL SUBSIDY")}</font></th>
+		    <th style="text-align:right;" ><font size="8"> ${_("RENT SUBSIDY")}</font></th>
+                    <th style="text-align:right;" ><font size="8"> ${_("TRANSPORT ALW")}</font></th>
+                    <th style="text-align:right;"><font size="8"> ${_("FURNITURE ALW")}</font></th>
+                    <th style="text-align:right;" ><font size="8"> ${_("ENTERMENT ALW")}</font></th>
+                    <th style="text-align:right;" ><font size="8"> ${_("UTILITY")}</font></th>
+                    <th style="text-align:right;" ><font size="8"> ${_("DOMESTIC SERVENTS ALW")}</font></th>
+                    <th style="text-align:right;"><font size="8"> ${_("ANNUAL LEAVE GRANT")}</font></th>
+                    <th style="text-align:right;" ><font size="8"> ${_("ARREARS (ALW)")}</font></th>
+                    <th style="text-align:right;" ><font size="8"> ${_("UNDER PAYMENT")}</font></th>
+                    <th style="text-align:right;" ><font size="8"> ${_("TOTAL NON TAXABLE")}</font></th>
+                    <th style="text-align:right;"><font size="8"> ${_("TOTAL NET EMOLUMENTS")}</font></th>
+                    <th style="text-align:right;" ><font size="8"> ${_("NAME")}</th>
+		    <th style="text-align:right;" ><font size="8"> ${_("SIGN")}</th>
+                </tr>
+            </thead>
+            %for line in (get_payslip_lines(o)):
+                <tbody >
+                <tr>
+                    <td style="text-align:left;border-collapse:collapse; "><font size="8">  
+                         ${line.get('basic') or ''}</font>
+                     </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('acting_allow') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;""><font size="8">
+                        ${line.get('overtime') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('gross_amount') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('tax') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('nhf') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('other_ded') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('pension') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('nhis') or ''} </font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('ctls') or ''} </font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('mv_adv_interest') or ''} </font>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('personl_adv') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('nigerin_reg') or ''} </font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('fghb') or ''} </font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('over_payment') or ''} </font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('salary_advance') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('deducation_amt') or ''} </font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('net_pay') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('meal') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('rent') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('transport') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('furniture') or ''} </font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('entertainment') or ''} </font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('utilities') or ''} </font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('domestic_servent') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('leave_grant') or ''} </font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('arrears') or ''} </font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('under_payment') or ''} </font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('taxable') or ''}</font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8">
+                        ${line.get('net_total') or ''}</font>
+                    </td>
+                    <td style="text-align:right;border-collapse:collapse;"><font size="8">
+                        ${line.get('name') or ''}</font>
+                    </td>
+                    <td style="text-align:right;border-collapse:collapse;">
+
+                    </td>
+
+                </tr>
+                </tbody>
+            %endfor
+		%for line in (get_total(o)):
+		<tbody >
+                <tr>
+                    <td style="text-align:left;border-collapse:collapse; "><font size="8"> <b>
+                         ${line.get('basic') or ''} </b></font>
+                     </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('acting_allow') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;""><font size="8"> <b>
+                        ${line.get('overtime') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('gross_amount') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('tax') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('nhf') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('other_ded') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('pension') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('nhis') or ''} </b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('ctls') or ''} </b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('mv_adv_interest') or ''} </b></font>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('personl_adv') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('nigerin_reg') or ''} </b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('fghb') or ''} </b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('over_payment') or ''} </b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('salary_advance') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('deducation_amt') or ''} </b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('net_pay') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('meal') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('rent') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('transport') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('furniture') or ''} </b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('entertainment') or ''} </b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('utilities') or ''} </b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('domestic_servent') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('leave_grant') or ''} </b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('arrears') or ''} </b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('under_payment') or ''} </b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('taxable') or ''}</b></font>
+                    </td>
+                    <td style="text-align:left;border-collapse:collapse;"><font size="8"> <b>
+                        ${line.get('net_total') or ''}</b></font>
+                    </td>
+                    <td colspan="4" style="text-align:center;border-collapse:collapse;"><font size="8"> <b>
+                        Total</b></font>
+                    </td>
+                </tr>
+		</tbody >
+		%endfor	
+        </table>
+ 
+    %endfor
+</body>
+</html>

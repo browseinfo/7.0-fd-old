@@ -1,0 +1,101 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2011-2013 Serpent Consulting Services (<http://www.serpentcs.com>)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+############################################################################
+import time
+
+from openerp.report import report_sxw
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+import openerp.exceptions
+
+class stock_inventory_in_out_report(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context=None):
+        super(stock_inventory_in_out_report, self).__init__(cr, uid, name, context)
+        self.localcontext.update({
+            'time': time,
+            'get_all_lines': self._get_all_lines,
+            'sum_total': self.sum_total,
+            'all_total': self.all_total,
+        })
+        
+    
+    def set_context(self, objects, data, ids, report_type=None):
+        self.date_from = data['form'].get('startdtae', time.strftime('%Y-%m-%d'))
+        self.date_to = data['form'].get('enddtae', time.strftime('%Y-%m-%d'))
+        return super(location, self).set_context(objects, data, ids, report_type=report_type)
+
+    def sum_total(self):
+        return self.regi_total
+
+    def all_total(self):
+        return self.all_total
+       
+    def _get_all_lines(self, data):
+        wdw
+        res = []
+        inv_list = []
+        line_list = []
+        self.regi_total = 0.0
+        self.all_total = 0.0
+
+        self.cr.execute("select lot_stock_id from stock_warehouse where id= %s", (data['warehouse_id'],))
+        warehouse_id = self.cr.fetchone()
+        print "============warehouse_id=======", warehouse_id
+        
+
+        self.cr.execute("select pt.id,pt.name, sum(sm.product_uos_qty) as qty,pt.standard_price as cost, pu.name as uom, lc.complete_name as location from stock_move as sm "\
+                "left join stock_picking as sp on sm.picking_id = sp.id"\
+                "left join product_product as pp on sm.product_id = pp.id "\
+                "left join product_template as pt on pp.product_tmpl_id = pt.id "\
+                "left join product_uom as pu on pt.uom_id = pu.id "\
+                "left join stock_location as lc on sm.location_dest_id = lc.id "\
+                "where sm.location_dest_id= %s "\
+                "and (sm.create_date <= %s) and (sm.create_date >= %s)" \
+                "group by pt.id, sp.id,pt.name,pt.standard_price, pu.name, lc.complete_name",
+                        ( warehouse_id,self.date_to,self.date_from))
+
+        move_lines = self.cr.fetchall()
+
+        print "==========move_lines=======", move_lines
+        if move_lines:
+            for line in move_lines:
+                qty = 0.0
+                for inv in inv_line_obj.browse(self.cr, self.uid, line_list):
+                    if line[0] == inv.product_id.id:
+                        qty = inv.product_qty
+                total = line[2]*line[3]     
+                res.append({
+                    'product': line[1],
+                    'uom': line[4],
+                    'qty': line[2],
+                    'cost': line[3],
+                    'total': total,
+                    'rty': qty,
+                    'dif': qty - line[2],
+                   })
+                self.regi_total += line[2]
+                self.all_total += total
+        
+        return res
+
+
+report_sxw.report_sxw('report.stock.inventory.in.out.report.webkit', 'stock.inventory.in.out.wizard', 'addons/stock_inventory_in_out_report/report/stock_inventory_in_out_report.mako', parser=stock_inventory_in_out_report,header=False)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,0 +1,106 @@
+<html>
+<head>
+    <style type="text/css">
+       ${css}
+       
+		hr.vertical
+		{
+		   border-right: thick solid #ff0000;
+		} 
+		th
+		{
+			font-family:helvetica; 
+			font-size:10; 
+		}
+		tr
+		{
+			font-family:helvetica; 
+			font-size:10; 
+		}
+   </style>
+   
+</head>
+<header>
+	%for o in objects :
+	<table style="font-face:Helvetica;font-size=1px;">
+		<tr>
+			<td>Total Purchase Amount Report - </td>
+			<td>Receive Date</td>
+			<td><table width="100%" border="1px">
+				<tr>
+					<td>${get_date_form()}</td>
+				</tr>
+			</table></td>
+			<td>To</td>
+			<td><table width="100%" border="1">
+				<tr>
+					<td>${get_date_to()}</td>
+				</tr>
+			</table></td>
+		</tr>
+		<tr>
+			<td>By Supplier</td>
+		</tr>
+	</table>
+</header>
+<body>
+        <table  width="50%">
+            <thead>
+                <tr>
+                    <th style="text-align:left;">${_("Supplier Code")}</th>
+                    <th style="text-align:left;">${_("Supplier NAME")}</th>
+                </tr>
+            </thead>
+            
+        </table>
+        <table width="100%" align="right" >
+            <thead>
+                <tr>
+                    <th style="text-align:right;">${_("Family Code")}</th>
+                    <th style="text-align:right;">${_("Total Qty")}</th>
+                    <th style="text-align:right;">${_("Total Amount")}</th>
+                    <th style="text-align:right;">${_("Currency")}</th>
+                    <th style="text-align:right;">${_("Total US Amount")}</th>
+                 </tr>
+            </thead>
+        %for line in (get_order_lines(o)):
+            <tbody>
+                <tr>
+                    <th style="text-align:left;">${line.get('ref') or ' '}</th>
+                    <th style="text-align:left;">${line.get('ref') or ' '}</th>
+                </tr>
+            </tbody>
+        	%for li in line['values']:
+					<tbody>
+						<tr>
+						    <td style="text-align:right;">${li.get('code') or ''}</td>
+						    <td style="text-align:right;" >${li.get('qty') or ''}</td>
+						    <td style="text-align:right;" >${li.get('amount') or ''}</td>
+						    <td style="text-align:right;" >${li.get('currency') or ''}</td>
+						    <td style="text-align:right;" >${li.get('amount') or ''}</td>
+						</tr> 
+        	%endfor
+						<tr>
+							<th style="text-align:right;">${_("Supplier Total")}</th>
+						    <th style="text-align:right;" >${line.get('total') or ' '}</th>
+						    <td style="text-align:right;" > </td>
+						    <td style="text-align:right;" > </td>
+						    <th style="text-align:right;" >${line.get('sum_total') or ' '}</th>
+					    </tr>
+						
+					</tbody>
+		%endfor
+					<tbody>
+						<tr>
+							 <th style="text-align:right;"><font size="2">${_("Grand Total")}</font></th>
+						    <th style="text-align:right;" ><font size="3">${get_total_qty()}</font></th>
+						    <th style="text-align:right;" ><font size="3"/> </th>
+						    <th style="text-align:right;" ><font size="3"/> </th>
+						    <th style="text-align:right;" ><font size="3">${get_total_amount()}</font></th>
+					    </tr>
+						
+					</tbody>
+				</table>
+    %endfor
+</body>
+</html>

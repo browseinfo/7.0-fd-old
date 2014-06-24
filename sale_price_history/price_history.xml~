@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+
+
+		<record id="sale_price_order_form" model="ir.ui.view">
+            <field name="name">new.sale.order.form</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//notebook/page[@string='Other Information']" position="after">
+                    <page string="History">
+                            <group>
+                                <group>
+                                <field name="sale_history_ids" nolabel="1">
+                                <tree string="Price History">
+			                       <field name="product_id"/>
+			                       <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+			                       <field name="product_qty" />
+			                       <field name="product_uom" groups="product.group_uom" />
+			                       <field name="price_unit_old" string="Old Price"/>
+			                       <field name="price_unit" string="New Price"/>
+                                   <field name="line_id" invisible="1"/>
+                                    <field name="order_id" invisible="1"/>
+                                </tree>
+                                </field>
+                                </group>
+                            </group>
+                        </page>
+                </xpath>				
+			</field>
+		</record>
+
+        
+        <!--  sale_order_line_history -->
+            <record id="prepurchase_order_line_history_tree" model="ir.ui.view">
+            <field name="name">prepurchase.order.line.history.tree</field>
+            <field name="model">sale.order.line.history</field>
+            <field name="arch" type="xml">
+                <tree string="prepurchase order line history Order">
+                       <field name="product_id"/>
+                       <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                       <field name="product_qty" />
+                       <field name="product_uom" groups="product.group_uom" />
+                       <field name="price_unit_old" string="Old Price"/>
+                       <field name="price_unit" string="New Price"/>
+                       <field name="line_id" invisible="1"/>
+                       <field name="order_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</openerp>

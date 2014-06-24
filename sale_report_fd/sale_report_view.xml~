@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    <report id="sale_report_uniq"
+           name="sale.report"
+           auto="False"
+           model="sale.order"
+           file="sale_report_fd/sale_report.rml"
+           string="Sale Report"
+           header="False"  
+           />
+           
+     </data>
+</openerp>

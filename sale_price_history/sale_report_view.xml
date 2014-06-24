@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    <report id="sale_report_uniq_id"
+           name="history.sale"
+           auto="False"
+           model="sale.order"
+           file="sale_price_history/report/history_tab.rml"
+           string="QUOTATION COST DOWN"
+           />
+           
+     </data>
+</openerp>

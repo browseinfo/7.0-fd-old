@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+ <data>
+           
+       <report id="account_invoice_pajak_report"
+           name="account.invoice.pajak"
+           auto="False"
+           model="account.invoice"
+           file="account_invoice_pajak_report/report/account_invoice_pajak.rml"
+           string="FAKTUR PAJAK Report"
+           header="False"  
+           />
+ </data>
+</openerp>
+ 
+

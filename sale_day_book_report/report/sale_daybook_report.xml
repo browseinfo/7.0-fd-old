@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report auto="False" id="report_sale_day_book" model="sale.day.book.wizard" name="sale.day.book"
+                rml="sale_day_book_report/report/sale_daybook_report.mako"
+				string="Sale Day Book" 
+				webkit_header=""
+				report_type="webkit"  />
+    </data>
+</openerp>

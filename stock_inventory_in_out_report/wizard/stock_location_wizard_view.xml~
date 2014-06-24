@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+		<record id="stock_location_wizard_view" model="ir.ui.view">
+            <field name="name">stock_location_wizard_form</field>
+            <field name="model">stock.location.wizard</field>
+            <field name="arch" type="xml">
+		        <form string="Stock Location" version="7.0">
+					<sheet>
+						<group>
+							<group>
+								<field name="product_category" class="oe_inline"/>
+								<field name="startdtae"/>
+							</group>
+							<group>
+								<field name="location" class="oe_inline"/>							
+								<field name="enddtae"/>							
+							</group>
+						</group>						
+					</sheet>
+					<footer>
+                       	<button name="save_student_result" string="Save" type="object" class="oe_highlight"/>
+                       	or
+                       	<button string="Discard" class="oe_link" special="cancel"/>
+                    </footer>									
+		        </form>
+           </field>
+        </record>
+
+		
+		<act_window id="action_stock_loction_wizard"            
+            name="Stock Location"
+            res_model="stock.location.wizard"            
+            view_mode="form" 
+            target="new" 
+            view_type="form" />
+
+    </data>
+</openerp>

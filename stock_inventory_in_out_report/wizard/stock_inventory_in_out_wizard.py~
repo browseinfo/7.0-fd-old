@@ -1,0 +1,120 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    This module uses OpenERP, Open Source Management Solution Framework.
+#    Copyright (C) 2014-Today BrowseInfo (<http://www.browseinfo.in>)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
+#
+##############################################################################
+
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
+class stock_inventory_in_out_wizard(osv.osv_memory):
+    _name = 'stock.inventory.in.out.wizard'
+    _columns={
+        'warehouse_id':fields.many2one('stock.warehouse',"Warehouse"),
+        'startdtae':fields.date("Start Date"),
+        'enddtae':fields.date("End Date"),
+        'branch_id': fields.many2one('res.branch', 'Branch'),
+    }	
+
+    def on_change_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
+        values = {}
+        if warehouse_id:
+            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
+            values = {
+                'branch_id' : warehouse.branch_id and warehouse.branch_id.id or False,
+            }
+        return {'value' : values}
+
+
+    def print_report(self, cr, uid, ids, context=None):
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        datas = {
+            'ids': [data.get('id')],
+            'model': 'stock.inventory.in.out.wizard',
+            'form': data
+            }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'stock.inventory.in.out.report.webkit',
+            'datas': datas,
+            }    
+    
+stock_inventory_in_out_wizard()
+    
+
+
+class stock_inventory_wizard(osv.osv_memory):
+    _name = 'stock.inventory.wizard'
+    _columns={
+        'warehouse_id':fields.many2one('stock.warehouse',"Warehouse"),
+        'startdtae':fields.date("Start Date"),
+        'enddtae':fields.date("End Date"),
+        'branch_id': fields.many2one('res.branch', 'Branch'),
+    }	
+    def on_change_warehouse_asset_id(self, cr, uid, ids, warehouse_id, context=None):
+        values = {}
+        if warehouse_id:
+            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
+            values = {
+                'branch_id' : warehouse.branch_id and warehouse.branch_id.id or False,
+            }
+        return {'value' : values}
+
+
+    def print_asset_report(self, cr, uid, ids, context=None):
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        datas = {
+            'ids': [data.get('id')],
+            'model': 'stock.inventory.wizard',
+            'form': data
+            }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'stock.inventory.report.webkit',
+            'datas': datas,
+            }    
+    
+stock_inventory_wizard()
+
+class stock_inventory_scrap_wizard(osv.osv_memory):
+    _name = 'stock.inventory.scrap.wizard'
+    _columns={
+        'startdate':fields.date("Start Date"),
+        'enddate':fields.date("End Date"),
+        'branch_id': fields.many2one('res.branch', 'Branch'),
+    }	
+
+    def print_scrap_report(self, cr, uid, ids, context=None):
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        print "GEHEHEHEHEHEHEHEHEHEHEHEHE",data
+        datas = {
+            'ids': [data.get('id')],
+            'model': 'stock.inventory.scrap.wizard',
+            'form': data
+            }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'stock.inventory.scrap.report.webkit',
+            'datas': datas,
+            }    
+    
+    
+stock_inventory_scrap_wizard()
+    
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

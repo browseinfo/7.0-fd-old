@@ -1,0 +1,100 @@
+<html>
+<head>
+    <style type="text/css">
+        ${css}
+    </style>
+</head>
+<body>
+    %for o in objects :
+        <center><h2>Reporte de Inventario por Ubicación y Fecha</h2></center>
+        <center><h2>Fecha</h2></center>
+        <table class="basic_table" width="100%" align="center" style="text-align:center">
+            <tr>
+                <td width="20%">
+                    <b>${_("Categoría: ")} </b>
+                </td>
+                <td width="30%">
+                    ${o.product_category.name or '' |entity} 
+                </td>
+           </tr>
+           <tr>
+                <td width="30%">
+                   <b> ${_("Ubicación")} </b>
+                </td>
+                <td width="30%">
+                    ${o.location.name or '' |entity} 
+                </td>
+            </tr>
+        </table>
+        <table class="basic_table" width="100%" align="center" style="text-align:center">
+            <tr>
+                <td width="25%">
+                    <b>${_("Fecha Inicial:")} </b>
+                </td>
+                <td width="25%">
+                    ${formatLang(data['form']['startdtae'],date=True) or ''|entity}
+                </td>
+                <td width="25%">
+                   <b> ${_("Fecha Final:")} </b>
+                </td>
+                <td width="25%">
+                    ${formatLang(data['form']['enddtae'],date=True) or ''|entity}
+                </td>
+            </tr>
+        </table>
+        <br/><br/>
+        <table class="list_table"  width="100%">
+            <thead>
+                <tr>
+                    <th style="text-align:left;">${_("Producto")}</th>
+                    <th style="text-align:left;">${_("UOM")}</th>
+                    <th style="text-align:left;">${_("Cantidad")}</th>
+                    <th style="text-align:right;">${_("Costo U.")}</th>
+                    <th style="text-align:right;" >${_("Total")}</th>
+                    <th style="text-align:right;" >${_("Cantidad")}</th>
+                    <th style="text-align:right;" >${_("Diferencia")}</th>
+                </tr>
+            </thead>
+            %for line in (get_all_lines(o)):
+                <tbody >
+                <tr>
+                    <td style="text-align:left;">
+                        ${line.get('product') or ''}
+                     </td>
+                    <td style="text-align:left;">
+                        ${line.get('uom') or ''}
+                    </td>
+                    <td style="text-align:right;"">
+                        ${line.get('qty') or ''}
+                    </td>
+                    <td style="text-align:right;">
+                        ${line.get('cost') or ''}
+                    </td>
+                    <td style="text-align:right;">
+                        ${line.get('total') or ''}
+                    </td>
+                    <td style="text-align:right;">
+                        ${line.get('rty') or ''}
+                    </td>
+                    <td style="text-align:right;">
+                        ${line.get('dif') or ''}
+                    </td>
+                </tr>
+                </tbody>
+            %endfor
+        </table>
+        <table class="list_table" width="100%" style="border-top:1px solid #ccc">
+                        <tr>
+                            <td width="185px"></td>
+                            <td width="185px"></td>
+                            <td><b>${formatLang(sum_total())}</b></td>
+                           <td width="-10px"></td>
+                            <td><b>${formatLang(all_total())}</b></td>
+                            <td></td>
+                            <td style="text-align:right;border-top:0px" ></td>
+                        </tr>
+        </table>
+        <p style="page-break-after:always"></p>
+    %endfor
+</body>
+</html>

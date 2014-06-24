@@ -1,0 +1,29 @@
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
+class stock_location_wizard(osv.osv_memory):
+    _name = 'stock.location.wizard'
+    _columns={
+        'product_category':fields.many2one('product.category',"Product Category"),
+        'location':fields.many2one('stock.location',"Location"),
+        'startdtae':fields.date("Start Date"),
+        'enddtae':fields.date("End Date"),
+    }	
+
+    def print_report(self, cr, uid, ids, context=None):
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        print "===================", data, data.get('id')
+        datas = {
+            'ids': [data.get('id')],
+            'model': 'stock.location.wizard',
+            'form': data
+            }
+        print "============datas=======",datas 
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'stock.location.move.webkit',
+            'datas': datas,
+            }    
+    
+    
+stock_location_wizard()

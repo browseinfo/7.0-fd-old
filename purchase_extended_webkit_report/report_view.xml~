@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+ <data>
+   <report id="purchase_date_webkit_report"
+           name="purchase.date.webkit.report"
+           auto="False"
+           model="purchase.wizard"
+           file="purchase_extended_webkit_report/report/purchase_report.mako"
+           string="Purchase Date Report"
+           header="False"  
+           webkit_header="purchase_extended_webkit_report.ir_header_webkit_base_purchase_date_report"
+           report_type="webkit"/>
+           
+       <report id="purchase_ledger_report"
+           name="purchase.ledger.report"
+           auto="False"
+           model="purchase.wizard"
+           file="purchase_extended_webkit_report/report/purchase_ledger_report.rml"
+           string="Purchase Ledger Report"
+           header="False"  
+           />
+ </data>
+</openerp>
+ 
+

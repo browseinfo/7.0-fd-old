@@ -1,0 +1,178 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
+import time
+import datetime
+from openerp.report import report_sxw
+
+class account_supplier_invoice_report(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context=None):
+        super(account_supplier_invoice_report, self).__init__(cr, uid, name, context=context)
+        self.index = 0
+        self.temp = 1
+        self.localcontext.update({
+            'time': time,
+            'get_address':self.get_address,
+            'get_licence':self.get_licence,
+            'get_branch_code':self.get_branch_code,
+            'get_licence_date':self.get_licence_date,
+            'get_invoice_ids':self.get_invoice_ids,
+            'get_formate_date':self.get_formate_date,
+            'get_month':self.get_month,
+            'get_end_month':self.get_end_month,
+            'get_index':self.get_index,
+            'set_index':self.set_index,
+        })
+    def get_address(self,branch_id):        
+        address = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).address
+        return address
+    
+    def get_branch_code(self,branch_id):
+        code = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).branch_code
+        return code
+    
+    def get_licence(self,branch_id):        
+        licence = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).company_id.licence_no
+        if licence:
+            return licence
+    def get_licence_date(self,branch_id):        
+        licence_date = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).company_id.date_of_licence
+        if licence_date:
+            date = datetime.datetime.strptime(licence_date, '%Y-%m-%d')
+            date = date.strftime('%d %b %Y')
+            return date  
+    def get_invoice_ids(self,data):
+        self.index = 0
+        start_date = data['start_date']
+        end_date = data['end_date']
+        self.cr.execute("select id from account_invoice ai "\
+                   "WHERE (ai.date_invoice >= %s) AND (ai.date_invoice <= %s)", (start_date, end_date))
+        invoice_line_ids = self.cr.fetchall()
+        account_invoice_ids_list=[i[0] for i in invoice_line_ids]
+        account_invoice_obj = self.pool.get('account.invoice')
+        account_invoice_ids = account_invoice_obj.search(self.cr, self.uid, [('branch_id','=',data['branch_id'][0]),('type','=','in_invoice')])
+        final_list = []
+        for val in account_invoice_ids:
+            if val in account_invoice_ids_list:
+                final_list.append(val)
+        obj_list =[]
+        for ids in final_list:
+            obj_list.append(account_invoice_obj.browse(self.cr, self.uid, ids ))
+        return obj_list      
+    def get_formate_date(self, date_invoice):
+        d = datetime.datetime.strptime(date_invoice, '%Y-%m-%d')
+        date = d.strftime('%d-%b-%Y')
+        return date
+    def get_month(self,start_date):
+        d = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+        date = d.strftime('%b -')
+        return date
+    def get_end_month(self,end_date):
+        d = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+        date = d.strftime('%b %Y')
+        return date
+    def set_index(self):
+        self.index += 1        
+    def get_index(self):
+        if self.index == self.temp:
+            self.temp += 1
+            return self.index
+        else:
+            return ' '
+
+report_sxw.report_sxw('report.account.supplier.invoice.report', 'account.report.wizard', '7.0-fd/account_custom_report_wizard/report/account_supplier_impor_report.rml', parser=account_supplier_invoice_report, header="internal landscape")
+
+
+class account_customer_invoice_report(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context=None):
+        self.index = 0
+        self.temp = 1
+        super(account_customer_invoice_report, self).__init__(cr, uid, name, context=context)
+        self.localcontext.update({
+            'time': time,
+            'get_address':self.get_address,
+            'get_telephone':self.get_telephone,
+            'get_licence':self.get_licence,
+            'get_invoice_ids':self.get_invoice_ids,
+            'get_formate_date':self.get_formate_date,
+            'get_month':self.get_month,
+            'get_end_month':self.get_end_month,
+            'get_fiscalyear':self.get_fiscalyear,
+            'get_index':self.get_index,
+            'get_formate_qty':self.get_formate_qty,
+        })
+    def get_address(self,branch_id):        
+        address = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).address
+        if address:
+            address= address.replace('\n','')
+            return address
+    def get_telephone(self,branch_id):        
+        telephone = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).telephone_no
+        if telephone:
+            return telephone
+    def get_licence(self,branch_id):        
+        licence = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).company_id.licence_no
+        if licence:
+            return licence
+    def get_fiscalyear(self,fiscalyear):
+        start_date = self.pool.get("account.fiscalyear").browse(self.cr,self.uid,fiscalyear[0]).date_start
+        if start_date:
+            date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+            date = date.strftime('%Y')
+            return date
+    def get_formate_qty(self,qty):
+        qty = int(qty)
+        return qty
+    def get_invoice_ids(self,data):
+        start_date = data['start_date']
+        end_date = data['end_date']
+        self.cr.execute("select id from account_invoice ai "\
+                   "WHERE (ai.date_invoice >= %s) AND (ai.date_invoice <= %s)", (start_date, end_date))
+        invoice_line_ids = self.cr.fetchall()
+        account_invoice_ids_list=[i[0] for i in invoice_line_ids]
+        account_invoice_obj = self.pool.get('account.invoice')        
+        account_invoice_ids = account_invoice_obj.search(self.cr, self.uid, [('branch_id','=',data['branch_id'][0]),('type','=','out_invoice')])
+        final_list = []
+        for val in account_invoice_ids:
+            if val in account_invoice_ids_list:
+                final_list.append(val)
+        obj_list =[]
+        for ids in final_list:
+            obj_list.append(account_invoice_obj.browse(self.cr, self.uid, ids ))
+        return obj_list      
+    def get_formate_date(self, date_invoice):
+        d = datetime.datetime.strptime(date_invoice, '%Y-%m-%d')
+        date = d.strftime('%d-%b-%Y')
+        return date
+    def get_month(self,start_date):
+        d = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+        date = d.strftime('%d %b %Y')
+        return date
+    def get_end_month(self,end_date):
+        d = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+        date = d.strftime('%d %b %Y')
+        return date
+    def get_index(self):
+        self.index += 1
+        return self.index
+report_sxw.report_sxw('report.account.customer.invoice.report', 'account.ekspor.report.wizard', '7.0-fd/account_custom_report_wizard/report/account_customer_impor_report.rml', parser=account_customer_invoice_report, header="internal landscape")
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

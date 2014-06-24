@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report auto="False" id="report_account_supplier_invoice" model="account.invoice" name="account.supplier.invoice.report"
+                rml="account_custom_report_wizard/report/account_supplier_impor_report.rml" string="Cntoh Impor Report(KB)" header="False" />
+		<report auto="False" id="report_account_customer_invoice" model="account.invoice" name="account.customer.invoice.report"
+                rml="account_custom_report_wizard/report/account_customer_impor_report.rml" string="Cntoh EKSPOR Report" header="False" />
+    </data>
+</openerp>

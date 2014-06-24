@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    <record id="view_sales_forecast_form" model="ir.ui.view">
+            <field name="name">sales.forecast.form</field>
+            <field name="model">sales.forecast</field>
+            <field name="arch" type="xml">
+            	<form string="Sale Forcasting" version="7.0">
+            		<header>
+            			<button name="action_button_confirm" states="draft" string="Confirm" class="oe_highlight" type="object" groups="base.group_user"/>
+            			<button name="action_button_cancel" states="draft" string="Cancel" type="object" groups="base.group_user"/>
+            			<button name="action_button_redraft" states="cancel" string="Reset to Draft" class="oe_highlight" type="object" groups="base.group_user"/>
+            			<field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+            		</header>
+            		<sheet>
+            			<div class="oe_right">		
+            				<button name="forecast_to_sale_view" type="object"
+                        string="Quotations"
+                        groups="sales_forecast.group_sales_forecast_manager"/> 
+                    	</div>
+            			<h1>
+            				<field name="name" class="oe_inline" readonly="1"/>
+            			</h1>
+            			<group cols="4">
+            				<group>
+            					<field name="prerid_from"/>
+            					<field name="prerid_to"/>            					
+        					</group>
+        					<group>		
+        						<field name="shop_id" on_change="onchange_shop_id(shop_id)"/>
+        						<field name="branch_id" on_change="onchange_branch_id(shop_id,branch_id)"/>
+        						<field name="company_id"/>
+                        	</group>
+        				</group>
+        				<notebook>
+        					<page string="Forcast Lines">
+                            	<field name="order_line">
+		                        	<tree string="Forcast Line" editable="bottom">
+		                        		<field name="product_id" on_change="product_id_change(product_id, context)"/>
+										<field name="date"/>
+										<field name="customer_id"/>
+										<field name="product_qty" string="Qty" sum="Qty"/>
+										<field name="product_uom" string="UOM"/>
+										<field name="dummy_button" invisible="1"/>
+										<field name="state" readonly="1"/>
+										<button name="sales_forecast_confirm" string="Confirm" attrs="{'invisible': [('dummy_button', '=', True)]}" type="object" icon="gtk-execute"/>
+		                        	</tree>
+                            	</field>
+                        	</page>
+        				</notebook>
+        			</sheet>
+        			<div class="oe_chatter">
+		                <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+		                <field name="message_ids" widget="mail_thread"/>
+                	</div>
+    			</form>
+			</field>
+	</record>
+	
+	<record id="view_sales_forecast_filter" model="ir.ui.view">
+            <field name="name">sales.forecast.list.select1</field>
+            <field name="model">sales.forecast</field>
+            <field name="arch" type="xml">
+                <search string="Search Forecast Order">
+                    <field name="name" string="Sales Order" filter_domain="['|',('name','ilike',self)]"/>
+                    <separator/>
+                </search>
+            </field>
+    </record>
+	
+
+	<record id="view_sales_forecast_tree" model="ir.ui.view">
+		<field name="name">sales.forecast.tree</field>
+		<field name="model">sales.forecast</field>
+		<field name="arch" type="xml">
+			<tree string="Sale Forcasting">
+				<field name="name"/>
+				<field name="prerid_from"/>
+            	<field name="prerid_to"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record id="action_sales_forecast_form" model="ir.actions.act_window">
+		<field name="name">Sales Forecast</field>
+		<field name="res_model">sales.forecast</field>
+		<field name="view_type">form</field>
+		<field name="search_view_id" ref="view_sales_forecast_filter"/>
+		<field name="view_mode">tree,form</field>
+	</record>
+	
+	<menuitem action="action_sales_forecast_form" id="menu_action_sales_forecast" parent="base.menu_sales"
+            sequence="7"/>           
+    
+     <record id="view_sale_order_form1_inherit" model="ir.ui.view">
+		<field name="name">sale.order.form1.inherit</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_order_form"/>
+		<field name="arch" type="xml">
+			<field name="origin" position="after">
+            	<field name="forecast_id" readonly="1"/>
+            </field>
+		</field>		
+    </record>
+    
+    </data>
+</openerp>

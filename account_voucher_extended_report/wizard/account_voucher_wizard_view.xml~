@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_voucher_wizard_form" model="ir.ui.view">
+            <field name="name">account.voucher.wizard.form</field>
+            <field name="model">account.voucher.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Account Voucher Report" version="7.0">
+                <group  colspan="4">
+                	<group>
+                		<field name="period_id"/>
+                		<field name="journal_id"/>
+	                </group>
+	                <group>
+	                </group>
+                </group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        
+       <record id="action_account_voucher_wizard" model="ir.actions.act_window">
+            <field name="name">Account Voucher Wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.voucher.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_voucher_wizard_form"/>
+            <field name="target">new</field>
+            <field name="multi">True</field>
+        </record>
+        
+		
+		
+		<menuitem action="action_account_voucher_wizard" id="account_voucher_menu_wizard"
+				  parent="account_custom_report_wizard.menu_finance_custom_statement" 
+				  name = "Account Voucher Wizard" sequence="10"/>
+   
+   </data>
+</openerp>

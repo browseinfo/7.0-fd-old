@@ -1,0 +1,44 @@
+<html>
+<head>
+    <style type="text/css">
+        ${css}
+    </style>
+</head>
+<body>
+     %for o in objects :
+        <table border="3" class="list_table" width="100%">
+            <thead>
+                <tr>
+                    <th style="text-align:center;"> <font size="8"> ${_("Date")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("V/CHR")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("PARTICULAR")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("DETAILS")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("ACC. NO.")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("DEBET")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("DEBET")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("DEBET")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("CREDIT")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("CREDIT")}</font></th>
+                    <th style="text-align:center;" ><font size="8"> ${_("BALANCE")}</font></th>
+                    <th style="text-align:center;" ><font size="8"> ${_("BALANCE")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("RATE")}</font></th>
+                </tr>
+                <tr>
+                	<th style="text-align:center;"> <font size="8"> ${_(" ")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_(" ")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_(" ")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_(" ")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_(" ")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("YEN")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("USD")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("IDR")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("USD")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("IDR")}</font></th>
+                    <th style="text-align:center;" ><font size="8"> ${_("USD")}</font></th>
+                    <th style="text-align:center;" ><font size="8"> ${_("IDR")}</font></th>
+                    <th style="text-align:center;"><font size="8"> ${_("#N/A")}</font></th>
+                </tr>
+            </thead>
+    %endfor
+</body>
+</html>

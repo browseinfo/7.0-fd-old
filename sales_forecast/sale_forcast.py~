@@ -1,0 +1,128 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    This module uses OpenERP, Open Source Management Solution Framework.
+#    Copyright (C) 2014-Today BrowseInfo (<http://www.browseinfo.in>)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
+#
+##############################################################################
+
+import time
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
+
+class sale_forcast(osv.Model):
+    _inherit = ['mail.thread', 'ir.needaction_mixin']       
+    _name = 'sale.forcast'
+    
+    _columns = {
+        'name': fields.char('Order Reference'),
+        'prerid_from': fields.date('Period From'),
+        'prerid_to': fields.date('Period To'),
+        'state': fields.selection([
+            ('draft', 'Draft'),
+            ('confirm', 'Confirmed'),
+            ('cancel', 'Cancel')], 'Status'),
+        'order_line': fields.one2many('sale.forcast.line', 'order_id', 'Order Lines', states={'confirm': [('readonly', False)]}),
+    }   
+    
+    _defaults = {
+        'state': 'draft'
+    }
+    
+    def create(self, cr, uid, vals, context=None):
+        vals['name'] = 'Order Reference/' + self.pool.get('ir.sequence').get(cr, uid, 'sale.forcast')
+        return super(sale_forcast, self).create(cr, uid, vals, context=context)
+        
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        current_obj = self.browse(cr, uid, ids, context=context)[0]
+        current_obj.write({'state': 'confirm'})
+        return True
+        
+    def action_button_cancel(self, cr, uid, ids, context=None):
+        current_obj = self.browse(cr, uid, ids, context=context)[0]
+        current_obj.write({'state': 'cancel'})
+        return True
+        
+    def action_button_draft(self, cr, uid, ids, context=None):
+        current_obj = self.browse(cr, uid, ids, context=context)[0]
+        current_obj.write({'state': 'draft'})
+        return True
+        
+    def action_button_redraft(self, cr, uid, ids, context=None):
+        current_obj = self.browse(cr, uid, ids, context=context)[0]
+        print "\n\nCurrent OBJ", current_obj
+        current_obj.write({'state': 'draft'})
+        return True
+        
+class sale_forcast_line(osv.Model):       
+    _name = 'sale.forcast.line'
+    
+    _columns = {
+        'product_id': fields.many2one('product.product', 'Product', required=True),
+        'date': fields.date('Date', required=True),
+        'customer_id': fields.many2one('res.partner', 'Customer', domain=[('customer', '=', True)], required=True),
+        'product_qty': fields.float('Quantity', digits_compute= dp.get_precision('Product UoS'), required=True),
+        'product_uom': fields.many2one('product.uom', 'Unit of Measure ', required=True),
+        'order_id': fields.many2one('sale.forcast', 'Order Reference'),
+        'dummy_button': fields.boolean('Dummy'),
+        'state': fields.selection([
+            ('draft', 'Draft'),
+            ('confirm', 'Quatation Sent')], 'Status'),
+    }
+    
+    _defaults = {
+        'product_qty': 1,
+        'dummy_button': False,
+        'state': 'draft',
+    }
+    
+    def product_id_change(self, cr, uid, ids, product_id, context=None):
+        vals = {}
+        product_uom_obj = self.pool.get('product.uom')
+        product_obj = self.pool.get('product.product')
+        
+        product_browse = product_obj.browse(cr, uid, [product_id], context=context)[0]
+        
+        if product_browse.uom_id.id:
+            vals['product_uom'] = product_browse.uom_id.id
+            
+        return {'value': vals}
+        
+    def sale_forcast_confirm(self, cr, uid, ids, context=None):
+        vals = {}
+        current_obj = self.browse(cr, uid, ids, context=context)[0]
+        
+        vals = {
+            'partner_id': current_obj.customer_id.id,
+            'date_order': current_obj.date,
+            'order_line': [(0,0, {
+                        'product_id': current_obj.product_id.id,   
+                        'name': '[' + current_obj.product_id.default_code + '] ' + current_obj.product_id.name,
+                        'product_uom_qty': current_obj.product_qty,
+                        'product_uom': current_obj.product_uom.id,
+                        'price_unit': current_obj.product_id.list_price,
+             })],
+             'pricelist_id': current_obj.customer_id.property_product_pricelist.id,
+             'partner_invoice_id': current_obj.customer_id.id,
+             'partner_shipping_id': current_obj.customer_id.id,
+        }
+        
+        self.pool.get('sale.order').create(cr, uid, vals, context=context)
+        current_obj.write({'dummy_button': True, 'state': 'confirm'})
+        return True
+        
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

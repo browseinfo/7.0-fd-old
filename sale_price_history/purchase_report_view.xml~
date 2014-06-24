@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    <report id="purchase_report_uniq_id"
+           name="history.purchase"
+           auto="False"
+           model="purchase.order"
+           file="purchase_price_history/report/history_tab.rml"
+           string="Price History"
+           header="True"  
+           />
+           
+     </data>
+</openerp>

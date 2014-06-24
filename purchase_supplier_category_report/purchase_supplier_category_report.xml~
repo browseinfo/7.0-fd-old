@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <report id="purchase_supplier_category_rpt"
+            name="purchase.supplier.category.report.all"
+            auto="False"
+            model="purchase.supplier.category.wizard"
+            file="purchase_supplier_category_report/report/purchase_supplier_category_report.mako"
+            string="Purchase Product Category"
+	    	header="False"
+            webkit_header=""
+            report_type="webkit"/>
+
+    <report id="sales_customer_category_rpt"
+            name="sales.customer.category.report.all"
+            auto="False"
+            model="sales.customer.category.wizard"
+            file="purchase_supplier_category_report/report/sales_customer_category_report.mako"
+            string="Purchase Product Category"
+	    	header="False"
+            webkit_header=""
+            report_type="webkit"/>
+  </data>
+</openerp>

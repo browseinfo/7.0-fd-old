@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <report id="stock_inventory_in_out_report_al"
+            name="stock.inventory.in.out.report.webkit"
+            auto="False"
+            model="stock.inventory.in.out.wizard"
+            file="stock_inventory_in_out_report/report/stock_inventory_in_out_report.mako"
+            string="LAPORAN BULANAN GB JAN'14(MUTASI BRG)"
+            webkit_header=""
+            report_type="webkit"/>
+            
+            
+    <report id="stock_inventory_al"
+            name="stock.inventory.report.webkit"
+            auto="False"
+            model="stock.inventory.wizard"
+            file="stock_inventory_in_out_report/report/stock_inventory_report_asset.mako"
+            string="CNTH LAP.4 BLNAN(MUTASI MESIN)"
+            webkit_header=""
+            report_type="webkit"/>
+
+
+    <report id="stock_inventory_scrap_location"
+            name="stock.inventory.scrap.location.webkit"
+            auto="False"
+            model="stock.inventory.scrap.location.wizard"
+            file="stock_inventory_in_out_report/report/stock_inventory_report_asset.mako"
+            string="CNTH Lap 4 BLanan(BRG SCRAP)"
+            webkit_header=""
+            report_type="webkit"/>
+
+    <report id="stock_inventory_rawmaterial"
+            name="stock.inventory.raw.material.webkit"
+            auto="False"
+            model="stock.inventory.raw.material.wizard"
+            file="stock_inventory_in_out_report/report/stock_inventory_rawmaterial_report.mako"
+            string="CNTH LAP 4 BLNAN(BAHAN BAKU)"
+            webkit_header=""
+            report_type="webkit"/>
+
+    <report id="stock_inventory_finishgoods"
+            name="stock.inventory.finish.goods.webkit"
+            auto="False"
+            model="stock.inventory.finish.goods.wizard"
+            file="stock_inventory_in_out_report/report/stock_inventory_finishgoods_report.mako"
+            string="CNTH LAP 4 BLNAN(BRG JADI)"
+            webkit_header=""
+            report_type="webkit"/>
+
+  </data>
+</openerp>

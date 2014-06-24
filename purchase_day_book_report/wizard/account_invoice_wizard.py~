@@ -1,0 +1,70 @@
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from datetime import datetime
+
+class account_invoice_wizard(osv.osv_memory):
+	_name = "account.invoice.wizard"
+	_columns={
+        'start_date': fields.date('Start Date', required=True),
+        'end_date': fields.date('End Date', required=True),
+    }
+
+	def print_invoice(self,cr, uid, ids, context=None):
+		if context is None:
+			context = {}
+		data = self.read(cr, uid, ids)[0]
+		invoice_obj = self.pool.get('account.invoice')
+		invoice_ids = invoice_obj.search(cr, uid, [])
+		startdate = self.browse(cr, uid, ids, context=context)[0].start_date
+		enddate = self.browse(cr, uid, ids, context=context)[0].end_date
+		invoice_print_ids = []
+		for invoice_id in invoice_ids:
+			if invoice_id:
+				invoice = invoice_obj.browse(cr, uid, invoice_id, context=context)
+				if invoice.partner_id.supplier == True:
+					if invoice.date_invoice:
+						final = invoice.date_invoice.split(' ',1)
+						between_date = final[0]
+						wizard_start_date = datetime.strptime(startdate, '%Y-%m-%d')
+						wizard_end_date = datetime.strptime(enddate, '%Y-%m-%d')
+						inv_date = datetime.strptime(between_date, '%Y-%m-%d')
+						if wizard_start_date.month <=  inv_date.month and wizard_end_date.month >=  inv_date.month and wizard_start_date.day <=  inv_date.day and wizard_end_date.day >=  inv_date.day:
+							invoice_print_ids.append(invoice.id)
+		invoice_print_ids.sort()
+		if not invoice_print_ids:
+			raise osv.except_osv(_('No data!'), _('No Matching Record Found'))
+		data['partner_ids'] = invoice_print_ids
+
+		datas = {
+				 'model': 'account.invoice',
+				 'ids': invoice_print_ids,
+				 'form': data,
+		}
+		return {
+				'type': 'ir.actions.report.xml',
+				'report_name': 'account.invoice.wiz',
+				'datas': datas,
+				'nodestroy': True,
+				}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

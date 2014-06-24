@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+
+        <record id="sale_order_fields" model="ir.ui.view">
+            <field name="name">sale.order.fields.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='pricelist_id']" position="after">
+                    <field name="invoice_no"/>
+                </xpath>
+				<xpath expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']" position="after">
+		               <field name="customer_po" />
+		        </xpath>   
+				<xpath expr="//field[@name='order_line']/form//field[@name='tax_id']" position="after">
+		               <field name="customer_po" />
+		        </xpath>   
+
+             </field>
+        </record>
+
+           
+     </data>
+</openerp>
+

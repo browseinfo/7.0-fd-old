@@ -1,0 +1,81 @@
+<html>
+<head>
+    <style type="text/css">
+       ${css}
+   </style>
+</head>
+<header>
+</header>
+<body>
+    %for o in objects :
+        <center><h2>PURCHASE ORDER</h2></center><br><br>
+        <table>
+        	<tr>
+        		<td>
+        			<table style="align:left;">
+        				<tr>
+        					<td><b><font size="1">Ref No. :</font></b></td>
+        					<td></td>
+        				</tr>
+        				<tr>
+        					<td><b><font size="1">Date :</font></b></td>
+        					<td></td>
+        				</tr>
+        				<tr>
+        					<td><b><font size="1">Currency :</font></b></td>
+        					<td></td>
+        				</tr>
+        				<tr>
+        					<td><b><font size="1">Payment Terms :</font></b></td>
+        					<td></td>
+        				</tr>
+        			</table>
+        		</td>
+        		<td>
+        			<table style="align:right;">
+        				<tr>
+        					<td><b><font size="1">Ref No. :</font></b></td>
+        					<td></td>
+        				</tr>
+        				<tr>
+        					<td><b><font size="1">Date :</font></b></td>
+        					<td></td>
+        				</tr>
+        				<tr>
+        					<td><b><font size="1">Currency :</font></b></td>
+        					<td></td>
+        				</tr>
+        				<tr>
+        					<td><b><font size="1">Payment Terms :</font></b></td>
+        					<td></td>
+        				</tr>
+        			</table>
+        		</td>
+        	</tr>
+        </table>
+        
+        <table>
+        <tr>
+        	<td><b><font size="1">Attn:</font></b></td>
+        	<td style="text-align:left;"> </td>
+    	</tr>
+    	<tr>
+    		<td><b><font size="1">Please supply the following :</font></b></td>
+    	</tr>
+        </table>
+        <table class="list_table"  width="100%" border="1px">
+            <thead>
+                <tr>
+                    <th style="text-align:center;">${_("PO No.")}</th>
+                    <th style="text-align:center;">${_("Descriptions")}</th>
+                    <th style="text-align:center;">${_("U/M")}</th>
+                    <th style="text-align:center;">${_("Delivery Date")}</th>
+                    <th style="text-align:center;">${_("Qty")}</th>
+                    <th style="text-align:center;">${_("Unit Price")}</th>
+                    <th style="text-align:center;">${_("Amount")}</th>
+                </tr>
+            </thead>
+        </table>
+    %endfor
+</body>
+</html>

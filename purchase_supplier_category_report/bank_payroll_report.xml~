@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <report id="bank_payroll_report_1"
+            name="bank.payroll.report.all"
+            auto="False"
+            model="bank.payroll.wizard"
+            file="bank_payroll_report/report/bank_payroll_report.mako"
+            string="Payroll Bank Report"
+	    header="False"
+            report_type="webkit"/>
+  </data>
+</openerp>

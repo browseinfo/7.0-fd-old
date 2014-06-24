@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_hr_payroll_payslip_wizard" model="ir.ui.view">
+            <field name="name">hr.payroll.payslip.wizards</field>
+            <field name="model">hr.payroll.payslip.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="moves" version="7.0">
+                <label string="This wizard will print Payroll Report "/>
+                <group  colspan="4">
+                    <field name="grade_id"/>
+                </group>
+                <!--group colspan="4" col="6">
+                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    <button name="print_report" icon="gtk-print" string="Print" type="object"/>
+                </group-->
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_hr_payroll_payslip_wizard" model="ir.actions.act_window">
+            <field name="name">Payroll Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.payroll.payslip.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    
+    	<menuitem
+        	id="payroll_report_parent"
+        	name="Reporting"
+        	parent="hr.menu_hr_configuration"/>
+
+        <menuitem
+            name="Payroll report"
+            parent="payroll_report_parent"
+            action="action_hr_payroll_payslip_wizard"
+            sequence="16" 
+            id="menu_payroll_report_child"
+           />
+
+   </data>
+</openerp>

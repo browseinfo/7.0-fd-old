@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    <record id="view_stock_picking_in_branch_form1" model="ir.ui.view">
+		<field name="name">stock.picking.in.branch.extened</field>
+		<field name="model">stock.picking.in</field>
+		<field name="inherit_id" ref="stock.view_picking_form"/>
+		<field name="arch" type="xml">
+			<field name="partner_id" position="after">
+				<field name="branch_id"/>
+			</field>
+		</field>
+    </record>
+    
+    <record id="view_stock_picking_out_branch_form1" model="ir.ui.view">
+		<field name="name">stock.picking.out.branch.extened</field>
+		<field name="model">stock.picking.out</field>
+		<field name="inherit_id" ref="stock.view_picking_form"/>
+		<field name="arch" type="xml">
+			<field name="partner_id" position="after">
+				<field name="branch_id"/>
+			</field>
+		</field>
+    </record>
+
+	<record id="view_stock_inventory_branch_form1" model="ir.ui.view">
+		<field name="name">stock.inventory.branch.extened</field>
+		<field name="model">stock.inventory</field>
+		<field name="inherit_id" ref="stock.view_inventory_form"/>
+		<field name="arch" type="xml">
+			<field name="name" position="after">
+				<field name="branch_id"/>
+			</field>
+		</field>
+    </record>
+
+    </data>
+</openerp>

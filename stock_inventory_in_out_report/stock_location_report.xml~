@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <report id="stock_inventory_in_out_report_al"
+            name="stock.inventory.in.out.report.webkit"
+            auto="False"
+            model="stock.inventory.in.out.wizard"
+            file="stock_inventory_in_out_report/report/stock_inventory_in_out_report.mako"
+            string="Location Inventory"
+            webkit_header=""
+            report_type="webkit"/>
+  </data>
+</openerp>

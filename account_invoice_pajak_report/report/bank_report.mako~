@@ -1,0 +1,184 @@
+<html>
+<head>
+    <style type="text/css">
+       ${css}
+   </style>
+</head>
+<header>
+
+<table>
+<tr><td>
+
+	<table align="left" width="100%">
+	<tr>
+		<td>The Manager</td>
+	</tr>
+	<tr>
+		<td>GUARANTY TRUST BANK PLC</td>
+	</tr>
+	<tr>
+		<td>WUSE BRANCH</td>
+	</tr>
+	<tr>
+		<td>ABUJA</td>
+	</tr>
+	</table>
+</td>
+<td>
+
+	<table align="right" width="100%" >
+	<tr>
+		<td> <font color="white"> Ref Code: </font></td>
+	</tr>
+	<tr>
+		<td><font color="white"> Ref Code: </font> </td>
+	</tr>
+	<tr>
+		<td> <font color="white"> Ref Code: </font> </td>
+	</tr>
+	<tr>
+		<td></td>
+	</tr>
+	</table>
+</td>
+<td>
+
+	<table align="right" width="100%" >
+	<tr>
+		<td> <font face="monospace" size="5">FEDERAL JUDICIAL SERVICE COMMISION </font></td>
+	</tr>
+	<tr>
+		<td> <font face="monospace" size="5">SUPERME COUNT COMPLEX</font> </td>
+	</tr>
+	<tr>
+		<td> <font face="monospace" size="5">P.M.B. 484</font> </td>
+	</tr>
+	<tr>
+		<td><font face="monospace" size="5"> ABUJA, NIGERIA </font></td>
+	</tr>
+	</table>
+</td>
+<td>
+
+	<table align="right" width="100%" >
+	<tr>
+		<td> <font color="white"> Ref Code: </font></td>
+	</tr>
+	<tr>
+		<td><font color="white"> Ref Code: </font> </td>
+	</tr>
+	<tr>
+		<td> <font color="white"> Ref Code: </font> </td>
+	</tr>
+	<tr>
+		<td></td>
+	</tr>
+	</table>
+</td>
+
+<td>
+
+	<table align="right" width="100%">
+	<tr>
+		<td>Ref Code: </td>
+	</tr>
+	<tr>
+		<td>Code: </td>
+	</tr>
+	<tr>
+		<td>Date: </td>
+		<td> ${call_date()} </td>
+	</tr>
+	<tr>
+		<td></td>
+	</tr>
+	</table>
+</td></tr>
+
+</table>
+
+</header>
+<body>
+    %for o in objects :
+        <center><h2>E-PAYMENT CONFORMATION SCHEDUAL - (ZENITH BANK & OTHERS) </h2></center>
+        <table class="list_table"  width="100%" border="1px">
+            <thead>
+                <tr>
+                    <th style="text-align:left;">${_("Payment Code")}</th>
+                    <th style="text-align:left;">${_("BENEFICIARY ACCOUNT NAME")}</th>
+                    <th style="text-align:left;">${_("AMOUNT")}</th>
+                    <th style="text-align:right;">${_("ACCOUNT NUMBER")}</th>
+                    <th style="text-align:right;" >${_("BANK / BRANCH SORT CODE")}</th>
+                    <th style="text-align:right;" >${_("BANK")}</th>
+                    <th style="text-align:right;" >${_("BRANCH ADDRESS")}</th>
+                    <th style="text-align:right;" >${_("PURPOSE OF PAYMENT")}</th>
+                </tr>
+            </thead>
+            %for line in (get_payslip_lines(o)):
+                <tbody >
+                <tr>
+                    <td style="text-align:left;">
+                        ${line.get('payment_code') or ''}
+                     </td>
+                    <td style="text-align:left;">
+                        ${line.get('employee_name') or ''}
+                    </td>
+                    <td style="text-align:right;"">
+                        ${line.get('computation') or ''}
+                    </td>
+                    <td style="text-align:right;">
+                        ${line.get('acc_number') or ''}
+                    </td>
+                    <td style="text-align:right;">
+                        ${line.get('branch_code') or ''}
+                    </td>
+                    <td style="text-align:right;">
+                        ${line.get('bank_name') or ''}
+                    </td>
+                    <td style="text-align:right;">
+                        ${line.get('address') or ''}
+                    </td>
+                    <td style="text-align:right;">
+                        ${line.get('purpose') or ''}
+                    </td>
+                </tr>
+                </tbody>
+            %endfor
+        </table>
+        <br><br>
+        <table  width="100%">
+        <tbody>
+                        <tr>
+                            <td style="text-align:left;color:white;">  ${_("SUB - TOTAL:")} </td>
+                            <td style="text-align:left;"> ${_("SUB - TOTAL:     ")}<b>${formatLang(sum_total())}</td>
+                            <td style="text-align:left;">${}</td>
+                            <td style="text-align:left;">${}</td>
+                            <td style="text-align:left;">${}</td>
+                        </tr>
+        </tbody >
+        </table>
+        <table  width="100%">
+        <tr>
+            <td><center>${amount_word()}</center> </td>
+        </tr>
+                        
+        </table>
+    %endfor
+    
+    <br>
+    <br>
+
+    
+    <table  width="100%" style="margin-top: 200px;">
+    	<tr>
+    		<td>Authorised Signature: .............</td>
+    		<td>Thumb Print </td>
+    		<td><table height='50px' border='1px' width="175px"><tr><td></td></tr></table></td> 
+    		<td>Authorised Signature: .............</td>
+    		<td>Thumb Print </td>
+    		<td><table height='50px' border='1px' width="175px"><tr><td></td></tr></table></td> 
+    	</tr>
+	</table>  
+	
+</body>
+</html>

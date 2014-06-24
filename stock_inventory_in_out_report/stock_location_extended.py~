@@ -1,0 +1,13 @@
+from osv import osv,fields
+import datetime
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
+
+
+
+class product_product(osv.osv):
+    _inherit = 'stock.location'
+    _columns = {
+         'stock_location':fields.boolean("Stock Location"),
+    }
+

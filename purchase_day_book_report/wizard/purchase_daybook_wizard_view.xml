@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_purchase_date_wizard" model="ir.ui.view">
+            <field name="name">purchase.day.book.wizard.view</field>
+            <field name="model">purchase.day.book.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Day Book Wizard" version="7.0">
+                    <group col='4'>
+                        <field name="start_date" class="oe_inline" />
+                        <field name="end_date" class="oe_inline"/>
+                    </group>                  
+                    <footer>
+                        <button string="Print" name="print_report" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+               </form>
+            </field>
+        </record>
+        
+        <record id="action_purchase_daybook_wizard" model="ir.actions.act_window">
+            <field name="name">Purchase Day Book Wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.day.book.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_purchase_date_wizard"/>
+            <field name="target">new</field>
+            <field name="multi">True</field>
+        </record>
+        
+
+		<!--<menuitem id="menu_finance_custom_statement" name="Custom Reports" parent="account.menu_finance_reports"/>-->
+		<menuitem action="action_purchase_daybook_wizard" id="purchase_daybook_wizard" parent="sale_day_book_report.menu_day_book_report"
+        	name = "Purchase Day Book" />
+        
+    </data>
+</openerp>
