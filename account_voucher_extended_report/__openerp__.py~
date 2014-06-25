@@ -23,7 +23,7 @@
     "name" : "Account Voucher Report",
     "version" : "1.0",
     "depends" : ['account', 'report_webkit','account_custom_report_wizard'],
-    "author" : "Browseinfo",
+    "author" : "BrowseInfo",
     "description": """
     """,
     "website" : "www.browseinfo.in",

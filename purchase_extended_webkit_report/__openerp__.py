@@ -23,7 +23,7 @@
     "name" : "Purchase Date Order Report",
     "version" : "1.0",
     "depends" : ['purchase', 'report_webkit', 'company_extended', 'purchase_supplier_category_report','account'],
-    "author" : "Browseinfo",
+    "author" : "BrowseInfo",
     "description": """
 
     """,

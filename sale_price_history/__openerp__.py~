@@ -18,7 +18,7 @@ Manage sales order
 
 *  Manage Price History
     """,
-    'author': 'Browseinfo',
+    'author': 'BrowseInfo',
     'website': 'http://www.browseinfo.in',
     'images': [],
     'depends': ['sale'],

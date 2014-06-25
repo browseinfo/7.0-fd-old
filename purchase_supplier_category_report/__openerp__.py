@@ -24,7 +24,7 @@
     "version" : "1.0",
     "category": 'Purchase and Sales Management',
     "depends" : ['purchase','sale','report_webkit'],
-    "author" : "Browseinfo",
+    "author" : "BrowseInfo",
     "description": """
     This module is help to print Purchase Supplier Product Category Report
 

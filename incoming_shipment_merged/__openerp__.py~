@@ -27,8 +27,8 @@
     'description': """
         Merge Incoming Shipment.    
     """,
-    'author': 'Browseinfo',
-    'website': 'http://browseinfo.in',
+    'author': 'BrowseInfo',
+    'website': 'www.browseinfo.in',
     'depends': ['base','account','purchase','sale', 'stock', 'delivery',],
     'init_xml': [],
     'update_xml': [

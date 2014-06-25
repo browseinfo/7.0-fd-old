@@ -23,7 +23,7 @@
     "name" : "Purchase Report",
     "version" : "1.0",
     "depends" : ['purchase',  'purchase_extended', 'purchase_extended_webkit_report'],
-    "author" : "Browseinfo",
+    "author" : "BrowseInfo",
     "description": """
     """,
     "website" : "www.browseinfo.in",

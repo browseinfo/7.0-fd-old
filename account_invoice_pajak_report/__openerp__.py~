@@ -23,7 +23,7 @@
     "name" : "Account Invoice FAKTUR PAJAK Report",
     "version" : "1.0",
     "depends" : ['account', 'invoice_custom'],
-    "author" : "Browseinfo",
+    "author" : "BrowseInfo",
     "description": """
 
     """,

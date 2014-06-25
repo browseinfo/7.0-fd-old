@@ -14,7 +14,7 @@
     'description': """
 
     """,
-    'author': 'browseinfo',
+    'author': 'BrowseInfo',
     'website': 'http://www.browseinfo.in',
     'images': [],
     'depends': ['account','company_extended'],
