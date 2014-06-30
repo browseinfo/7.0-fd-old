@@ -90,6 +90,7 @@ class sale_order(osv.Model):
             'company_id': order.company_id.id,
             'user_id': order.user_id and order.user_id.id or False,
             'branch_id': order.branch_id.id,
+            'custom_invoice_no': order.invoice_no or ''
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1

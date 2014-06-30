@@ -1,19 +1,18 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
   <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
-    <pageTemplate id="first">
-      <frame id="first" x1="57.0" y1="57.0" width="500" height="750"/>
-         <stylesheet>
-            <!-- Set here the default font to use for all <para> tags -->
-            <paraStyle name='Normal' fontName="DejaVu Sans"/>
+	<pageTemplate>
+		<frame id="first" x1="1.3cm" y1="5.0cm" height="22.0cm" width="19.0cm"/>
+		<stylesheet> <!-- Set here the default font to use for all <para> tags --> 
+			<paraStyle name='Normal' fontName="DejaVu Sans"/>
             <paraStyle name="main_footer" fontSize="7.0" alignment="RIGHT"/>
             <paraStyle name="main_footer1" fontSize="6.0" alignment="LEFT"/>
             <paraStyle name="company_name" fontSize="16.0" alignment="CENTER"/>
             <paraStyle name="company_address" fontSize="8.0" alignment="CENTER"/>
-            <paraStyle name="main_header" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-         </stylesheet>
-         <pageGraphics>
-         	<image x="0.7cm" y="27.5cm" height="30.0" >[[ company.logo or removeParentNode('image') ]]</image>
+            <paraStyle name="main_header" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/> 
+		</stylesheet> 
+		<pageGraphics> <!-- Set here the default font to use for all <drawString> tags --> 
+			<image x="2.0cm" y="27.0cm" height="50.0" >[[ company.logo or removeParentNode('image') ]]</image>
          	<place x="1.0cm" y="23.4cm" height="5.55cm" width="20.0cm">
  				<para style="company_name"><b>[[ company.name ]]</b></para>
  				<para><font color="white"> </font></para>
@@ -21,13 +20,14 @@
  				<para style="company_address">[[ company.street2 ]] [[ company.city ]] [[ company.country_id.name ]]</para>
  				<para style="company_address">Tele. [[ company.phone ]] Fax. [[ company.city ]]</para>
          	</place>
-         	<place x="9.0cm" y="3.5cm" height="0.5cm" width="8.0cm">
+         	<lines>1.3cm 26.9cm 20cm 26.9cm</lines>
+         	<place x="9.0cm" y="2.5cm" height="0.5cm" width="8.0cm">
          		<para style="main_footer"> GB PT.INDUSTRI INDONESIA</para>
          	</place>
-         	<place x="2.0cm" y="3.5cm" height="0.5cm" width="8.0cm">
+         	<place x="2.0cm" y="2.5cm" height="0.5cm" width="8.0cm">
          		<para style="main_footer1">I confirm that the above goods mentioned were received in</para>
          	</place>
-         	<place x="2.0cm" y="3.2cm" height="0.5cm" width="8.0cm">
+         	<place x="2.0cm" y="2.2cm" height="0.5cm" width="8.0cm">
          		<para style="main_footer1">good condition.</para>
          	</place>
          	<place x="10.2cm" y="1.0cm" height="0.5cm" width="8.0cm">
@@ -38,9 +38,9 @@
          	</place>
          	<place x="0.0cm" y="0.6cm" height="0.5cm" width="8.0cm">
          		<para style="main_footer">Customer Signature and Official Stamp<font color="white">.........</font></para>
-         	</place>
-         </pageGraphics>        
-    </pageTemplate>
+         	</place> 
+		</pageGraphics> 
+	</pageTemplate>
   </template>
   <stylesheet>
     <blockTableStyle id="Standard_Outline">
@@ -151,6 +151,7 @@
     <images/>
   </stylesheet>
   <story>
+  <pto>
   	<para style="terp_default_81"><font color="white"> </font></para>
   	<para style="terp_default_81"><font color="white"> </font></para>
   	<para style="terp_default_81"><font color="white"> </font></para>
@@ -161,6 +162,18 @@
   	<para style="terp_default_81"><font color="white"> </font></para>
   	<para style="terp_default_81"><font color="white"> </font></para>
   	<para style="P9">[[repeatIn(objects,'o')]] [[ setLang(o.partner_id.lang) ]]</para>
+  	<pto_header>
+  		<blockTable colWidths="115.0,115.0,100.0,60.0,70.0,80.0" style="Table4" repeatRows="1">
+		  	<tr>
+		  		<td><para style="terp_default_8"><b>Customer Part No.</b></para></td>
+		  		<td><para style="terp_default_8"><b>Customer Part Name</b></para></td>
+		  		<td><para style="terp_default_8"><b>Customer PO No.</b></para></td>
+		  		<td><para style="terp_default_821"><b>Qty</b></para></td>
+		  		<td><para style="terp_default_821"><b>Unit Price</b></para></td>
+		  		<td><para style="terp_default_821"><b>Amount</b></para></td>
+		  	</tr>
+  	</blockTable>
+  	</pto_header>
   	<blockTable colWidths="330.0,80.0,130.0" rowHeights="10,10,10,10,10,10,10">
   		<tr>
   			<td><para style="terp_default_8">[[ o.partner_id.name or ' ' ]] </para></td>
@@ -169,26 +182,26 @@
   		</tr>
   		<tr>
   			<td><para style="terp_default_8">[[ o.partner_id.street or ' ' ]] </para></td>  			
-  			<td><para style="terp_default_81"><font color="white"> </font></para></td>
-  			<td><para style="terp_default_81"><font color="white"> </font></para></td>
+  			<td><para style="terp_default_8">Invoice Date</para></td>
+  			<td><para style="terp_default_8">: [[ formatLang(o.date_invoice , date=True) ]]</para></td>
   		</tr>
   		<tr>
   			<td><para style="terp_default_8">[[ o.partner_id.company_id.name or ' ' ]]</para></td>  			
-  			<td><para style="terp_default_8">Invoice Date</para></td>
-  			<td><para style="terp_default_8">: [[ formatLang(o.date_invoice , date=True) ]]</para></td>
+  			<td><para style="terp_default_8">Currency</para></td>
+  			<td><para style="terp_default_8">: [[ o.currency_id.name or ' ' ]] [[ o.currency_id.symbol or ' ' ]] </para></td>
   		</tr>
   		<tr>
   			<td>
   				<para style="terp_default_8">[[ o.partner_id.city or ' ' ]]  [[ o.partner_id.zip or ' ' ]] 
   				</para>
   			</td>
-  			<td><para style="terp_default_8">Currency</para></td>
-  			<td><para style="terp_default_8">: [[ o.currency_id.name or ' ' ]] [[ o.currency_id.symbol or ' ' ]] </para></td>
+  			<td><para style="terp_default_8">Payment Term</para></td>
+  			<td><para style="terp_default_8">: [[ o.payment_term.name or ' ' ]]</para></td>
   		</tr>
   		<tr>
   			<td><para style="terp_default_81"><font color="white"> </font></para></td>
-  			<td><para style="terp_default_8">Payment Term</para></td>
-  			<td><para style="terp_default_8">: [[ o.payment_term.name or ' ' ]]</para></td>
+  			<td><para style="terp_default_81"><font color="white"> </font></para></td>
+  			<td><para style="terp_default_81"><font color="white"> </font></para></td>
   		</tr>
   		<tr>
   			<td><para style="terp_default_81"><font color="white"> </font></para></td>
@@ -204,7 +217,7 @@
   	</blockTable>
   	<para style="terp_default_81"><font color="white"> </font></para>
   	<para style="terp_default_81"><font color="white"> </font></para>
-  	<blockTable colWidths="115.0,115.0,100.0,60.0,70.0,80.0" style="Table4">
+  	<blockTable colWidths="115.0,115.0,100.0,60.0,70.0,80.0" style="Table4" repeatRows="1">
 	  	<tr>
 	  		<td><para style="terp_default_8"><b>Customer Part No.</b></para></td>
 	  		<td><para style="terp_default_8"><b>Customer Part Name</b></para></td>
@@ -235,7 +248,6 @@
 	  		<td><para style="terp_default_831"><b>[[ o.amount_total or ' ' ]]</b></para></td>
 	  	</tr>
   	</blockTable>
-  	
-  	
+  </pto>
   </story>
 </document>
