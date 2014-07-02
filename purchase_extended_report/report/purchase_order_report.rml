@@ -203,15 +203,28 @@
     <images/>
   </stylesheet>
   <story>
-  	<para style="P26"><font color="white"> </font></para>
-  	<para style="P26"><font color="white"> </font></para>
-  	<para style="P26"><font color="white"> </font></para>
-  	<para style="P26"><font color="white"> </font></para>
-  	<para style="P26"><font color="white"> </font></para>
-  	<para style="P26"><font color="white"> </font></para>
-  	<para style="P26"><font color="white"> </font></para>
-    <para style="P9">[[repeatIn(objects,'o')]]</para>
+  	<pto>
+  	<para style="P9">[[repeatIn(objects,'o')]]</para>
     <para style="P9">[[ setLang(o.partner_id.lang) ]]</para>
+    <pto_header>
+    	<para><font color="white">.</font></para>
+  		<para><font color="white">.</font></para>
+  		<blockTable colWidths="40.0,63.0,151.0,49.0,68.0,42.0,54.0,67.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
+		  <tr>
+		    <td><para style="terp_default_8"><b>No.</b></para></td>
+		    <td><para style="terp_default_8"><b>PO No.</b></para></td>
+		    <td><para style="terp_default_8"><b>Description</b></para></td>
+		    <td><para style="terp_default_8"><b>U/M</b></para></td>
+		    <td><para style="terp_default_18"><b>Delivery Date</b></para></td>
+		    <td><para style="P5"><b>Qty</b></para></td>
+		    <td><para style="terp_default_18"><b>Unit Price</b></para></td>
+		    <td><para style="P5"><b>Amount</b></para></td>
+		  </tr>
+		</blockTable>
+    </pto_header>
+  	<para style="P26"><font color="white"> </font></para>
+  	<para style="P26"><font color="white"> </font></para>
+  	<para style="P26"><font color="white"> </font></para>
     <para style="P9">
       <font color="white"> </font>
     </para>
@@ -341,5 +354,6 @@
     <para style="P16">
       <font color="white"> </font>
     </para>
+  </pto>
   </story>
 </document>

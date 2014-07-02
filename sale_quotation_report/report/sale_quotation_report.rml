@@ -139,13 +139,32 @@
     <images/>
   </stylesheet>
   <story>
-  	<para><font color="white"> </font></para>
-  	<para><font color="white"> </font></para>
-  	<para><font color="white"> </font></para>
-  	<para><font color="white"> </font></para>
-  	<para><font color="white"> </font></para>
-  	<para><font color="white"> </font></para>
+  	<pto>
   	<para style="P9">[[repeatIn(objects,'o')]] [[ setLang(o.partner_id.lang) ]]</para>
+  	<pto_header>
+  		<para><font color="white"> </font></para>
+  		<para><font color="white"> </font></para>
+  		<blockTable colWidths="50.0,100.0,180.0,100.0,100.0" style="Table4">
+	  		<tr>
+	  			<td><para style="terp_default_8_left"><b>No.</b></para></td>
+	  			<td>
+	  				<para style="terp_default_8_left"><b>ITEM NUMBER</b></para>
+	  			</td>
+	  			<td>
+	  				<para style="terp_default_8_left"><b>ITEM DESCRIPTION</b></para>
+	  			</td>
+	  			<td>
+	  				<para style="terp_default_8_right_1"><b>MOQ (Pcs)</b></para>
+	  			</td>
+	  			<td>
+	  				<para style="terp_default_8_right_1"><b>Unit Price</b></para>
+	  			</td>
+	  		</tr>
+	  	</blockTable>
+  	</pto_header>
+  	<para><font color="white"> </font></para>
+  	<para><font color="white"> </font></para>
+  	<para><font color="white"> </font></para>
   	<blockTable colWidths="60.0,300.0,80.0,100.0">
   		<tr>
   			<td><para style="terp_default_8">Ref. No.</para></td>
@@ -282,5 +301,6 @@
   			<td><para style="terp_default_8">: [[ o.note or '']] </para></td>
   		</tr>
   	</blockTable>
+  </pto>
   </story>
 </document>

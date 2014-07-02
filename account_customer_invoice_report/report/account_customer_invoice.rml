@@ -20,7 +20,7 @@
  				<para style="company_address">[[ company.street2 ]] [[ company.city ]] [[ company.country_id.name ]]</para>
  				<para style="company_address">Tele. [[ company.phone ]] Fax. [[ company.city ]]</para>
          	</place>
-         	<lines>1.3cm 26.9cm 20cm 26.9cm</lines>
+         	<lines>1.3cm 26.9cm 20.5cm 26.9cm</lines>
          	<place x="9.0cm" y="2.5cm" height="0.5cm" width="8.0cm">
          		<para style="main_footer"> GB PT.INDUSTRI INDONESIA</para>
          	</place>
@@ -156,13 +156,10 @@
   	<para style="terp_default_81"><font color="white"> </font></para>
   	<para style="terp_default_81"><font color="white"> </font></para>
   	<para style="terp_default_81"><font color="white"> </font></para>
-  	<para style="terp_default_81"><font color="white"> </font></para>
-  	<para style="terp_default_81"><font color="white"> </font></para>
-  	<para style="terp_default_81"><font color="white"> </font></para>
-  	<para style="terp_default_81"><font color="white"> </font></para>
-  	<para style="terp_default_81"><font color="white"> </font></para>
   	<para style="P9">[[repeatIn(objects,'o')]] [[ setLang(o.partner_id.lang) ]]</para>
   	<pto_header>
+  		<para style="terp_default_81"><font color="white">.</font></para>
+  		<para style="terp_default_81"><font color="white">.</font></para>
   		<blockTable colWidths="115.0,115.0,100.0,60.0,70.0,80.0" style="Table4" repeatRows="1">
 		  	<tr>
 		  		<td><para style="terp_default_8"><b>Customer Part No.</b></para></td>
