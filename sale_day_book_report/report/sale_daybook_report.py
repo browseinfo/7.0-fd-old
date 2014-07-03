@@ -39,16 +39,11 @@ class sale_day_book_report(report_sxw.rml_parse):
         self.grand_total = dict.fromkeys([cat.id for cat in self.categ], 0)
 
     def _get_categ(self):
-        print"\n\nself=>",self
         cat_pool = self.pool.get('product.category')
         cat_list = []
-        print "\ncat_pool.search(self.cr, self.uid, []):==>",cat_pool.search(self.cr, self.uid, [])
         for categ_id in cat_pool.search(self.cr, self.uid, []):
-            print "\ncateg_id==>",categ_id
-            print "\ncat_pool.browse(self.cr, self.uid, categ_id)",cat_pool.browse(self.cr, self.uid, categ_id)
             cat_list.append(cat_pool.browse(self.cr, self.uid, categ_id))
         self.categ = cat_list
-        print "\ncat_list",cat_list
         return cat_list
 
     def _sale_details(self, obj):
@@ -85,6 +80,6 @@ class sale_day_book_report(report_sxw.rml_parse):
     def _get_grand_total(self, cat_id): 
         total = self.grand_total[cat_id]
         return total
-report_sxw.report_sxw('report.sale.day.book', 'sale.day.book.wizard', 'addons/sale_day_book_report/report/sale_daybook_report.mako', parser=sale_day_book_report, header="internal landscape")
+report_sxw.report_sxw('report.sale.day.book', 'sale.day.book.wizard', 'addons/sale_day_book_report/report/sale_daybook_report.mako', parser=sale_day_book_report, header=False)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

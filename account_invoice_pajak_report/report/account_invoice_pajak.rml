@@ -87,6 +87,11 @@
       <lineStyle kind="LINEAFTER" colorName="#000000" start="0,1" stop="0,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,1" stop="5,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="5,1" stop="5,1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,1" stop="6,-1"/>
       <lineStyle kind="LINEAFTER" colorName="#000000" start="6,1" stop="6,-1"/>
@@ -315,6 +320,73 @@
     <images/>
   </stylesheet>
   <story>
+  	<pto>
+  		<pto_header>
+  			<blockTable colWidths="32.0,21.0,262.0,2.0,2.0,109.0,102.0" style="Table14">
+			  <tr>
+				<td>
+				  <para style="P4">No. Urut</para>
+				</td>
+				<td>
+				  <para style="P15">
+				    <font color="white"> </font>
+				  </para>
+				</td>
+				<td>
+				  <para style="P5">Nama Barang Kena Pajak/ Jasa Kena Pajak</para>
+				</td>
+				<td>
+				  <para style="P15">
+				    <font color="white"> </font>
+				  </para>
+				</td>
+				<td>
+				  <para style="P15">
+				    <font color="white"> </font>
+				  </para>
+				</td>
+				<td>
+				  <para style="P6">Harga Jual/Penggantian</para>
+				</td>
+				<td>
+				  <para style="P6">/Unag Muka/Termijn</para>
+				</td>
+			  </tr>
+			  <tr>
+				<td>
+				  <para style="P15">
+				    <font color="white"> </font>
+				  </para>
+				</td>
+				<td>
+				  <para style="P15">
+				    <font color="white"> </font>
+				  </para>
+				</td>
+				<td>
+				  <para style="P15">
+				    <font color="white"> </font>
+				  </para>
+				</td>
+				<td>
+				  <para style="P15">
+				    <font color="white"> </font>
+				  </para>
+				</td>
+				<td>
+				  <para style="P15">
+				    <font color="white"> </font>
+				  </para>
+				</td>
+				<td>
+				  <para style="P5">Valas * )</para>
+				</td>
+				<td>
+				  <para style="P5">(RP)</para>
+				</td>
+			  </tr>
+			</blockTable>
+  		</pto_header>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
     <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
     <para style="P16">FAKTUR PAJAK</para>
@@ -870,5 +942,6 @@
     <para style="P2">penggantian/pembetulan Faktur Pajak maka kurs yang digunakan adalah kurs pada</para>
     <para style="P2">tanggal pertama kali Faktur Pajak dibuat</para>
     <para style="P2">**) Coret yang tidak perlu</para>
+  </pto>
   </story>
 </document>

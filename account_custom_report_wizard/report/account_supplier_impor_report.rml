@@ -365,6 +365,35 @@
       	<pto_header>
         	<spacer length="1.5cm" />
         	<para><font color="white">. </font></para>
+        	<blockTable colWidths="25.0,125.0,60.0,45.0,40.0,60.0,60.0,85.0,80.0,100.0,160.0" style="Table4">
+				<tr>
+					<td><para style="terp_default_81"><b>NO URUT</b></para></td>
+					<td><para style="terp_default_81"><b>URAIAN BARANG</b></para></td>
+					<td><para style="terp_default_81"><b>POS TARIF (10 DIGIT)</b></para></td>
+					<td><para style="terp_default_81"><b>VOLUME</b></para></td>
+					<td><para style="terp_default_81"><b>SATUAN</b></para></td>
+					<td><para style="terp_default_81"><b>HARGA SATUAN</b></para></td>
+					<td><para style="terp_default_81"><b>NILAI IMPOR</b></para></td>
+					<td><para style="terp_default_81"><b>NEGARA ASAL</b></para></td>
+					<td><para style="terp_default_81"><b>PELABUHAN BONGKAR</b></para></td>
+					<td><para style="terp_default_81"><b>L/S</b></para>
+						<blockTable colWidths="45.0,45.0"  style="Table41">
+							<tr>
+								<td><para style="terp_default_81"><b>NOMOR</b></para></td>
+								<td><para style="terp_default_81"><b>TANGGAL</b></para></td>
+							</tr>
+						</blockTable>
+					</td>
+					<td><para style="terp_default_81"><b>INVOICE</b></para>
+						<blockTable colWidths="75.0,75.0"  style="Table41">
+							<tr>
+								<td><para style="terp_default_81"><b>NOMOR</b></para></td>
+								<td><para style="terp_default_81"><b>TANGGAL</b></para></td>
+							</tr>
+						</blockTable>
+					</td>
+				</tr>
+			</blockTable>
       	</pto_header>
 		<blockTable colWidths="300.0,500.0">
 			<tr>

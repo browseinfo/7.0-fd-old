@@ -41,7 +41,7 @@
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <!--lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/-->
       <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
@@ -52,10 +52,8 @@
       <lineStyle kind="LINEBEFORE" colorName="#000000" start="8,0" stop="8,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#000000" start="9,0" stop="9,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#000000" start="10,0" stop="10,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="11,0" stop="11,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="12,0" stop="12,-1"/>
       
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <!--lineStyle kind="LINEBEFORE" colorName="#000000" start="0,-1" stop="0,-1"/-->
       <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,-1" stop="3,-1"/>
@@ -66,8 +64,6 @@
       <lineStyle kind="LINEBEFORE" colorName="#000000" start="8,-1" stop="8,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#000000" start="9,-1" stop="9,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#000000" start="10,-1" stop="10,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="11,-1" stop="11,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#000000" start="12,-1" stop="12,-1"/>
       
       <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
@@ -135,9 +131,7 @@
       <lineStyle kind="LINEAFTER" colorName="#000000" start="7,0" stop="7,-1"/>
       <lineStyle kind="LINEAFTER" colorName="#000000" start="8,0" stop="8,-1"/>
       <lineStyle kind="LINEAFTER" colorName="#000000" start="9,0" stop="9,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#000000" start="10,0" stop="10,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#000000" start="11,0" stop="11,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#000000" start="12,0" stop="12,-1"/>
+      <!--lineStyle kind="LINEAFTER" colorName="#000000" start="10,0" stop="10,-1"/-->
       
       <lineStyle kind="LINEAFTER" colorName="#000000" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEAFTER" colorName="#000000" start="1,-1" stop="1,-1"/>
@@ -149,13 +143,128 @@
       <lineStyle kind="LINEAFTER" colorName="#000000" start="7,-1" stop="7,-1"/>
       <lineStyle kind="LINEAFTER" colorName="#000000" start="8,-1" stop="8,-1"/>
       <lineStyle kind="LINEAFTER" colorName="#000000" start="9,-1" stop="9,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#000000" start="10,-1" stop="10,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#000000" start="11,-1" stop="11,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#000000" start="12,-1" stop="12,-1"/>
+      <!--lineStyle kind="LINEAFTER" colorName="#000000" start="10,-1" stop="10,-1"/-->
       
     </blockTableStyle>
     
+    <blockTableStyle id="Table45">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,0" stop="2,-1"/>      
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="6,0" stop="6,-1"/>      
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="8,0" stop="8,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="9,0" stop="9,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="10,0" stop="10,-1"/>      
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="11,0" stop="11,-1"/>      
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="12,0" stop="12,-1"/>
+      
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>      
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="6,-1" stop="6,-1"/>      
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="7,-1" stop="7,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="8,-1" stop="8,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="9,-1" stop="9,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="10,-1" stop="10,-1"/>      
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="11,-1" stop="11,-1"/>      
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="12,-1" stop="12,-1"/>      
+    </blockTableStyle>
     
+    <blockTableStyle id="Table46">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      
+      <!--lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/-->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="8,0" stop="8,-1"/>
+      
+      <!--lineStyle kind="LINEBEFORE" colorName="#000000" start="0,-1" stop="0,-1"/-->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,-1" stop="7,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="8,-1" stop="8,-1"/>
+      
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="8,0" stop="8,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="9,0" stop="9,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="10,0" stop="10,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="11,0" stop="11,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="12,0" stop="12,0"/>
+      
+       <lineStyle kind="LINEABOVE" colorName="#000000" start="0,-1" stop="0,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,-1" stop="1,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,-1" stop="2,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,-1" stop="3,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,-1" stop="4,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,-1" stop="5,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,-1" stop="6,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,-1" stop="7,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="8,-1" stop="8,0"/>
+            
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,0" stop="2,-1"/>      
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="6,0" stop="6,-1"/>      
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="8,0" stop="8,-1"/>
+      
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>      
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/>      
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="7,-1" stop="7,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="8,-1" stop="8,-1"/>
+      
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="7,0" stop="7,-1"/>
+      
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="7,-1" stop="7,-1"/>
+    </blockTableStyle>
     
     <blockTableStyle id="Table5">
       <blockAlignment value="LEFT"/>
@@ -216,12 +325,13 @@
     <paraStyle name="Index" fontName="Helvetica"/>
     <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="si_text" fontName="Helvetica-Bold" fontSize="12.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/> 
-    <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="6.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_80" fontName="Helvetica" fontSize="7.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_81" fontName="Helvetica-Bold" fontSize="6.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>    
-    <paraStyle name="terp_default_82" fontName="Helvetica" fontSize="7.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_83" fontName="Helvetica" fontSize="7.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_831" fontName="Helvetica" fontSize="7.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="9.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_80" fontName="Helvetica" fontSize="9.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_81" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_810" fontName="Helvetica" fontSize="10.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>    
+    <paraStyle name="terp_default_82" fontName="Helvetica" fontSize="9.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_83" fontName="Helvetica" fontSize="9.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_831" fontName="Helvetica" fontSize="9.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -255,8 +365,37 @@
       	<pto_header>
         	<spacer length="1.5cm" />
         	<para><font color="white">. </font></para>
+        	<blockTable colWidths="25.0,125.0,60.0,45.0,40.0,60.0,60.0,85.0,80.0,100.0,160.0" style="Table4">
+				<tr>
+					<td><para style="terp_default_81"><b>NO URUT</b></para></td>
+					<td><para style="terp_default_81"><b>URAIAN BARANG</b></para></td>
+					<td><para style="terp_default_81"><b>POS TARIF (10 DIGIT)</b></para></td>
+					<td><para style="terp_default_81"><b>VOLUME</b></para></td>
+					<td><para style="terp_default_81"><b>SATUAN</b></para></td>
+					<td><para style="terp_default_81"><b>HARGA SATUAN</b></para></td>
+					<td><para style="terp_default_81"><b>NILAI IMPOR</b></para></td>
+					<td><para style="terp_default_81"><b>NEGARA ASAL</b></para></td>
+					<td><para style="terp_default_81"><b>PELABUHAN BONGKAR</b></para></td>
+					<td><para style="terp_default_81"><b>L/S</b></para>
+						<blockTable colWidths="45.0,45.0"  style="Table41">
+							<tr>
+								<td><para style="terp_default_81"><b>NOMOR</b></para></td>
+								<td><para style="terp_default_81"><b>TANGGAL</b></para></td>
+							</tr>
+						</blockTable>
+					</td>
+					<td><para style="terp_default_81"><b>INVOICE</b></para>
+						<blockTable colWidths="75.0,75.0"  style="Table41">
+							<tr>
+								<td><para style="terp_default_81"><b>NOMOR</b></para></td>
+								<td><para style="terp_default_81"><b>TANGGAL</b></para></td>
+							</tr>
+						</blockTable>
+					</td>
+				</tr>
+			</blockTable>
       	</pto_header>
-		<blockTable colWidths="270.0,330.0">
+		<blockTable colWidths="300.0,500.0">
 			<tr>
 				<td>
 					<para style="terp_default_8"><font color="white"> </font></para>
@@ -276,18 +415,19 @@
 				</td>
 			</tr>
 		</blockTable>
+		<para style="terp_default_8"><font color="white"> </font></para>
 		<blockTable>
 			<tr>
 				<td>
-					<para style="terp_default_81"><b>BENTUK LAPORAN REALISASI IMPOR API</b></para>
+					<para style="terp_default_810">BENTUK LAPORAN REALISASI IMPOR API</para>
 				</td>
 			</tr>
 		</blockTable>	
 		<blockTable>
 			<tr>			
 				<td>
-					<para style="terp_default_81"><b>[[data['form']['branch_id'][1] ]]</b></para>
-					<para style="terp_default_81"><b>[[get_address(data['form']['branch_id'][0]) ]]</b></para>
+					<para style="terp_default_810">[[data['form']['branch_id'][1] ]]</para>
+					<para style="terp_default_810">[[get_address(data['form']['branch_id'][0]) ]]</para>
 				</td>
 			</tr>
 		</blockTable>
@@ -296,26 +436,29 @@
 				<td>
 					<para style="terp_default_8"><font color="white"> </font></para>
 					<para style="terp_default_8"><font color="white"> </font></para>
-					<para style="terp_default_81"><b>LAPORAN REALISASI IMPOR( [[ get_branch_code( data['form']['branch_id'][0] ) ]] ) BERDASARKAN ANGKA PENGENAL IMPORTIR(API)</b></para>
-					<para style="terp_default_81"><b>[[get_licence(data['form']['branch_id'][0]) ]] TGL: [[get_licence_date(data['form']['branch_id'][0]) ]]</b></para>
-					<para style="terp_default_81"><b>PERIODE:  [[ get_month(data['form']['start_date']) ]] [[ get_end_month(data['form']['end_date']) ]]</b></para>
+					<para style="terp_default_810">LAPORAN REALISASI IMPOR( [[ get_branch_code( data['form']['branch_id'][0] ) ]] ) BERDASARKAN ANGKA PENGENAL IMPORTIR(API)</para>
+					<para style="terp_default_8"><font color="white"> </font></para>
+					<para style="terp_default_810">[[get_licence(data['form']['branch_id'][0]) ]] TGL: [[get_licence_date(data['form']['branch_id'][0]) ]]</para>
+					<para style="terp_default_8"><font color="white"> </font></para>
+					<para style="terp_default_810">PERIODE:  [[ get_month(data['form']['start_date']) ]] [[ get_end_month(data['form']['end_date']) ]]</para>
 					<para style="terp_default_8"><font color="white"> </font></para>
 				</td>
 			</tr>
 		</blockTable>
-		<blockTable colWidths="25.0,130.0,60.0,45.0,35.0,60.0,60.0,85.0,80.0,100.0,160.0" style="Table4">
+		<para style="terp_default_8"><font color="white"> </font></para>
+		<blockTable colWidths="25.0,125.0,60.0,45.0,40.0,60.0,60.0,85.0,80.0,100.0,160.0" style="Table4">
 			<tr>
 				<td><para style="terp_default_81"><b>NO URUT</b></para></td>
 				<td><para style="terp_default_81"><b>URAIAN BARANG</b></para></td>
 				<td><para style="terp_default_81"><b>POS TARIF (10 DIGIT)</b></para></td>
 				<td><para style="terp_default_81"><b>VOLUME</b></para></td>
 				<td><para style="terp_default_81"><b>SATUAN</b></para></td>
-				<td><para style="terp_default_81"><b>HARGA SATUAN(USD)</b></para></td>
-				<td><para style="terp_default_81"><b>NILAI IMPOR(USD)</b></para></td>
+				<td><para style="terp_default_81"><b>HARGA SATUAN</b></para></td>
+				<td><para style="terp_default_81"><b>NILAI IMPOR</b></para></td>
 				<td><para style="terp_default_81"><b>NEGARA ASAL</b></para></td>
 				<td><para style="terp_default_81"><b>PELABUHAN BONGKAR</b></para></td>
 				<td><para style="terp_default_81"><b>L/S</b></para>
-					<blockTable  style="Table41">
+					<blockTable colWidths="45.0,45.0"  style="Table41">
 						<tr>
 							<td><para style="terp_default_81"><b>NOMOR</b></para></td>
 							<td><para style="terp_default_81"><b>TANGGAL</b></para></td>
@@ -323,7 +466,7 @@
 					</blockTable>
 				</td>
 				<td><para style="terp_default_81"><b>INVOICE</b></para>
-					<blockTable  style="Table41">
+					<blockTable colWidths="75.0,75.0"  style="Table41">
 						<tr>
 							<td><para style="terp_default_81"><b>NOMOR</b></para></td>
 							<td><para style="terp_default_81"><b>TANGGAL</b></para></td>
@@ -334,7 +477,7 @@
 		</blockTable>
 		<section>
 			<para style="P9"> [[ repeatIn(get_invoice_ids(data['form']),'o') ]] <font color="white">[[ set_index() ]]</font></para>
-			<blockTable colWidths="25.0,130.0,60.0,45.0,35.0,60.0,60.0,85.0,80.0,50.0,50.0,80.0,80.0" style="Table4">	
+			<blockTable colWidths="25.0,125.0,60.0,45.0,40.0,60.0,60.0,85.0,80.0,50.0,50.0,80.0,80.0" style="Table45">	
 			
 				<tr><para style="P9">[[ repeatIn(o.invoice_line,'line') ]]</para>
 					<td><para style="terp_default_82">[[ get_index() ]]</para></td>
@@ -356,7 +499,7 @@
 				<tr></tr>
 			</blockTable>
 		</section>
-		<blockTable colWidths="295.0,60.0,60.0,85.0,80.0,50.0,50.0,80.0,80.0" style="Table4">	
+		<blockTable colWidths="295.0,60.0,60.0,85.0,80.0,50.0,50.0,80.0,80.0" style="Table46">	
 			<tr>
 				<td><para style="terp_default_81"><b>JUMLAH TOTAL</b></para></td>
 				<td><para style="terp_default_8"><font color="white"> </font></para></td>
@@ -372,7 +515,7 @@
 		<para style="terp_default_8"><font color="white"> </font></para>
 		<para style="terp_default_8"><font color="white"> </font></para>
 		<para style="terp_default_8"><font color="white"> </font></para>
-		<blockTable colWidths="460.0,380.0">	
+		<blockTable colWidths="600.0,240.0">	
 			<tr>
 				<td><para style="terp_default_8"><font color="white"> </font></para></td>
 				<td><para style="terp_default_8"><b>PT.FD INDUSTRI INDONESIA</b></para>

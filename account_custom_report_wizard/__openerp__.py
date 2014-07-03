@@ -24,7 +24,7 @@
     'name' : "Account Custom Report Wizard",
 	'version' : "1.0",
 	'author' : "BrowseInfo",
-	'description' : 'This module for CONTOH EKSPOR REPORT and CONTOH IMPOR REPORT ',
+	'description' : 'This module to print CONTOH EKSPOR REPORT and CONTOH IMPOR REPORT ',
 	'category' : "Account Custom Report Wizard",
 	'depends' : ['account','company_extended', 'report_webkit'],
 	'website': 'http://www.browseinfo.in',

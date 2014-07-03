@@ -10,7 +10,7 @@
     'name' : "Sales Day Book Report",
 	'version' : "7.0",
 	'author' : "BrowseInfo",
-	'description' : 'This module for Sales Day Book Report',
+	'description' : 'This module help to print Sales Day Book Report',
 	'depends' : ['sale','company_extended','invoice_custom','report_webkit','sale_day_book_report'],
 	'website': 'http://www.browseinfo.in',
 	'data' : ['wizard/sales_daybook_report_wizard_view.xml',

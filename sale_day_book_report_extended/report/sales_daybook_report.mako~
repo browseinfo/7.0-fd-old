@@ -33,15 +33,15 @@
 	<h2>PT Sales Day Book as at ${ get_month(data['form']['start_date']) } </h2>
 	</br>
 		<table width="220%">
-			<th width="8%">DATE</th><th width="10%">INVOICE NUMBER</th><th width="10%">AREA</th>
-			<th width="14%">CUSTOMER</th><th width="20%">DESCRIPTION</th><th width="6%">CURRENCY</th><th width="7%">TOTAL</th>
+			<th width="8%">DATE</th><th width="10%">INVOICE NUMBER</th><th width="6%">AREA</th>
+			<th width="16%">CUSTOMER</th><th width="22%">DESCRIPTION</th><th width="6%">CURRENCY</th><th width="7%">TOTAL</th>
 			<th width="7%">RATE</th><th width="8%">DPP PPN</th><th width="10%">NO SERI FAKTUR PAJAK</th>
 			%for o in get_invoice_ids(data['form']):
 				%for line in o.invoice_line:
 					<tr>
 						<td style="text-align:center;" > ${ get_formate_date(o.date_invoice) } </td>
 						<td style="text-align:center;"> ${ o.number or '' } </td>
-						<td style="text-align:center;"> ${ o.branch_id.name or '' } </td>
+						<td style="text-align:center;"> ${ o.branch_id.branch_code or '' } </td>
 						<td style="text-align:left;"> ${ o.partner_id.name or '' } </td>
 						<td style="text-align:left;"> ${ line.name or '' } </td>
 						<td style="text-align:center;"> ${ o.currency_id.name or '' }  

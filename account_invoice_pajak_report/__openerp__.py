@@ -25,7 +25,7 @@
     "depends" : ['account', 'invoice_custom'],
     "author" : "BrowseInfo",
     "description": """
-
+        
     """,
 
     "website" : "www.browseinfo.in",

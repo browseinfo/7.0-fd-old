@@ -24,7 +24,7 @@
 	'author' : "BrowseInfo",
 	'description' : 'Stock Inventory in-out Report',
 	'category' : "Stock",
-	'depends' : ['product','stock', 'report_webkit','product_extended','company_extended'],
+	'depends' : ['product','stock', 'report_webkit','product_extended','company_extended','account'],
 	'website': 'http://www.browseinfo.in',
 	'data' : ['wizard/stock_inventory_in_out_wizard_view.xml',
 				'stock_inventory_in_out_report.xml',

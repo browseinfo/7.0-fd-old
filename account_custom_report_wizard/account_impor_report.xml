@@ -7,7 +7,7 @@
         	model="account.report.wizard" 
         	name="account.supplier.invoice.report"
             rml="account_custom_report_wizard/report/account_supplier_impor_report.rml" 
-            string="Cntoh Impor Report" 
+            string="CONTOH IMPOR REPORT" 
             header="False" />
                 
                 
@@ -17,18 +17,8 @@
 			model="account.ekspor.report.wizard" 
 			name="account.customer.invoice.report"
             rml="account_custom_report_wizard/report/account_customer_impor_report.rml" 
-            string="Cntoh EKSPOR Report" 
+            string="CONTOH EKSPOR REPORT" 
             header="False" />
-            
-       <report id="report_account_customer_invoice_month"
-            name="account.invoice.month.report"
-            auto="False"
-            model="account.monthly.report.wizard"
-            file="account_custom_report_wizard/report/account_month_report.mako"
-            string="LAPORAN BULANAN GB"
-	    	header="False"
-            webkit_header="account_custom_report_wizard.ir_header_webkit_base_account_invoice"
-            report_type="webkit"/>
             
     </data>
 </openerp>

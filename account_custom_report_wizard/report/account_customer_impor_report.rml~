@@ -277,6 +277,28 @@
       	<pto_header>
         	<spacer length="1.5cm" />
         	<para><font color="white">. </font></para>
+        	<blockTable colWidths="25.0,150.0,60.0,40.0,40.0,60.0,170.0,100.0,40.0,60.0,95.0" style="Table4">
+				<tr>
+					<td><para style="terp_default_81"><b>NO URUT</b></para></td>
+					<td><para style="terp_default_81"><b>TUJUAN EKSPOR</b></para></td>
+					<td><para style="terp_default_81"><b>NEGARA ASAL</b></para></td>
+					<td><para style="terp_default_81"><b>NO NPE</b></para></td>
+					<td><para style="terp_default_81"><b>NO PEB</b></para></td>
+					<td><para style="terp_default_81"><b>TANGGAL</b></para></td>
+					<td><para style="terp_default_81"><b>JENIS KOMODITI</b></para></td>
+					<td><para style="terp_default_81"><b>VOLUME</b></para>
+						<blockTable  style="Table41">
+							<tr>
+								<td><para style="terp_default_81"><b>JUMLAH</b></para></td>
+								<td><para style="terp_default_81"><b>SATUAN</b></para></td>
+							</tr>
+						</blockTable>
+					</td>
+					<td><para style="terp_default_81"><b>KGM</b></para></td>
+					<td><para style="terp_default_81"><b>AMOUNT</b></para></td>
+					<td><para style="terp_default_81"><b>KETERANGAN</b></para></td>												
+				</tr>
+			</blockTable>
       	</pto_header>		
 		<blockTable>
 			<tr>

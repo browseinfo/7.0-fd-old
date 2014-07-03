@@ -36,10 +36,10 @@
             <field name="multi">True</field>
         </record>
         
-		
+		<menuitem id="menu_account_voucher_report" name="Account Voucher Report" parent="account.menu_finance_reports"/>
 		
 		<menuitem action="action_account_voucher_wizard" id="account_voucher_menu_wizard"
-				  parent="account_custom_report_wizard.menu_finance_custom_statement" 
+				  parent="menu_account_voucher_report" 
 				  name = "Account Voucher Wizard" sequence="10"/>
    
    </data>

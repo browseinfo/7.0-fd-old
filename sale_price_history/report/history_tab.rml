@@ -142,9 +142,30 @@
     <images/>
   </stylesheet>
   <story>
-  <para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
-  <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
-
+  <pto>
+  	<para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
+  	<para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
+	<pto_header>
+		<blockTable colWidths="30.0,320.0,0.0,85.0,85.0" repeatRows="1" style="Table2">
+		  <tr>
+		    <td>
+		      <para style="P1">No</para>
+		    </td>
+		    <td>
+		      <para style="P1">Customer Code(Description)</para>
+		    </td>
+		    <td>
+		      <para style="P1"></para>
+		    </td>
+		    <td>
+		      <para style="P1">Old Price</para>
+		    </td>
+		    <td>
+		      <para style="P1">New Price</para>
+		    </td>
+		  </tr>
+		</blockTable>
+	</pto_header>
 
     <blockTable colWidths="30.0,400.0,100.0" style="Table1">
       <tr>
@@ -331,6 +352,6 @@
         </td>
       </tr>
     </blockTable>
-   
+   </pto>
   </story>
 </document>

@@ -24,7 +24,7 @@
     'name': 'Account Customer Invoice Report',
     'version': '1.0',
     'category': 'Account Customer Invoice Report',
-    'description' : 'This module for Customer Invoice Report',
+    'description' : 'This module help to print Customer Invoice Report',
     'author': 'BrowseInfo',
     'website': 'http://www.browseinfo.in',
     'depends': ['account','sale', 'sale_report_fd'],
