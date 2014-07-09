@@ -30,16 +30,16 @@ class sales_forecast(osv.Model):
     
     _columns = {
         'name': fields.char('Order Reference'),
-        'prerid_from': fields.date('Period From'),
-        'prerid_to': fields.date('Period To'),
+        'prerid_from': fields.date('Period From', states={'draft': [('readonly', False)], 'confirm': [('readonly', True)]}),
+        'prerid_to': fields.date('Period To', states={'draft': [('readonly', False)], 'confirm': [('readonly', True)]}),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Confirmed'),
             ('cancel', 'Cancel')], 'Status'),
-        'order_line': fields.one2many('sales.forecast.line', 'order_id', 'Order Lines', states={'confirm': [('readonly', False)]}),
-        'branch_id': fields.many2one('res.branch', 'Branch', required=True),
+        'order_line': fields.one2many('sales.forecast.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)], 'confirm': [('readonly', True)]}),
+        'branch_id': fields.many2one('res.branch', 'Branch', states={'draft': [('readonly', False)], 'confirm': [('readonly', True)]}),
         'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True,readonly=True),
-        'shop_id': fields.many2one('sale.shop', 'Shop', required=True),
+        'shop_id': fields.many2one('sale.shop', 'Shop', required=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', True)]}),
     }   
     
     _defaults = {
@@ -88,7 +88,6 @@ class sales_forecast(osv.Model):
            'target': 'current',
            'nodestroy': True,
        }
-       
    
     def onchange_branch_id(self, cr, uid, ids, shop_id, branch_id, context=None):
         shop_branch_id = self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context)
@@ -111,7 +110,6 @@ class sales_forecast(osv.Model):
             raise osv.except_osv(_('Shop not given!'), _('Please select Shop first.'))
         return {'value': res}
 
-        
 class sales_forecast_line(osv.Model):       
     _name = 'sales.forecast.line'
     

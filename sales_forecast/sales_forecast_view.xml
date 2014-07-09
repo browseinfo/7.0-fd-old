@@ -76,6 +76,7 @@
 		<field name="arch" type="xml">
 			<tree string="Sale Forcasting">
 				<field name="name"/>
+				<field name="state" invisible="1"/>
 				<field name="prerid_from"/>
             	<field name="prerid_to"/>
 			</tree>
