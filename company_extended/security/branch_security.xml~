@@ -54,7 +54,7 @@
         <field name="name">branch</field>
         <field name="model_id" ref="model_res_branch"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">[('id', '=', user.branch_id.id)]</field>
+        <field name="domain_force">['|', ('id', '=', user.branch_id.id), ('id', '=', False)]</field>
         <field name="groups" eval="[(4, ref('company_extended.group_branch_user'))]"/>
     </record>
 
@@ -63,7 +63,7 @@
         <field name="name">Account Branch</field>
         <field name="model_id" ref="model_account_invoice"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">[('branch_id','=',user.branch_id.id)]</field>
+        <field name="domain_force">['|', ('branch_id','=',user.branch_id.id), ('branch_id', '=', False)]</field>
         <field name="groups" eval="[(4, ref('company_extended.group_branch_user'))]"/>
     </record>
 
@@ -71,7 +71,7 @@
         <field name="name">Purchase Branch</field>
         <field name="model_id" ref="model_purchase_order"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">[('branch_id','=',user.branch_id.id)]</field>
+        <field name="domain_force">['|', ('branch_id','=',user.branch_id.id), ('branch_id', '=', False)]</field>
         <field name="groups" eval="[(4, ref('company_extended.group_branch_user'))]"/>
     </record>
 
@@ -79,7 +79,7 @@
         <field name="name">Sale Branch</field>
         <field name="model_id" ref="model_sale_order"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">[('branch_id','=',user.branch_id.id)]</field>
+        <field name="domain_force">['|', ('branch_id','=',user.branch_id.id), ('branch_id', '=', False)]</field>
         <field name="groups" eval="[(4, ref('company_extended.group_branch_user'))]"/>
     </record>
 
@@ -87,7 +87,7 @@
         <field name="name">Budget Branch</field>
         <field name="model_id" ref="model_crossovered_budget"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">[('branch_id','=',user.branch_id.id)]</field>
+        <field name="domain_force">['|', ('branch_id','=',user.branch_id.id), ('branch_id', '=', False)]</field>
         <field name="groups" eval="[(4, ref('company_extended.group_branch_user'))]"/>
     </record>
     
