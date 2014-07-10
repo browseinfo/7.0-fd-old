@@ -28,7 +28,6 @@
 	'website': 'http://www.browseinfo.in',
 	'data' : ['wizard/stock_inventory_in_out_wizard_view.xml',
 				'stock_inventory_in_out_report.xml',
-				'stock_common_view.xml'
 			],
 	'demo' : [],
 	'installable': True,
