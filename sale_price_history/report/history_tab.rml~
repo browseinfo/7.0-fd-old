@@ -1,10 +1,44 @@
 <?xml version="1.0"?>
 <document filename="Sales Order.pdf">
-  <template title="Sales Order" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
-    <pageTemplate id="first">
-      <frame id="first" x1="15.0" y1="42.0" width="539" height="758"/>
-    </pageTemplate>
-  </template>
+ <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20"> 
+    <pageTemplate> 
+        <frame id="first" x1="1.3cm" y1="5.0cm" height="22.0cm" width="19.0cm"/> 
+        <stylesheet> <!-- Set here the default font to use for all <para> tags -->  
+            <paraStyle name='Normal' fontName="DejaVu Sans"/> 
+            <paraStyle name="main_footer" fontSize="7.0" alignment="LEFT"/> 
+            <paraStyle name="main_footer1" fontSize="6.0" alignment="LEFT"/> 
+            <paraStyle name="company_name" fontSize="16.0" alignment="CENTER"/> 
+            <paraStyle name="company_address" fontSize="8.0" alignment="CENTER"/> 
+            <paraStyle name="main_header" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>  
+        </stylesheet>  
+        <pageGraphics> <!-- Set here the default font to use for all <drawString> tags -->  
+            <image x="2.0cm" y="27.0cm" height="50.0" >[[ company.logo or removeParentNode('image') ]]</image> 
+             <place x="1.0cm" y="23.6cm" height="5.55cm" width="20.0cm"> 
+                 <para style="company_name"><b>[[ company.name ]]</b></para> 
+			</place>
+			<place x="1.0cm" y="23.0cm" height="5.55cm" width="20.0cm">
+                 <para><font color="white"> </font></para> 
+                 <para style="company_address">[[ company.street ]]</para> 
+                 <para style="company_address">[[ company.street2 ]] [[ company.city ]] [[ company.country_id.name ]]</para> 
+                 <para style="company_address">Tele. [[ company.phone ]] Fax. [[ company.city ]]</para> 
+             </place> 
+             <lines>1.3cm 26.9cm 20cm 26.9cm</lines> 
+             <place x="1.7cm" y="2.5cm" height="0.5cm" width="8.0cm"> 
+                 <para style="main_footer">Your Faithfully,</para> 
+             </place> 
+             <place x="1.7cm" y="2.1cm" height="0.5cm" width="8.0cm"> 
+                 <para style="main_footer"> <b>PT. FD INDUSTRI INDONESIA</b></para> 
+             </place> 
+			 <place x="1.7cm" y="0.5cm" height="0.5cm" width="8.0cm"> 
+                 <para style="main_footer"> <b>______________________________</b> </para> 
+             </place>          
+			 <place x="1.7cm" y="0.1cm" height="0.5cm" width="8.0cm"> 
+                 <para style="main_footer">Manager Marketing</para> 
+             </place>          
+
+        </pageGraphics>  
+    </pageTemplate> 
+  </template> 
   <stylesheet>
     <blockTableStyle id="Standard_Outline">
       <blockAlignment value="LEFT"/>
@@ -299,9 +333,9 @@
         <td>
           <para style="P2">The Terms and Condition as per follows</para>
           <para style="P2">1.Payment terms:[[ o.payment_term.name or '']]</para>
-          <para style="P2">2.Term Of Delivery: Land Transfer to PT JEIN</para>
-          <para style="P2">3.Lead Time: 3 Months for 1st order and 2 month for forecast provided</para>
-          <para style="P2">4.Effective Date: [[date_format(o.date_order)]] Delivery Base</para>
+          <para style="P2">2.Term Of Delivery: [[o.delivery_id.name or '']]</para>
+          <para style="P2">3.Lead Time: [[o.leadtime_id.name or '']]</para>
+          <para style="P2">4.Effective Date: [[date_format(o.effective_date)]] Delivery Base</para>
           <para style="P2">5.Remark:[[o.note or '']]</para>
         </td>
         <td>
@@ -323,35 +357,9 @@
     </blockTable>
 
 
-    <blockTable colWidths="351.0,188.0" style="Table7">
-      <tr>
-        <td>
-          <para style="P2">Your faithfully,</para>
-          <para style="terp_default_7">PT.FD INDUSTRI INDONESIA</para>
-        </td>
-        <td>
-          <para style="P4"></para>
-        </td>
-      </tr>
-    </blockTable>
 
-
-<spacer length="2.5cm"/>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
     
-    <blockTable colWidths="351.0,188.0" style="Table7">
-      <tr>
-        <td>
-          <para style="P2">__________________________</para>
-          <para style="P2">Manager Marketing</para>
-        </td>
-        <td>
-          <para style="P4"></para>
-        </td>
-      </tr>
-    </blockTable>
+
    </pto>
   </story>
 </document>

@@ -8,7 +8,7 @@
 			<field name="inherit_id" ref="sale.view_order_form" />
 			<field name="arch" type="xml">
 				<field name="client_order_ref" position="before">
-				    <field name="branch_id" on_change="onchange_branch_id(shop_id,branch_id)"/>
+				    <field name="branch_id"/>
 				</field>
 				<xpath expr="//field[@name='date_order']" position="after">
 		            <field name="date_ext"/>

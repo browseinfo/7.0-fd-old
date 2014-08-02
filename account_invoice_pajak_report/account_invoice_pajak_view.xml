@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_account_invoice_pajak_report" model="ir.ui.view">
+            <field name="name">account.invoice.form.inherit</field> 
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+				<xpath expr="//button[@name='invoice_print']" position="after">
+					<button name="pajak_print" string="Faktur Pajak Print" type="object" attrs="{'invisible':[('state','in',('draft', 'proforma', 'proforma2', 'paid', 'cancel'))]}" class="oe_highlight"/>
+				</xpath>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

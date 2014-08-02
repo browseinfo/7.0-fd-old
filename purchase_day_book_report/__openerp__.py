@@ -4,7 +4,7 @@
 #    Sales and Account Invoice Discount Management
 #    Copyright (C) 2013-2014 BrowseInfo(<http://www.browseinfo.in>).
 #    $autor:
-#   
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -24,7 +24,7 @@
     'name' : "Purchase Day Book Report",
 	'version' : "1.0",
 	'author' : "BrowseInfo",
-	'depends' : ['purchase','report_webkit','sale_day_book_report'],
+	'depends' : ['purchase','report_webkit','company_extended','sale_day_book_report'],
 	'website': 'http://www.browseinfo.in',
 	'data' : ['wizard/purchase_daybook_wizard_view.xml',
 	          'report/purchase_daybook_report.xml',

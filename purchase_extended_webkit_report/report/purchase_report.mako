@@ -22,24 +22,28 @@
 </head>
 <header>
 	%for o in objects :
-	<table style="font-face:Helvetica;font-size=1px;">
+	<table>
 		<tr>
-			<td>Total Purchase Amount Report - </td>
-			<td>Receive Date</td>
-			<td><table width="100%" border="1px">
+			<td style="font-face:Helvetica;font-size:18px;"><b>Total Purchase Amount Report - </b></td>
+			<td><font color="white">.......</font></td>
+			<td style="font-face:Helvetica; font-size:12px;"><b>Receive Date</b></td>
+			<td><font color="white">.</font></td>
+			<td>
+				<table width="100%">
+					<tr>
+						<td style="font-size:12px;">${get_date_form()}</td>
+					</tr>
+				</table>
+			</td>
+			<td style="font-size:12px;"><b>To</b></td>
+			<td><table width="100%">
 				<tr>
-					<td>${get_date_form()}</td>
-				</tr>
-			</table></td>
-			<td>To</td>
-			<td><table width="100%" border="1">
-				<tr>
-					<td>${get_date_to()}</td>
+					<td style="font-size:12px;">${get_date_to()}</td>
 				</tr>
 			</table></td>
 		</tr>
 		<tr>
-			<td>By Supplier</td>
+			<td style="font-face:Helvetica;font-size:18px;"><b>By Supplier</b></td>
 		</tr>
 	</table>
 </header>
@@ -47,56 +51,56 @@
         <table  width="50%">
             <thead>
                 <tr>
-                    <th style="text-align:left;">${_("Supplier Code")}</th>
-                    <th style="text-align:left;">${_("Supplier NAME")}</th>
+                    <th style="text-align:left; font-size:10px; "><b>${_("Supplier Code")}</b></th>
+                    <th style="text-align:left; font-size:10px;"><b>${_("Supplier Name")}</b></th>
                 </tr>
             </thead>
             
         </table>
         <table width="100%" align="right" >
             <thead>
-                <tr>
-                    <th style="text-align:right;">${_("Family Code")}</th>
-                    <th style="text-align:right;">${_("Total Qty")}</th>
-                    <th style="text-align:right;">${_("Total Amount")}</th>
-                    <th style="text-align:right;">${_("Currency")}</th>
-                    <th style="text-align:right;">${_("Total US Amount")}</th>
+                <tr >
+                    <th style="text-align:right; border-bottom: 1px solid black; font-size:10px; "><b>${_("Family Code")}</b></th>
+                    <th style="text-align:right; border-bottom: 1px solid black; font-size:10px; "><b>${_("Total Qty")}</b></th>
+                    <th style="text-align:right; border-bottom: 1px solid black; font-size:10px;"><b>${_("Total Amount")}</b></th>
+                    <th style="text-align:right; border-bottom: 1px solid black; font-size:10px;"><b>${_("Currency")}</b></th>
+                    <th style="text-align:right; border-bottom: 1px solid black; font-size:10px;"><b>${_("Total US Amount")}</b></th>
                  </tr>
             </thead>
         %for line in (get_order_lines(o)):
             <tbody>
                 <tr>
-                    <th style="text-align:left;">${line.get('ref') or ' '}</th>
-                    <th style="text-align:left;">${line.get('ref') or ' '}</th>
+                    <td style="text-align:left; font-size:10px;"> ${line.get('ref') or ' '} </td>
+                    <td style="text-align:center; font-size:10px;"> ${ get_partner_name(line) } </td>
                 </tr>
             </tbody>
         	%for li in line['values']:
 					<tbody>
 						<tr>
-						    <td style="text-align:right;">${li.get('code') or ''}</td>
-						    <td style="text-align:right;" >${li.get('qty') or ''}</td>
-						    <td style="text-align:right;" >${li.get('amount') or ''}</td>
-						    <td style="text-align:right;" >${li.get('currency') or ''}</td>
-						    <td style="text-align:right;" >${li.get('amount') or ''}</td>
+						    <td style="text-align:right; font-size:10px;">${li.get('code') or ''}</td>
+						    <td style="text-align:right; font-size:10px;" >${li.get('qty') or ''}</td>
+						    <td style="text-align:right; font-size:10px;" >${li.get('amount') or ''}</td>
+						    <td style="text-align:right; font-size:10px;" >${li.get('currency') or ''}</td>
+						    <td style="text-align:right; font-size:10px;" >${li.get('us_total_amount') or ''}</td>
 						</tr> 
         	%endfor
 						<tr>
-							<th style="text-align:right;">${_("Supplier Total")}</th>
-						    <th style="text-align:right;" >${line.get('total') or ' '}</th>
-						    <td style="text-align:right;" > </td>
-						    <td style="text-align:right;" > </td>
-						    <th style="text-align:right;" >${line.get('sum_total') or ' '}</th>
+							<td style="text-align:right; border-top: 1px solid #e0e0e0; font-size:10px;"><b>${_("Supplier Total")}</b></td>
+						    <td style="text-align:right; border-top: 1px solid #e0e0e0; font-size:10px;" >${line.get('total') or ' '}</td>
+						    <td style="text-align:right; border-top: 1px solid #e0e0e0; " > </td>
+						    <td style="text-align:right; border-top: 1px solid #e0e0e0; " > </td>
+						    <td style="text-align:right; border-top: 1px solid #e0e0e0; font-size:10px;" >${line.get('sum_total') or ' '}</td>
 					    </tr>
 						
 					</tbody>
 		%endfor
 					<tbody>
 						<tr>
-							 <th style="text-align:right;"><font size="2">${_("Grand Total")}</font></th>
-						    <th style="text-align:right;" ><font size="3">${get_total_qty()}</font></th>
-						    <th style="text-align:right;" ><font size="3"/> </th>
-						    <th style="text-align:right;" ><font size="3"/> </th>
-						    <th style="text-align:right;" ><font size="3">${get_total_amount()}</font></th>
+							 <th style="text-align:right; font-size:10px; border-top: 1px solid black; ">${_("Grand Total")}</th>
+						    <th style="text-align:right; font-size:10px; border-top: 1px solid black; " >${ get_total_qty() }</th>
+						    <th style="text-align:right; font-size:10px; border-top: 1px solid black; " > </th>
+						    <th style="text-align:right; font-size:10px; border-top: 1px solid black; " > </th>
+						    <th style="text-align:right; font-size:10px; border-top: 1px solid black; " >${ get_total_amount() }</th>
 					    </tr>
 						
 					</tbody>

@@ -7,9 +7,10 @@
             <field name="arch" type="xml">
                 <form string="Sale Day Book Wizard" version="7.0">
                     <group col='4'>
+                    	<field name="branch_id" class="oe_inline"/>
                         <field name="start_date" class="oe_inline" />
                         <field name="end_date" class="oe_inline"/>
-                    </group>                  
+                    </group>
                     <footer>
                         <button string="Print" name="print_report" type="object" class="oe_highlight"/>
                         or
@@ -18,7 +19,7 @@
                </form>
             </field>
         </record>
-        
+
         <record id="action_sale_daybook_wizard" model="ir.actions.act_window">
             <field name="name">Sale Day Book Wizard</field>
             <field name="type">ir.actions.act_window</field>
@@ -29,11 +30,11 @@
             <field name="target">new</field>
             <field name="multi">True</field>
         </record>
-        
+
 		<menuitem id="menu_day_book_report" name="Day Book Report" parent="account.menu_finance_reports"/>
 		<menuitem action="action_sale_daybook_wizard" id="sale_daybook_wizard"
-				  parent="menu_day_book_report" 
-				  name = "Sale Day Book" />
-        
+				  parent="menu_day_book_report"
+				  name = "Sale Day Book (Product Category)" />
+
     </data>
 </openerp>

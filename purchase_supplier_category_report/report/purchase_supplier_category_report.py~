@@ -95,6 +95,9 @@ class purchase_supplier_category_report(report_sxw.rml_parse):
  
     def _get_payslip_lines(self, obj, column_flag=0):
         purchase_obj = self.pool.get('purchase.order')
+        currency_obj = self.pool.get('res.currency')
+        cur_obj = self.pool.get('res.currency.rate')
+        self.total_amount = 0.0
         payslip_lines = []
         res = []
         result = []
@@ -104,18 +107,60 @@ class purchase_supplier_category_report(report_sxw.rml_parse):
         self.cr.execute("select po.partner_id from purchase_order po "\
                     "WHERE (po.date_order >= %s) AND (po.date_order <= %s) group by  po.partner_id", (self.date_from, self.date_to,))
         purchase_line_ids = self.cr.fetchall()
+        
+        
         for a in  purchase_line_ids:
-             line_ids.append(a[0])
+            line_ids.append(a[0])
         purchase_ids = purchase_obj.search(self.cr, self.uid, [('partner_id', 'in', line_ids)])
         partner_list = categ_list = []
         for line in purchase_obj.browse(self.cr, self.uid, purchase_ids):
+            
+            to_datelist= []
+            from_datelist= []
+            self.sub_total_qty = 0
+            self.total_amount = self.total_amount + line.amount_total
+            self.cr.execute(" select * from res_currency where name = 'USD' ")
+            browse_curency = self.cr.fetchone()
+            
+            for to_curr_obj in currency_obj.browse(self.cr, self.uid, [browse_curency[0]]):
+                for to_rate_obj in to_curr_obj.rate_ids:
+                    to_datelist.append(to_rate_obj.name)
+            to_get_datetime = lambda s: datetime.strptime(s, "%Y-%m-%d")
+            to_base = to_get_datetime(line.date_order)
+            to_later = filter(lambda d: to_get_datetime(d) <= to_base, to_datelist)
+            to_closest_date = max(to_later, key = lambda d: to_get_datetime(d))
+            
+            to_rate_search = cur_obj.search(self.cr, self.uid, [('name', '=', to_closest_date), ('currency_id', '=', browse_curency[0])])[0]
+            to_rate_browse = cur_obj.browse(self.cr, self.uid, to_rate_search)
+            to_rate = to_rate_browse.rate
+            
+            for from_curr_obj in currency_obj.browse(self.cr, self.uid, [line.pricelist_id.currency_id.id]):
+                for from_rate_obj in from_curr_obj.rate_ids:
+                    from_datelist.append(from_rate_obj.name)
+            from_get_datetime = lambda s: datetime.strptime(s, "%Y-%m-%d")
+            from_base = from_get_datetime(line.date_order)
+            from_later = filter(lambda d: from_get_datetime(d) <= from_base, from_datelist)
+            from_closest_date = max(from_later, key = lambda d: from_get_datetime(d))
+            
+            from_rate_search = cur_obj.search(self.cr, self.uid, [('name', '=', from_closest_date), ('currency_id', '=', line.pricelist_id.currency_id.id)])[0]
+            from_rate_browse = cur_obj.browse(self.cr, self.uid, from_rate_search)
+            from_rate = from_rate_browse.rate
+            
+            rate = round((to_rate / from_rate), 2)
+            
+            
+            
+            
+            
+            
+            
             computation_lines = {line.partner_id.name:{}}
             for l in line.order_line:
                     if l.product_id.categ_id.name in computation_lines[line.partner_id.name].keys():
-                        total = computation_lines[line.partner_id.name][l.product_id.categ_id.name] +  l.price_subtotal
+                        total = computation_lines[line.partner_id.name][l.product_id.categ_id.name] +  l.price_subtotal * rate
                         computation_lines[line.partner_id.name][l.product_id.categ_id.name] = total 
                     else:
-                        computation_lines[line.partner_id.name][l.product_id.categ_id.name]= l.price_subtotal
+                        computation_lines[line.partner_id.name][l.product_id.categ_id.name]= l.price_subtotal  * rate
             res.append(computation_lines)
         print "\n\nres",res
         output = {}

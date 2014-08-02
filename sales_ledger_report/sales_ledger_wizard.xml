@@ -10,7 +10,6 @@
                     <group colspan="2">
                          <field name="start_date"/>
                          <field name="end_date"/>
-                         <field name="branch"/>
                     </group>
                     <group colspan="2">
                     	
@@ -26,7 +25,7 @@
             </field>
         </record>
         <record id="action_sales_ledger_report" model="ir.actions.act_window">
-            <field name="name">Sales Ledger Report</field>
+            <field name="name">Sales Ledger</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sales.ledger.report.wizard</field>
             <field name="view_type">form</field>
@@ -36,9 +35,13 @@
             <field name="target">new</field>
         </record>
 
+
+		<menuitem id="menu_sales_purchase_ledger_menu" name="Ledger/Amount Report" parent="account.menu_finance_reports"/>
+		
+        	
 <menuitem action="action_sales_ledger_report"
                   id="sale_invoice_ledger"
-                  parent="account.menu_finance_legal_statement"
-                  sequence="3"/> 
+                  parent="menu_sales_purchase_ledger_menu"
+                  sequence="1"/> 
          </data>
 </openerp>  

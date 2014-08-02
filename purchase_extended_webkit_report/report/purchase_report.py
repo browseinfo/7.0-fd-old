@@ -39,17 +39,17 @@ class purchase_report(report_sxw.rml_parse):
             'get_total_qty': self.get_total_qty,
             'get_total_amount': self.get_total_amount,
             'get_subtotal_qty': self.get_subtotal_qty,
+            'get_partner_name': self.get_partner_name,
             
         })
 
     def set_context(self, objects, data, ids, report_type=None):
-        print "\n\n\n===", objects, data, ids, objects.start_date, data['form']['start_date']
-        date_from = data['form']['start_date']
-        date_to = data['form']['end_date']
+        self.date_from_wizard = data['form']['start_date']
+        self.date_to_wizard = data['form']['end_date']
         formatter_string = "%Y-%m-%d" 
-        datetime_object = datetime.strptime(date_from, formatter_string)
+        datetime_object = datetime.strptime(self.date_from_wizard, formatter_string)
         date_object = datetime_object.date()
-        datetime_object_to = datetime.strptime(date_to, formatter_string)
+        datetime_object_to = datetime.strptime(self.date_to_wizard, formatter_string)
         date_object_to = datetime_object_to.date()
         self.date_from = date_object.strftime("%d-%b-%Y")
         self.date_to = date_object_to.strftime("%d-%b-%Y")
@@ -72,12 +72,18 @@ class purchase_report(report_sxw.rml_parse):
         return int(self.total_qty)
         
     def get_total_amount(self):
-        return self.total_amount
-
+        return self.total_sum_amount
+    
+    def get_partner_name(self, ref):
+        for line in ref['values']:
+            return line['partner']
+    
     def _get_lines(self, obj):
         purchase_obj = self.pool.get('purchase.order')
         order_line = self.pool.get('purchase.order.line')
         partner_obj = self.pool.get('res.partner')
+        currency_obj = self.pool.get('res.currency')
+        cur_obj = self.pool.get('res.currency.rate')
         fromdate = self.date_from
         todate = self.date_to
         self.total_qty = 0
@@ -90,38 +96,70 @@ class purchase_report(report_sxw.rml_parse):
         final_res = []
         result = []
         
-        query = ("SELECT * from purchase_order as pl "\
-                        "WHERE pl.date_order >= '"+ fromdate + "'" \
-                        " AND pl.date_order <= '" + todate + "'" 
-                        " ORDER BY pl.date_order"
-                        )
-        self.cr.execute(query)
+        self.cr.execute("SELECT * from purchase_order as pl "\
+        "WHERE pl.date_order >= %s "\
+        "AND pl.date_order <= %s "\
+        "AND pl.state = 'approved' "\
+        "ORDER BY pl.date_order", (self.date_from_wizard, self.date_to_wizard))
+        
         move_lines = [x[0] for x in self.cr.fetchall()]
         
         
         for order in purchase_obj.browse(self.cr, self.uid, move_lines):
+            to_datelist= []
+            from_datelist= []
             self.sub_total_qty = 0
             self.total_amount = self.total_amount + order.amount_total
+            self.cr.execute(" select * from res_currency where name = 'USD' ")
+            browse_curency = self.cr.fetchone()
+            
+            for to_curr_obj in currency_obj.browse(self.cr, self.uid, [browse_curency[0]]):
+				for to_rate_obj in to_curr_obj.rate_ids:
+					to_datelist.append(to_rate_obj.name)
+            to_get_datetime = lambda s: datetime.strptime(s, "%Y-%m-%d")
+            to_base = to_get_datetime(order.date_order)
+            to_later = filter(lambda d: to_get_datetime(d) <= to_base, to_datelist)
+            to_closest_date = max(to_later, key = lambda d: to_get_datetime(d))
+			
+            to_rate_search = cur_obj.search(self.cr, self.uid, [('name', '=', to_closest_date), ('currency_id', '=', browse_curency[0])])[0]
+            to_rate_browse = cur_obj.browse(self.cr, self.uid, to_rate_search)
+            to_rate = to_rate_browse.rate
+            
+            for from_curr_obj in currency_obj.browse(self.cr, self.uid, [order.pricelist_id.currency_id.id]):
+				for from_rate_obj in from_curr_obj.rate_ids:
+					from_datelist.append(from_rate_obj.name)
+            from_get_datetime = lambda s: datetime.strptime(s, "%Y-%m-%d")
+            from_base = from_get_datetime(order.date_order)
+            from_later = filter(lambda d: from_get_datetime(d) <= from_base, from_datelist)
+            from_closest_date = max(from_later, key = lambda d: from_get_datetime(d))
+			
+            from_rate_search = cur_obj.search(self.cr, self.uid, [('name', '=', from_closest_date), ('currency_id', '=', order.pricelist_id.currency_id.id)])[0]
+            from_rate_browse = cur_obj.browse(self.cr, self.uid, from_rate_search)
+            from_rate = from_rate_browse.rate
+            
+            rate = round((to_rate / from_rate), 2)
             for line in order.order_line:
                 self.sub_total_qty = self.sub_total_qty + line.product_qty
-                print "\nProduct ID===", line.product_id.id
                 res.append({
                     'partner': order.partner_id.name,
                     'ref':order.partner_id.ref,
                     'currency': order.pricelist_id.currency_id.name,
                     'total_amount': order.amount_total,
+                    'us_total_amount': (line.price_subtotal * rate),
                     'code': line.product_id.default_code,
                     'qty': int(line.product_qty),
                     'amount': line.price_subtotal,
                     'qty_total': int(self.sub_total_qty),
                 })
                 self.total_qty = self.total_qty + line.product_qty
-        
+
         newlist = sorted(res, key=lambda k: k['ref'])
 
         groups = itertools.groupby(newlist, key=operator.itemgetter('ref'))
                     
         result = [{'ref':k, 'values':[x for x in v]} for k,v in groups]
+        
+        print "\n\n======result======", result
         
         self.total_sum_qty = 0
         self.total_sum_amount = 0
@@ -130,14 +168,12 @@ class purchase_report(report_sxw.rml_parse):
            self.main_total = 0
            for loop in vals['values']:
                self.qty_main_total += loop['qty']
-               self.main_total += loop['amount']
+               self.main_total += loop['us_total_amount']
            vals['total'] = self.qty_main_total
            vals['sum_total'] = self.main_total
            self.total_sum_qty += vals['total']
            self.total_sum_amount += vals['sum_total']
            
-        print "\n\nVALSSS", result
-
         return result
 
 

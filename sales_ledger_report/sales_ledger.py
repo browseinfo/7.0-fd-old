@@ -18,7 +18,6 @@ class sales_ledger_report_wizard(osv.osv_memory):
     _columns = {
        'start_date': fields.date('Issue Date', required=True),
        'end_date': fields.date('To', required=True),
-       'branch': fields.many2one('res.branch','Branch',required=True),
     }
 
 
@@ -26,7 +25,6 @@ class sales_ledger_report_wizard(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids)[0]
-        
         datas = {
              'ids':[data.get('id')],
              'model': 'account.invoice',

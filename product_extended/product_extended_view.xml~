@@ -20,32 +20,9 @@
 				<xpath expr="//field[@name='standard_price']" position="after">
 		            <field name="pur_cur_id" class="oe_inline"/>
 		        </xpath>
-				<xpath expr="//field[@name='list_price']" position="after">
+				<!--xpath expr="//field[@name='list_price']" position="after">
 		            <field name="sale_cur_id" class="oe_inline"/>
-		        </xpath>
-			</field>
-		</record>
-
-		<record id="view_stock_warehouse_extended_form" model="ir.ui.view">
-			<field name="name">stock.warehouse.form.extend</field>
-			<field name="model">stock.warehouse</field>
-			<field name="inherit_id" ref="stock.view_warehouse" />
-			<field name="arch" type="xml">
-				<xpath expr="//field[@name='partner_id']" position="after">
-			        <field name="branch_id" class="oe_inline"/>
-					<field name="shop_id" class="oe_inline"/>
-			    </xpath>
-			</field>
-		</record>
-
-		<record id="view_sale_shop_extended_form" model="ir.ui.view">
-			<field name="name">sale.shop.form.extend</field>
-			<field name="model">sale.shop</field>
-			<field name="inherit_id" ref="sale.view_shop_form" />
-			<field name="arch" type="xml">
-				<xpath expr="//field[@name='company_id']" position="after">
-			        <field name="branch_id" class="oe_inline"/>
-			    </xpath>
+		        </xpath-->
 			</field>
 		</record>
 

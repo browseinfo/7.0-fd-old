@@ -26,7 +26,7 @@
     'category': 'Address Book',
     'author': 'BrowseInfo',
     'website': 'http://www.browseinfo.in',
-    'depends': ['base','sale','account','purchase','mrp', 'account_budget','account_asset'],
+    'depends': ['base','sale','account','purchase','mrp', 'account_budget','account_asset', 'account_payment'],
     'data': ['data_view.xml',
              'company_extended_view.xml',
              'security/branch_security.xml',

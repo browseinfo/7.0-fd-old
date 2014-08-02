@@ -28,7 +28,10 @@
     'author': 'BrowseInfo',
     'website': 'http://www.browseinfo.in',
     'depends': ['sale'],
-    'data': ['sale_quotation_extended_view.xml','report/sale_quotation_report_view.xml'],
+    'data': [
+    'sale_quotation_extended_view.xml',
+    'report/sale_quotation_report_view.xml',
+    'security/ir.model.access.csv',],
     'demo': [],
     'test': [],
     'installable': True,

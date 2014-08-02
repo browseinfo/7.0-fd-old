@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_custom_invoice_report" model="ir.ui.view">
+            <field name="name">custom_invoice_report</field>
+            <field name="model">custom.invoice.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="CUSTOM INVOICE REPORT" version="7.0">
+                    <group col='4'>
+                        <field name="start_date" class="oe_inline" />
+                        <field name="end_date" class="oe_inline"/>
+                        <field name="branch_id" class="oe_inline"/>
+                    </group>                
+                    <footer>
+                        <button string="Print" name="print_report" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_custom_invoice_report" model="ir.actions.act_window">
+            <field name="name">CUSTOM INVOICE REPORT</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">custom.invoice.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_custom_invoice_report"/>
+            <field name="target">new</field>
+            <field name="multi">True</field>
+        </record>
+        
+		<menuitem id="menu_custom_invoice_report" name="Invoice Report" 
+			parent="base.menu_base_partner"/>
+       	
+       	<menuitem action="action_custom_invoice_report" id="sub_menu_custom_invoice_report" 
+       		parent="menu_custom_invoice_report"
+        	name="Invoice Report" />        	
+
+    </data>
+</openerp>

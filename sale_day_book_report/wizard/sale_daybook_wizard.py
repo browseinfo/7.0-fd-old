@@ -17,22 +17,25 @@ class sale_day_book_wizard(osv.osv_memory):
     _columns={
         'start_date': fields.date('Start Period', required=True),
         'end_date': fields.date('End Period', required=True),
+        'branch_id':fields.many2one('res.branch','Branch',required=True),
     }
 
     def print_report(self,cr, uid, ids, context=None):
         if context is None:
            context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
-        
+
         datas = {
              'ids': [data.get('id')],
              'model': 'sale.day.book.wizard',
              'form': data
         }
+        self_browse = self.browse(cr, uid, ids)
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'sale.day.book',
             'datas': datas,
+            'name': self_browse[0].branch_id.branch_code +' '+'Sale Day Book Report'
             }
 
 sale_day_book_wizard()

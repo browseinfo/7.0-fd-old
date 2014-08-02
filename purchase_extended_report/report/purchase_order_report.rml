@@ -18,27 +18,30 @@
  				<para><font color="white"> </font></para>
  				<para style="company_address">[[ company.street ]]</para>
  				<para style="company_address">[[ company.street2 ]] [[ company.city ]] [[ company.country_id.name ]]</para>
- 				<para style="company_address">Tele. [[ company.phone ]] Fax. [[ company.city ]]</para>
+ 				<para style="company_address">Tele. [[ company.phone ]] Fax. [[ company.fax ]]</para>
          	</place>
          	<lines>1.3cm 26.9cm 20cm 26.9cm</lines>
          	<place x="9.0cm" y="2.5cm" height="0.5cm" width="8.0cm">
-         		<para style="main_footer"> GB PT.INDUSTRI INDONESIA</para>
+         		<para style="main_footer"> PT. FD INDUSTRI INDONESIA</para>
          	</place>
          	<place x="2.0cm" y="2.5cm" height="0.5cm" width="8.0cm">
-         		<para style="main_footer1">I confirm that the above goods mentioned were received in</para>
+         		<para style="main_footer1"><b>Note:</b>  1) Kindly pls fax back this purchase order only</para>
          	</place>
-         	<place x="2.0cm" y="2.2cm" height="0.5cm" width="8.0cm">
-         		<para style="main_footer1">good condition.</para>
+         	<place x="3.0cm" y="2.2cm" height="0.5cm" width="8.0cm">
+         		<para style="main_footer1">signed by you for the confirmation.</para>
+         	</place>
+         	<place x="2.7cm" y="1.9cm" height="0.5cm" width="8.0cm">
+         		<para style="main_footer1">2) Above part shall not contain any prohibited</para>
+         	</place>
+         	<place x="3.0cm" y="1.6cm" height="0.5cm" width="8.0cm">
+         		<para style="main_footer1">as RoHS directives</para>
          	</place>
          	<place x="10.2cm" y="1.0cm" height="0.5cm" width="8.0cm">
          		<para style="main_footer"> <b>________________________________________________</b> </para>
          	</place>
-         	<place x="0.0cm" y="1.0cm" height="0.5cm" width="8.0cm">
+         	<place x="0.7cm" y="1.0cm" height="0.5cm" width="8.0cm">
          		<para style="main_footer"> <b>________________________________________________</b> </para>
          	</place>
-         	<place x="0.0cm" y="0.6cm" height="0.5cm" width="8.0cm">
-         		<para style="main_footer">Customer Signature and Official Stamp<font color="white">.........</font></para>
-         	</place> 
 		</pageGraphics> 
 	</pageTemplate>
   </template>
@@ -109,11 +112,6 @@
     <blockTableStyle id="Table_All_Total_Detail">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/>
@@ -182,6 +180,7 @@
     <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_800" fontName="Helvetica" fontSize="6.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_18" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
@@ -233,8 +232,11 @@
     <blockTable colWidths="253.0,72.0,220.0" style="Tableau1">
       <tr>
         <td>
-          <para style="P15">FD INTERCONNECT (SINGAPORE) PTE., LTD.</para>
-          <para style="P18">[[ (o.partner_id and display_address(o.partner_id)) or '']]</para>
+          <para style="P15">[[ ((o.partner_id.is_company == True) and (o.partner_id.name)) or o.partner_id.parent_id.name ]]</para>
+          <para style="P18">[[ o.partner_id.street or '' ]]</para>
+          <para style="P18">[[ o.partner_id.street2 or '' ]]</para>
+          <para style="P18">[[ o.partner_id.city or '' ]] [[ o.partner_id.zip or '' ]]</para>
+          <para style="P18">[[ o.partner_id.country_id.name or '' ]]</para>
         </td>
         <td>
           <para style="P16">
@@ -244,19 +246,19 @@
         <td>
           <blockTable colWidths="87.0,133.0" rowHeights="12,12,12,12">
             <tr>
-              <td><para style="terp_default_8">Ref No.</para></td>
+              <td><para style="terp_default_8"><b>Ref No.</b></para></td>
               <td><para style="terp_default_8">: [[ o.partner_ref or ' ' ]]</para></td>
             </tr>
             <tr>
-              <td><para style="terp_default_8">Date</para></td>
+              <td><para style="terp_default_8"><b>Date</b></para></td>
               <td><para style="terp_default_8">: [[ get_order_date(o.date_order) ]]</para></td>
             </tr>
             <tr>
-              <td><para style="terp_default_8">Currency</para></td>
+              <td><para style="terp_default_8"><b>Currency</b></para></td>
               <td><para style="terp_default_8">: [[ o.currency_id.name or ' ' ]]</para></td>
             </tr>
             <tr>
-              <td><para style="terp_default_8">Payment Terms</para></td>
+              <td><para style="terp_default_8"><b>Payment Terms</b></para></td>
               <td><para style="terp_default_8">: [[ o.payment_term_id.name or ' ']]</para></td>
             </tr>
           </blockTable>
@@ -271,10 +273,10 @@
     <para style="P9"><font color="white"> </font> </para>
     <blockTable colWidths="534.0">
     	<tr>
-    		<td><para style="terp_default_8">Attn : [[ str([obj.name for obj in o.partner_id.child_ids]).replace('[','').replace(']','').replace("u'",'').replace("'",'').replace('u"','').replace('"','') or o.partner_id.name ]]</para></td>
+    		<td><para style="terp_default_8"><b>Attn :</b> [[ str([obj.name for obj in o.partner_id.child_ids]).replace('[','').replace(']','').replace("u'",'').replace("'",'').replace('u"','').replace('"','') or o.partner_id.name ]]</para></td>
     	</tr>
     	<tr>
-    		<td><para style="terp_default_8">Please supply the following:</para></td>
+    		<td><para style="terp_default_800"><b>Please supply the following:</b></para></td>
     	</tr>
     </blockTable>
     <para style="P15"><font color="white"> </font></para>
@@ -300,7 +302,7 @@
           <td><para style="P16">[[ line.name or ' ']]</para></td>
           <td><para style="P16">[[ line.product_id.uom_id.name or ' ' ]]</para></td>
           <td><para style="P23">[[ get_delivery_date(o.date_delivery) ]]</para></td>
-          <td><para style="P5">[[ line.product_qty or ' ']] </para></td>
+          <td><para style="P5">[[ get_qty(line.product_qty) ]] </para></td>
           <td><para style="P6">[[ formatLang(line.price_unit, digits=get_digits(dp='Account') ) ]]</para></td>
           <td><para style="P5">[[ formatLang(line.price_subtotal, digits=get_digits(dp='Account') ) ]] </para></td>
         </tr>
@@ -339,7 +341,7 @@
           </para>
         </td>
         <td>
-          <para style="P25">[[ qty_total(o)]]</para>
+          <para style="P5">[[ qty_total(o)]]</para>
         </td>
         <td>
           <para style="P26"><font color="white"> </font></para>

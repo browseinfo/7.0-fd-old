@@ -45,7 +45,6 @@ class res_users(osv.Model):
         'branch_ids': fields.many2many('res.branch', id1='user_id', id2='branch_id',string='Branch'),
     }
 
-
 class res_company(osv.Model):
     _inherit = 'res.company'
 
@@ -54,7 +53,6 @@ class res_company(osv.Model):
         'date_of_licence':fields.date('Date Of Licence', required=True),
         'npwp': fields.char('NPWP'),
     }
-
 
 class product_product(osv.Model):
     _inherit='product.product'
@@ -86,26 +84,7 @@ class account_invoice(osv.Model):
         'customer_service_no':fields.char('Customer Service No'),
         'customer_good_export_no':fields.char('Customer Good Export No'),
     }
-'''
-class account_invoice_refund(osv.Model):
-    _inherit = 'account.invoice.refund'
 
-    def _get_invoice_refund_default_branch(self, cr, uid, context=None):
-        if context.get('active_id'):
-            ids = context.get('active_id')
-            user_pool = self.pool.get('account.invoice')
-            branch_id = user_pool.browse(cr, uid, ids, context=context).branch_id and user_pool.browse(cr, uid, ids, context=context).branch_id.id or False
-            return branch_id
-
-    _columns = {
-        'branch_id': fields.many2one('res.branch', 'Branch', required=True),
-    }
-
-    _defaults = {
-        'branch_id': _get_invoice_refund_default_branch,
-    }
-
-'''
 class account_invoice_line(osv.Model):
      _inherit="account.invoice.line"
      _columns = {
@@ -124,22 +103,28 @@ class account_bank_statement(osv.Model):
         'branch_id': fields.many2one('res.branch', 'Branch', required=True),
     }
 
-class sale_shop(osv.Model):
-    _inherit = 'sale.shop'
-    _columns = {
-        'branch_id': fields.many2one('res.branch', 'Branch',required=True),
-    }
-
 class account_asset_asset(osv.Model):
     _inherit = 'account.asset.asset'
     _columns = {
         'branch_id': fields.many2one('res.branch', 'Branch', required=True),
     }
+   
+class stock_warehouse_orderpoint(osv.Model):
+    _inherit = 'stock.warehouse.orderpoint'
+    _columns = {
+        'branch_id': fields.many2one('res.branch', 'Branch', required=True),
+    }
+    
+class payment_order(osv.Model):
+    _inherit = 'payment.order'
+    _columns = {
+        'branch_id': fields.many2one('res.branch', 'Branch'),
+    }
 
 class procurement_order(osv.Model):
     _inherit = 'procurement.order'
     _columns = {
-        'branch_id': fields.many2one('res.branch', 'Branch', required=True),
+        'branch_id': fields.many2one('res.branch', 'Branch'),
     }
 
     def create_procurement_purchase_order(self, cr, uid, procurement, po_vals, line_vals, context=None):
@@ -183,8 +168,20 @@ class procurement_order(osv.Model):
             wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
         self.production_order_create_note(cr, uid, ids, context=context)
         return res
-
         
+
+    def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, product_qty, context=None):
+        return {'name': orderpoint.name,
+                'date_planned': self._get_orderpoint_date_planned(cr, uid, orderpoint, datetime.today(), context=context),
+                'product_id': orderpoint.product_id.id,
+                'product_qty': product_qty,
+                'company_id': orderpoint.company_id.id,
+                'product_uom': orderpoint.product_uom.id,
+                'location_id': orderpoint.location_id.id,
+                'procure_method': 'make_to_order',
+                'origin': orderpoint.name,
+                'branch_id': orderpoint.branch_id.id or False}
+
 class mrp_production(osv.Model):
     _inherit = 'mrp.production'
     _columns = {
@@ -335,7 +332,5 @@ class account_invoice_refund(osv.osv_memory):
             invoice_domain.append(('id', 'in', created_inv))
             result['domain'] = invoice_domain
             return result
-    
-    
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

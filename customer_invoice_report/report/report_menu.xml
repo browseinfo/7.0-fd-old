@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+ <data>
+   <report id="customer_sale_webkit_report"
+           name="custom.inv.report"
+           auto="False"
+           model="custom.invoice.report.wizard"
+           file="customer_invoice_report/report/customer_sale_report.mako"
+           string="Customer Sale Report"
+           header="False"  
+           report_type="webkit"/>
+           
+ </data>
+</openerp>
+ 
+

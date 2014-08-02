@@ -32,6 +32,8 @@ class sale_amount_report(report_sxw.rml_parse):
             'get_subtotal_qty': self.get_subtotal_qty,
             'get_total_amount': self.get_total_amount,
             'date_format': self.date_format,
+            'get_partner_name': self.get_partner_name,
+            'get_partner_ref': self.get_partner_ref,
         })
 
     def set_context(self, objects, data, ids, report_type=None):
@@ -53,6 +55,17 @@ class sale_amount_report(report_sxw.rml_parse):
         self.partner_ids = [x[0] for x in self.cr.fetchall()]
         objects = obj_partner.browse(self.cr, self.uid, self.partner_ids)
         return super(sale_amount_report, self).set_context(objects, data, self.partner_ids, report_type=report_type)
+
+    def get_partner_name(self, partner_id):
+        print "partner nameeeeeeeeee", partner_id
+        parnter_obj = self.pool.get('res.partner')
+        name = parnter_obj.browse(self.cr, self.uid, partner_id).name
+        return name or ''
+
+    def get_partner_ref(self, partner_id):
+        parnter_obj = self.pool.get('res.partner')
+        reference = parnter_obj.browse(self.cr, self.uid, partner_id).ref
+        return reference or ''
 
     def get_from_date(self):
         return self.start_date
@@ -78,24 +91,56 @@ class sale_amount_report(report_sxw.rml_parse):
     def _get_amount_data(self, obj):
         sale_obj = self.pool.get('sale.order')
         line_obj = self.pool.get('sale.order.line')
+        currency_obj = self.pool.get('res.currency')
+        cur_obj = self.pool.get('res.currency.rate')
         self.total_qty = 0
         self.total_amount = 0.0
         self.sub_total_qty = 0
         res = []
         result = []
         line_name = []
+        to_datelist= []
+        from_datelist= []
         self.cr.execute("select DISTINCT so.id from sale_order_line sol "\
         "left join sale_order as so on (sol.order_id = so.id) "\
         "WHERE (so.state != 'draft') AND (so.date_order >= %s) AND (so.date_order <= %s)"\
         "AND so.partner_id = %s"\
-        "group by so.id,so.partner_id", (self.start_date, self.end_date, obj.id,))
+        "group by so.id,so.partner_id", (self.start_date, self.end_date, obj.id))
         temp = [x[0] for x in self.cr.fetchall()]
-        print "temp==========", temp
         if temp:
             for so in sale_obj.browse(self.cr, self.uid, temp):
                 self.sub_total_qty = 0
                 self.total_amount = self.total_amount + so.amount_untaxed
                 self.partner_name = so.partner_id.name
+                self.cr.execute(" select * from res_currency where name = 'USD' ")
+                browse_curency = self.cr.fetchone()
+                
+                for to_curr_obj in currency_obj.browse(self.cr, self.uid, [browse_curency[0]]):
+                    for to_rate_obj in to_curr_obj.rate_ids:
+                        to_datelist.append(to_rate_obj.name)
+                to_get_datetime = lambda s: datetime.strptime(s, "%Y-%m-%d")
+                to_base = to_get_datetime(so.date_order)
+                to_later = filter(lambda d: to_get_datetime(d) <= to_base, to_datelist)
+                to_closest_date = max(to_later, key = lambda d: to_get_datetime(d))
+                
+                to_rate_search = cur_obj.search(self.cr, self.uid, [('name', '=', to_closest_date), ('currency_id', '=', browse_curency[0])])[0]
+                to_rate_browse = cur_obj.browse(self.cr, self.uid, to_rate_search)
+                to_rate = to_rate_browse.rate
+                
+                for from_curr_obj in currency_obj.browse(self.cr, self.uid, [so.pricelist_id.currency_id.id]):
+                    for from_rate_obj in from_curr_obj.rate_ids:
+                        from_datelist.append(from_rate_obj.name)
+                from_get_datetime = lambda s: datetime.strptime(s, "%Y-%m-%d")
+                from_base = from_get_datetime(so.date_order)
+                from_later = filter(lambda d: from_get_datetime(d) <= from_base, from_datelist)
+                from_closest_date = max(from_later, key = lambda d: from_get_datetime(d))
+                
+                from_rate_search = cur_obj.search(self.cr, self.uid, [('name', '=', from_closest_date), ('currency_id', '=', so.pricelist_id.currency_id.id)])[0]
+                from_rate_browse = cur_obj.browse(self.cr, self.uid, from_rate_search)
+                from_rate = from_rate_browse.rate
+                
+                rate = round((to_rate / from_rate), 2)
+ 
                 for line in so.order_line:
                     self.sub_total_qty = self.sub_total_qty + line.product_uom_qty
                     profit = 0.0 
@@ -104,9 +149,10 @@ class sale_amount_report(report_sxw.rml_parse):
                         profit = line.price_subtotal - (line.product_uom_qty * line.product_id.standard_price)
                         profit_percent = (profit * 100) / line.price_subtotal
                     res.append({'date_invoice': self.date_format(so.date_order),
-                                'partner_id': so.partner_id.name,
+                                'partner_id': so.partner_id and so.partner_id.id or False,
                                 'number': so.name,
                                 'origin':so.origin,
+                                'currency': so.pricelist_id.currency_id and so.pricelist_id.currency_id.name or False,
                                 'default_code': line.product_id.default_code,
                                 'product_id': line.product_id.name,
                                 'quantity': int(line.product_uom_qty),
@@ -115,6 +161,7 @@ class sale_amount_report(report_sxw.rml_parse):
                                 'price_subtotal': line.price_subtotal,
                                 'total_amount': so.amount_untaxed,
                                 'profit': profit,
+                                'us_amount': (line.price_subtotal * rate),
                                 'profit_percent': round(profit_percent, 2),
                             })
                     self.total_qty = self.total_qty + line.product_uom_qty
@@ -136,15 +183,7 @@ class sale_amount_report(report_sxw.rml_parse):
                 self.total_sum += vals['sum_total']
             return result
 
-#     def new_partner(self,partner):
-#         partnerlist = []
-#         print "#########partner#########", partner
-#         if not partner in partnerlist:
-#             print "partner in=============", partner
-#             return False
-#         else: 
-#             return True
-#         return False    
+
     def date_format(self, datedetail):
         if datedetail:
             a = time.strptime(datedetail,'%Y-%m-%d')

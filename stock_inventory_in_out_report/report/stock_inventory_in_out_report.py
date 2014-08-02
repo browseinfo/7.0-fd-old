@@ -19,6 +19,7 @@
 #
 ############################################################################
 import time
+import datetime
 from openerp.report import report_sxw
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -51,9 +52,9 @@ class stock_inventory_in_out_report(report_sxw.rml_parse):
 
     def date_format(self, datedetail):
         if datedetail:
-            a = time.strptime(datedetail,'%Y-%m-%d')
-            b = time.strftime('%d%B%Y', a)
-            return b
+            date = datetime.datetime.strptime(datedetail, '%Y-%m-%d')
+            date = date.strftime('%d-%b-%Y')
+            return date
         else:
             return ''
 
@@ -81,136 +82,129 @@ class stock_inventory_in_out_report(report_sxw.rml_parse):
         self.regi_total = 0.0
         self.all_total = 0.0
         new = {}
-        self.cr.execute("select lot_stock_id from stock_warehouse where id= %s and branch_id=%s", (data.warehouse_id.id,data.branch_id.id,))
-        warehouse_id = self.cr.fetchone()
-        if warehouse_id:
-            self.cr.execute("select pt.id, pp.default_code,pt.name, sum(sm.product_uos_qty) as in_qty, pu.name as uom from stock_move as sm "\
-                    "left join stock_picking as sp on sm.picking_id = sp.id "\
-                    "left join product_product as pp on sm.product_id = pp.id "\
-                    "left join product_template as pt on pp.product_tmpl_id = pt.id "\
-                    "left join product_uom as pu on pt.uom_id = pu.id "\
-                    "left join stock_location as lc on sm.location_dest_id = lc.id "\
-                    "where sm.location_dest_id= %s "\
-                    "and sm.state = 'done'"\
-                    "and sp.type = 'in'"\
-                    "and (sm.create_date <= %s)" \
-                    "group by pt.id, pp.default_code, pt.name,pt.standard_price, pu.name order by pt.name",
-                            ( warehouse_id[0],self.date_to))
-            in_stock_lines = self.cr.dictfetchall()
-            
-            self.cr.execute("select pt.id, pp.default_code,pt.name, sum(sm.product_uos_qty) as out_qty, pu.name as uom from stock_move as sm "\
-                    "left join stock_picking as sp on sm.picking_id = sp.id "\
-                    "left join product_product as pp on sm.product_id = pp.id "\
-                    "left join product_template as pt on pp.product_tmpl_id = pt.id "\
-                    "left join product_uom as pu on pt.uom_id = pu.id "\
-                    "left join stock_location as lc on sm.location_id = lc.id "\
-                    "where sm.location_id= %s "\
-                    "and sm.state = 'done'"\
-                    "and sp.type = 'out'"\
-                    "and (sm.create_date <= %s)"\
-                    "group by pt.id, pp.default_code,pt.name,pt.standard_price, pu.name  order by pt.name",
-                            ( warehouse_id[0],self.date_to))
-    
-            stock_lines = self.cr.dictfetchall()
-    
-            new = self.merge_lists(in_stock_lines, stock_lines, 'id')
-            if new:
-                for line in new:
-                    qty = line.get('in_qty', False) - line.get('out_qty', False)
-                    nwqty = abs(qty)
-                    newres.append({
-                        'code': line.get('default_code', False),
-                        'product': line.get('name', False),
-                        'uom': line.get('uom', False),
-                        'totalqty': nwqty,
-                       })
-           
-            self.cr.execute("select pt.id, pp.default_code,pt.name, sum(sm.product_uos_qty) as in_qty, pu.name as uom from stock_move as sm "\
-                    "left join stock_picking as sp on sm.picking_id = sp.id "\
-                    "left join product_product as pp on sm.product_id = pp.id "\
-                    "left join product_template as pt on pp.product_tmpl_id = pt.id "\
-                    "left join product_uom as pu on pt.uom_id = pu.id "\
-                    "left join stock_location as lc on sm.location_dest_id = lc.id "\
-                    "where sm.location_dest_id= %s "\
-                    "and sm.state = 'done'"\
-                    "and sp.type = 'in'"\
-                    "and (sm.create_date <= %s) and (sm.create_date >= %s)" \
-                    "group by pt.id, pp.default_code, pt.name,pt.standard_price, pu.name order by pt.name",
-                            ( warehouse_id[0],self.date_to,self.date_from))
-    
-            in_lines = self.cr.dictfetchall()
-            
-    
-            self.cr.execute("select pt.id, pp.default_code,pt.name, sum(sm.product_uos_qty) as out_qty, pu.name as uom from stock_move as sm "\
-                    "left join stock_picking as sp on sm.picking_id = sp.id "\
-                    "left join product_product as pp on sm.product_id = pp.id "\
-                    "left join product_template as pt on pp.product_tmpl_id = pt.id "\
-                    "left join product_uom as pu on pt.uom_id = pu.id "\
-                    "left join stock_location as lc on sm.location_id = lc.id "\
-                    "where sm.location_id= %s "\
-                    "and sm.state = 'done'"\
-                    "and sp.type = 'out'"\
-                    "and (sm.create_date <= %s) and (sm.create_date >= %s)" \
-                    "group by pt.id, pp.default_code,pt.name,pt.standard_price, pu.name  order by pt.name",
-                            ( warehouse_id[0],self.date_to,self.date_from))
-    
-            pick_lines = self.cr.dictfetchall()
-    
-            
-            
-            
-            result = self.merge_lists(in_lines, pick_lines, 'id')
-            if result:
-                for line in in_lines:
-                    res.append({
-                        'code': line.get('default_code', False),
-                        'product': line.get('name', False),
-                        'uom': line.get('uom', False),
-                        'in_qty': line.get('in_qty', False),
-                        'out_qty': line.get('out_qty', False),
-                        'totalqty': nwqty,
-                       })
-                    #self.regi_total = line[2]
-                    #self.all_total = total
-            get = self.merge_lists(res, newres, 'product')
-            if get:
-                for line in get:
-                    stockinobj = self.pool.get('stock.inventory')
-                    if line.get('product'):
-                         self.cr.execute("select si.id from stock_inventory si where state='done' and (si.date <= %s) and (si.date >= %s)", (self.date_to, self.date_from,))
-                         invids = [ i for i in self.cr.fetchall()[0]]
-                         for si in stockinobj.browse(self.cr,self.uid, invids):
-                             inv_qty = 0
-                             for move in si.move_ids:
-                                 productname = move.product_id.name
-                                 if productname == line.get('product', False):
-                                     inv_qty = move.product_qty
-                    last_qty = line.get('totalqty', False) + line.get('in_qty', False) - line.get('out_qty', False)
-                    opening_qty = last_qty + inv_qty
-                    if inv_qty < 0:
-                        katering = 'Selisih Kurang'
-                    if inv_qty > 0:
-                        katering = 'Selisih lebih'
-                    if inv_qty == 0: 
-                        katering = 'Sesuai'
-                    
-                    getres.append({
-                        'code': line.get('code', False),
-                        'product': line.get('product', False),
-                        'uom': line.get('uom', False),
-                        'in_qty': line.get('in_qty', False),
-                        'out_qty': line.get('out_qty', False),
-                        'totalqty': line.get('totalqty', False),
-                        'inv_qty' : inv_qty,
-                        'last_qty': last_qty,
-                        'ope_qty': opening_qty,
-                        'selish': inv_qty,
-                        'katering': katering,
-                       })
+        self.cr.execute("select pt.id, pp.default_code,pt.name, sum(sm.product_uos_qty) as in_qty, pu.name as uom from stock_move as sm "\
+                "left join stock_picking as sp on sm.picking_id = sp.id "\
+                "left join product_product as pp on sm.product_id = pp.id "\
+                "left join product_template as pt on pp.product_tmpl_id = pt.id "\
+                "left join product_uom as pu on pt.uom_id = pu.id "\
+                "where sm.branch_id= %s "\
+                "and sm.state = 'done'"\
+                "and sp.type = 'in'"\
+                "and (sm.create_date <= %s)" \
+                "group by pt.id, pp.default_code, pt.name,pt.standard_price, pu.name order by pt.name",
+                        ( data.branch_id.id,self.date_to))
+        in_stock_lines = self.cr.dictfetchall()
+        
+        self.cr.execute("select pt.id, pp.default_code,pt.name, sum(sm.product_uos_qty) as out_qty, pu.name as uom from stock_move as sm "\
+                "left join stock_picking as sp on sm.picking_id = sp.id "\
+                "left join product_product as pp on sm.product_id = pp.id "\
+                "left join product_template as pt on pp.product_tmpl_id = pt.id "\
+                "left join product_uom as pu on pt.uom_id = pu.id "\
+                "where sm.branch_id= %s "\
+                "and sm.state = 'done'"\
+                "and sp.type = 'out'"\
+                "and (sm.create_date <= %s)"\
+                "group by pt.id, pp.default_code,pt.name,pt.standard_price, pu.name  order by pt.name",
+                        ( data.branch_id.id,self.date_to))
+
+        stock_lines = self.cr.dictfetchall()
+
+        new = self.merge_lists(in_stock_lines, stock_lines, 'id')
+        if new:
+            for line in new:
+                qty = line.get('in_qty', False) - line.get('out_qty', False)
+                nwqty = abs(qty)
+                newres.append({
+                    'code': line.get('default_code', False),
+                    'product': line.get('name', False),
+                    'uom': line.get('uom', False),
+                    'totalqty': nwqty,
+                   })
+       
+        self.cr.execute("select pt.id, pp.default_code,pt.name, sum(sm.product_uos_qty) as in_qty, pu.name as uom from stock_move as sm "\
+                "left join stock_picking as sp on sm.picking_id = sp.id "\
+                "left join product_product as pp on sm.product_id = pp.id "\
+                "left join product_template as pt on pp.product_tmpl_id = pt.id "\
+                "left join product_uom as pu on pt.uom_id = pu.id "\
+                "where sm.branch_id= %s"\
+                "and sm.state = 'done'"\
+                "and sp.type = 'in'"\
+                "and (sm.create_date <= %s) and (sm.create_date >= %s)" \
+                "group by pt.id, pp.default_code, pt.name,pt.standard_price, pu.name order by pt.name",
+                        ( data.branch_id.id,self.date_to,self.date_from))
+
+        in_lines = self.cr.dictfetchall()
+        
+
+        self.cr.execute("select pt.id, pp.default_code,pt.name, sum(sm.product_uos_qty) as out_qty, pu.name as uom from stock_move as sm "\
+                "left join stock_picking as sp on sm.picking_id = sp.id "\
+                "left join product_product as pp on sm.product_id = pp.id "\
+                "left join product_template as pt on pp.product_tmpl_id = pt.id "\
+                "left join product_uom as pu on pt.uom_id = pu.id "\
+                "where sm.branch_id= %s"\
+                "and sm.state = 'done'"\
+                "and sp.type = 'out'"\
+                "and (sm.create_date <= %s) and (sm.create_date >= %s)" \
+                "group by pt.id, pp.default_code,pt.name,pt.standard_price, pu.name  order by pt.name",
+                        ( data.branch_id.id,self.date_to,self.date_from))
+
+        pick_lines = self.cr.dictfetchall()
+
+        
+        
+        
+        result = self.merge_lists(in_lines, pick_lines, 'id')
+        if result:
+            for line in in_lines:
+                res.append({
+                    'code': line.get('default_code', False),
+                    'product': line.get('name', False),
+                    'uom': line.get('uom', False),
+                    'in_qty': line.get('in_qty', False),
+                    'out_qty': line.get('out_qty', False),
+                    'totalqty': nwqty,
+                   })
+                #self.regi_total = line[2]
+                #self.all_total = total
+        get = self.merge_lists(res, newres, 'product')
+        if get:
+            for line in get:
+                stockinobj = self.pool.get('stock.inventory')
+                if line.get('product'):
+                     self.cr.execute("select si.id from stock_inventory si where state='done' and (si.date <= %s) and (si.date >= %s)", (self.date_to, self.date_from,))
+                     invids = [ i for i in self.cr.fetchall()[0]]
+                     for si in stockinobj.browse(self.cr,self.uid, invids):
+                         inv_qty = 0
+                         for move in si.move_ids:
+                             productname = move.product_id.name
+                             if productname == line.get('product', False):
+                                 inv_qty = move.product_qty
+                last_qty = line.get('totalqty', False) + line.get('in_qty', False) - line.get('out_qty', False)
+                opening_qty = last_qty + inv_qty
+                if inv_qty < 0:
+                    katering = 'Selisih Kurang'
+                if inv_qty > 0:
+                    katering = 'Selisih lebih'
+                if inv_qty == 0: 
+                    katering = 'Sesuai'
+                
+                getres.append({
+                    'code': line.get('code', False),
+                    'product': line.get('product', False),
+                    'uom': line.get('uom', False),
+                    'in_qty': line.get('in_qty', False),
+                    'out_qty': line.get('out_qty', False),
+                    'totalqty': line.get('totalqty', False),
+                    'inv_qty' : inv_qty,
+                    'last_qty': last_qty,
+                    'ope_qty': opening_qty,
+                    'selish': inv_qty,
+                    'katering': katering,
+                   })
             
         return getres
 
 
-report_sxw.report_sxw('report.stock.inventory.in.out.report.webkit', 'stock.inventory.in.out.wizard', 'addons/stock_inventory_in_out_report/report/stock_inventory_in_out_report.mako', parser=stock_inventory_in_out_report,header=False)
+report_sxw.report_sxw('report.stock.inventory.in.out.report.webkit', 'stock.inventory.in.out.wizard', 'addons/stock_inventory_in_out_report/report/stock_inventory_in_out_report.rml', parser=stock_inventory_in_out_report,header="internal landscape")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

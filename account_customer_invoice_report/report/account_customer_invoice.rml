@@ -18,11 +18,11 @@
  				<para><font color="white"> </font></para>
  				<para style="company_address">[[ company.street ]]</para>
  				<para style="company_address">[[ company.street2 ]] [[ company.city ]] [[ company.country_id.name ]]</para>
- 				<para style="company_address">Tele. [[ company.phone ]] Fax. [[ company.city ]]</para>
+ 				<para style="company_address">Tele. [[ company.phone ]] Fax. [[ company.fax ]]</para>
          	</place>
          	<lines>1.3cm 26.9cm 20.5cm 26.9cm</lines>
          	<place x="9.0cm" y="2.5cm" height="0.5cm" width="8.0cm">
-         		<para style="main_footer"> GB PT.INDUSTRI INDONESIA</para>
+         		<para style="main_footer"> [[ get_branch_code(o.branch_id) ]] PT. FD INDUSTRI INDONESIA</para>
          	</place>
          	<place x="2.0cm" y="2.5cm" height="0.5cm" width="8.0cm">
          		<para style="main_footer1">I confirm that the above goods mentioned were received in</para>
@@ -92,10 +92,11 @@
 	<blockTableStyle id="Table41">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,-1" stop="0,-1"/>
+      
       <lineStyle kind="LINEABOVE" colorName="#000000" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -173,19 +174,19 @@
   	</pto_header>
   	<blockTable colWidths="330.0,80.0,130.0" rowHeights="10,10,10,10,10,10,10">
   		<tr>
-  			<td><para style="terp_default_8">[[ o.partner_id.name or ' ' ]] </para></td>
+  			<td><para style="terp_default_8">[[ ((o.partner_id.is_company == True) and (o.partner_id.name)) or o.partner_id.parent_id.name ]] </para></td>
   			<td><para style="terp_default_8">Invoice No.</para></td>
   			<td><para style="terp_default_8">: [[ o.number or ' ' ]]</para></td>
   		</tr>
   		<tr>
   			<td><para style="terp_default_8">[[ o.partner_id.street or ' ' ]] </para></td>  			
-  			<td><para style="terp_default_8">Invoice Date</para></td>
+  			<td><para style="terp_default_8">Date</para></td>
   			<td><para style="terp_default_8">: [[ formatLang(o.date_invoice , date=True) ]]</para></td>
   		</tr>
   		<tr>
   			<td><para style="terp_default_8">[[ o.partner_id.company_id.name or ' ' ]]</para></td>  			
   			<td><para style="terp_default_8">Currency</para></td>
-  			<td><para style="terp_default_8">: [[ o.currency_id.name or ' ' ]] [[ o.currency_id.symbol or ' ' ]] </para></td>
+  			<td><para style="terp_default_8">: [[ o.currency_id.name or ' ' ]] </para></td>
   		</tr>
   		<tr>
   			<td>
@@ -237,8 +238,9 @@
   			</tr>
   		</blockTable>
   	</section>
-  	<blockTable colWidths="330.0,60.0,70.0,80.0" style="Table41">
+  	<blockTable colWidths="240.0,90.0,60.0,70.0,80.0" style="Table41">
 	  	<tr>
+	  		<td><para style="terp_default_831"></para></td>
 	  		<td><para style="terp_default_831">E. $ O.E. <font color="white">.........</font><b>Total</b></para></td>
 	  		<td><para style="terp_default_831"><b>[[ get_total_qty() ]]</b></para></td>
 	  		<td><para style="terp_default_831"></para></td>

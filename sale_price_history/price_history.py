@@ -19,6 +19,7 @@ class sale_order(osv.osv):
     
     _columns = {
         'sale_history_ids': fields.one2many('sale.order.line.history', 'order_id', 'History Lines', readonly=True),
+        'effective_date': fields.date('Effective Date')
     }
     
 sale_order()

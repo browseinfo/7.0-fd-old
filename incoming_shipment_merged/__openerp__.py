@@ -18,11 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
-
-
 {
     'name': 'Merge Incoming Shipment',
-    'version': '0.1',
+    'version': '1.0',
     'category': 'Tools',
     'description': """
         Merge Incoming Shipment.    

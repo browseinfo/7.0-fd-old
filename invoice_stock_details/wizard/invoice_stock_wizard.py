@@ -54,9 +54,11 @@ class invoice_stock_details_wizard(osv.osv_memory):
              'model': 'account.invoice',
              'form': data
         }
+        self_browse = self.browse(cr, uid, ids)
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'invoice.stock.details',
             'datas': datas,
+            'name': 'LAPORAN POSISI BARANG ' + '(' + self_browse[0].branch_id.branch_code + ')'
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

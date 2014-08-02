@@ -90,18 +90,26 @@ class delivery_order_merge(osv.osv_memory):
         state = []
         pick_ids = []
         branch = []
+        partner = []
+        moves_product = []
         origin = ''
         if len(shipments) < 2:
             raise osv.except_osv(_('Warning'),
                 _('Please select multiple order to merge in the list view.'))
         
         new_pick = self.pool.get('stock.picking.out').create(cr, uid,{'type': 'out','state': 'draft',}, context=context)
-        pick_name = pick_obj.browse(cr,uid,new_pick,context=context).pick_name
+        pick_data = pick_obj.browse(cr,uid,new_pick,context=context)
+        pick_name = pick_data.pick_name
         
         for line in shipments:
+            origin += line.name
             state.append(line.state)
             invoice.append(line.invoice_state)
             branch.append(line.branch_id.id)
+            partner.append(line.partner_id.id)
+            if not partner[1:] == partner[:-1]:
+                 raise osv.except_osv(_('Warning!'),
+                                         _('Merging is only allowed on same Partner'))            
             if not state[1:] == state[:-1]:
                  raise osv.except_osv(_('Warning!'),
                                          _('Merging is only allowed on same state'))
@@ -116,18 +124,45 @@ class delivery_order_merge(osv.osv_memory):
                          _('Merging is Not allowed on Done Orders.'))
             
             for move in line.move_lines:
-                origin += line.name
-                move_obj.write(cr, uid, [move.id], {'picking_id':new_pick, 'origin':origin}, context=context)
-                origin += '-'
+            	if  move.product_id.id in moves_product:
+            		cr.execute("select sum(product_qty) from stock_move where picking_id=%s and product_id=%s", (new_pick, move.product_id.id))
+            		product_qty = cr.fetchone()
+            		new_qty = product_qty[0] + move.product_qty
+            		cr.execute("update stock_move set product_qty = %s where picking_id=%s and product_id=%s", (new_qty,new_pick, move.product_id.id))
+            	else:
+	            	move_obj.create(cr, uid,{
+				            'name': move.name or '',
+				            'product_id': move.product_id and move.product_id.id or False,
+				            'product_qty': move.product_qty,
+				            'product_uos_qty': move.product_uos_qty,
+				            'product_uom': move.product_uom and move.product_uom.id or False,
+				            'product_uos': move.product_uos and move.product_uos.id or False,
+				            'date': move.date,
+				            'date_expected': move.date_expected,
+				            'location_id':move.location_id and move.location_id.id or False,
+				            'location_dest_id':move.location_dest_id and move.location_dest_id.id or False,
+				            'picking_id': new_pick,
+				            'partner_id': move.partner_id and move.partner_id.id or False,
+				            'move_dest_id': move.move_dest_id and move.move_dest_id.id or False,
+				            'state': move.state,
+				            'type':move.type,
+				            'company_id': move.company_id.id,
+				            'price_unit': move.price_unit,
+	        			}, context=context)
+	            	moves_product.append(move.product_id.id)
                 
-            pick_obj.write(cr, uid, [new_pick], {'invoice_state': line.invoice_state, 'state': line.state, 'branch_id': line.branch_id.id}, context=context)
-            
+                #move_obj.write(cr, uid, [move.id], {'picking_id':new_pick, 'origin':origin}, context=context)
+            pick_obj.write(cr, uid, [new_pick], {'invoice_state': line.invoice_state, 'state': line.state, 'partner_id': line.partner_id and line.partner_id.id or False,'origin':origin, 'branch_id': line.branch_id.id}, context=context)
+            origin += '-'
             if pick_ids:
                 new_id = line.id
                 pick_ids.append(new_id)
             else:
                  pick_ids.append(line.id)
             pick_obj.write(cr, uid, [new_pick], {'pick_name': pick_ids}, context=context)
+            wf_service = netsvc.LocalService("workflow")
+            for pick in pick_ids:
+            	wf_service.trg_validate(uid, 'stock.picking', pick, 'button_cancel', cr)
         return {
                 'name': _('Delivery Order'),
                 'view_type': 'form',
@@ -206,41 +241,79 @@ class incoming_shipment_merge(osv.osv_memory):
                 _('Please select multiple order to merge in the list view.'))
         
         new_pick = self.pool.get('stock.picking.in').create(cr, uid,{'type': 'in','state': 'draft',}, context=context)
-        pick_name = pick_obj.browse(cr,uid,new_pick,context=context).pick_name
-        print "\n\npick_name", pick_name
+        pick_data = pick_obj.browse(cr,uid,new_pick,context=context)
+        pick_name = pick_data.pick_name
         
         for line in shipments:
+            origin += line.name
             state.append(line.state)
             invoice.append(line.invoice_state)
+            branch.append(line.branch_id.id)
+            partner.append(line.partner_id.id)
+            if not partner[1:] == partner[:-1]:
+                 raise osv.except_osv(_('Warning!'),
+                                         _('Merging is only allowed on same Partner'))            
             if not state[1:] == state[:-1]:
                  raise osv.except_osv(_('Warning!'),
                                          _('Merging is only allowed on same state'))
             if not invoice[1:] == invoice[:-1]:
                  raise osv.except_osv(_('Warning!'),
                                          _('Merging is only allowed on same Invoice state'))
+            if not branch[1:] == branch[:-1]:
+                 raise osv.except_osv(_('Warning!'),
+                                         _('Merging is only allowed on same branch'))
             if line.state in ('done'):
                 raise osv.except_osv(_('Warning!'),
                          _('Merging is Not allowed on Done Orders.'))
             
             for move in line.move_lines:
-                move_obj.write(cr, uid, [move.id], {'picking_id':new_pick, 'origin':line.name}, context=context)
+            	if  move.product_id.id in moves_product:
+            		cr.execute("select sum(product_qty) from stock_move where picking_id=%s and product_id=%s", (new_pick, move.product_id.id))
+            		product_qty = cr.fetchone()
+            		new_qty = product_qty[0] + move.product_qty
+            		cr.execute("update stock_move set product_qty = %s where picking_id=%s and product_id=%s", (new_qty,new_pick, move.product_id.id))
+            	else:
+	            	move_obj.create(cr, uid,{
+				            'name': move.name or '',
+				            'product_id': move.product_id and move.product_id.id or False,
+				            'product_qty': move.product_qty,
+				            'product_uos_qty': move.product_uos_qty,
+				            'product_uom': move.product_uom and move.product_uom.id or False,
+				            'product_uos': move.product_uos and move.product_uos.id or False,
+				            'date': move.date,
+				            'date_expected': move.date_expected,
+				            'location_id':move.location_id and move.location_id.id or False,
+				            'location_dest_id':move.location_dest_id and move.location_dest_id.id or False,
+				            'picking_id': new_pick,
+				            'partner_id': move.partner_id and move.partner_id.id or False,
+				            'move_dest_id': move.move_dest_id and move.move_dest_id.id or False,
+				            'state': move.state,
+				            'type':move.type,
+				            'company_id': move.company_id.id,
+				            'price_unit': move.price_unit,
+	        			}, context=context)
+	            	moves_product.append(move.product_id.id)
                 
-            pick_obj.write(cr, uid, [new_pick], {'invoice_state': line.invoice_state, 'state': line.state}, context=context)
-            
+                #move_obj.write(cr, uid, [move.id], {'picking_id':new_pick, 'origin':origin}, context=context)
+            pick_obj.write(cr, uid, [new_pick], {'invoice_state': line.invoice_state, 'state': line.state, 'partner_id': line.partner_id and line.partner_id.id or False,'origin':origin, 'branch_id': line.branch_id.id}, context=context)
+            origin += '-'
             if pick_ids:
                 new_id = line.id
                 pick_ids.append(new_id)
             else:
                  pick_ids.append(line.id)
             pick_obj.write(cr, uid, [new_pick], {'pick_name': pick_ids}, context=context)
+            wf_service = netsvc.LocalService("workflow")
+            for pick in pick_ids:
+            	wf_service.trg_validate(uid, 'stock.picking', pick, 'button_cancel', cr)
         return {
-                'name': _('Incoming Shipment'),
+                'name': _('Delivery Order'),
                 'view_type': 'form',
                 'view_mode': 'tree,form',
-                'res_model': 'stock.picking.in',
+                'res_model': 'stock.picking.out',
                 'view_id': False,
                 'type': 'ir.actions.act_window',
-                'context': {'type' : 'in', 'active_id': [new_pick]}
+                'context': {'type' : 'out', 'active_id': [new_pick]}
             }
 
 incoming_shipment_merge()

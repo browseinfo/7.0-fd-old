@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    This module uses OpenERP, Open Source Management Solution Framework.
+#    Copyright (C) 2014-Today BrowseInfo (<http://www.browseinfo.in>)
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
 
@@ -109,7 +109,9 @@ class account_customer_invoice_report(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
             'get_address':self.get_address,
+            'get_address1':self.get_address1,
             'get_telephone':self.get_telephone,
+            'get_company_name':self.get_company_name,
             'get_licence':self.get_licence,
             'get_invoice_ids':self.get_invoice_ids,
             'get_formate_date':self.get_formate_date,
@@ -119,15 +121,34 @@ class account_customer_invoice_report(report_sxw.rml_parse):
             'get_index':self.get_index,
             'get_formate_qty':self.get_formate_qty,
         })
+    def get_company_name(self,branch_id):
+        company_id = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).company_id.id
+        company_name = self.pool.get('res.company').browse(self.cr,self.uid,company_id).name
+        return company_name
     def get_address(self,branch_id):        
-        address = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).address
-        if address:
-            address= address.replace('\n','')
-            return address
+        #address = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).address
+        company_id = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).company_id.id
+        address1 = self.pool.get('res.company').browse(self.cr,self.uid,company_id).street
+        if address1:
+            address1= address1.replace('\n','')
+            return address1
+    
+    def get_address1(self,branch_id):        
+        #address = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).address
+        company_id = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).company_id.id
+        address2 = self.pool.get('res.company').browse(self.cr,self.uid,company_id).street2
+        if address2:
+            address2= address2.replace('\n','')
+            return address2    
+    
     def get_telephone(self,branch_id):        
-        telephone = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).telephone_no
+        #telephone = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).telephone_no
+        company_id = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).company_id.id
+        telephone = self.pool.get('res.company').browse(self.cr,self.uid,company_id).phone
         if telephone:
             return telephone
+        else:
+            return ''
     def get_licence(self,branch_id):        
         licence = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id).company_id.licence_no
         if licence:

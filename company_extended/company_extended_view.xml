@@ -256,23 +256,12 @@
         </field>
     </record>
     
-    <record id="view_sale_shop_branch_form1" model="ir.ui.view">
-        <field name="name">sale.shop.branch.extened</field>
-        <field name="model">sale.shop</field>
-        <field name="inherit_id" ref="sale.view_shop_form"/>
+    <record id="view_payment_order_branch_form1" model="ir.ui.view">
+        <field name="name">payment.order.branch.extened</field>
+        <field name="model">payment.order</field>
+        <field name="inherit_id" ref="account_payment.view_payment_order_form"/>
         <field name="arch" type="xml">
-            <field name="pricelist_id" position="after">
-                <field name="branch_id"/>
-            </field>
-        </field>
-    </record>
-
-    <record id="view_account_asset_branch_form1" model="ir.ui.view">
-        <field name="name">account.asset.branch.extened</field>
-        <field name="model">account.asset.asset</field>
-        <field name="inherit_id" ref="account_asset.view_account_asset_asset_form"/>
-        <field name="arch" type="xml">
-            <field name="currency_id" position="after">
+            <field name="mode" position="after">
                 <field name="branch_id"/>
             </field>
         </field>
@@ -288,7 +277,18 @@
             </field>
         </field>
     </record>
-
+    
+    <record id="view_stock_warehouse_orderpoint_form1" model="ir.ui.view">
+        <field name="name">stock.warehouse.orderpoint.branch.form</field>
+        <field name="model">stock.warehouse.orderpoint</field>
+        <field name="inherit_id" ref="procurement.view_warehouse_orderpoint_form"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="branch_id"/>
+            </field>
+        </field>
+    </record>
+    
     <record id="view_mrp_production_form1" model="ir.ui.view">
 		<field name="name">mrp.production.extened</field>
 		<field name="model">mrp.production</field>

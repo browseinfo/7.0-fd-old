@@ -26,7 +26,7 @@
     'category': 'Sale Branch',
     'author': 'BrowseInfo',
     'website': 'http://www.browseinfo.in',
-    'depends': ['base', 'purchase', 'purchase_extended', 'company_extended', 'product_extended'],
+    'depends': ['base', 'purchase', 'sale', 'purchase_extended', 'company_extended', 'product_extended', 'sale_invocie_discount'],
     'data': ['sale_extended_view.xml',
         ],
     'demo': [],

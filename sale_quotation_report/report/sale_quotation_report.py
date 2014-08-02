@@ -19,6 +19,7 @@
 #
 ##############################################################################
 import time
+from datetime import datetime
 from openerp.report import report_sxw
 from openerp.osv import fields, osv, orm
 
@@ -28,6 +29,7 @@ class sale_quotation_report(report_sxw.rml_parse):
         self.index = 0
         self.localcontext.update({
             'time': time,
+            'get_order_date': self._get_order_date,
             'get_index':self.get_index,
             'get_qty':self.get_qty,
         })
@@ -35,6 +37,10 @@ class sale_quotation_report(report_sxw.rml_parse):
     def get_index(self):
         self.index += 1
         return self.index
+    
+    def _get_order_date(self, date):
+        ds = (datetime.strptime(date, '%Y-%m-%d')).strftime('%d-%b-%Y')
+        return ds
     
     def get_qty(self,qty):
         qty = int(qty)

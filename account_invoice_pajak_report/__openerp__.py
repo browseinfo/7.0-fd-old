@@ -25,13 +25,14 @@
     "depends" : ['account', 'invoice_custom'],
     "author" : "BrowseInfo",
     "description": """
+        This module help to print report on Account Invoice.
         
     """,
 
     "website" : "www.browseinfo.in",
 
     "data" : [
-        'report_view.xml',
+        'account_invoice_pajak_view.xml'
         
     ],
     "auto_install": False,

@@ -20,25 +20,7 @@
            />
 
            
-<!--report id="sale_ledger_report"
-           name="sale.ledger.report"
-           auto="False"
-           model="sales.ledger.report.wizard"
-           file="sales_ledger_report/report/sale_ledger.mako"
-           string="Sales Ledger Report"
-           header="False"  
-           webkit_header="sales_ledger_report.ir_header_webkit_sale_ledger_report"
-           report_type="webkit"/-->           
-
-<!--report id="sale_amount_report"
-           name="sale.amount.report"
-           auto="False"
-           model="sales.ledger.report.wizard"
-           file="sales_ledger_report/report/sale_amount.mako"
-           string="Sales Amount Report"
-           header="False"  
-           webkit_header="sales_ledger_report.ir_header_webkit_sale_ledger_report"
-           report_type="webkit"/-->    
+   
 
      </data>
 </openerp>

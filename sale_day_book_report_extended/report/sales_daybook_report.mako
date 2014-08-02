@@ -34,42 +34,52 @@
 	</br>
 		<table width="220%">
 			<th width="8%">DATE</th><th width="10%">INVOICE NUMBER</th><th width="6%">AREA</th>
-			<th width="16%">CUSTOMER</th><th width="22%">DESCRIPTION</th><th width="6%">CURRENCY</th><th width="7%">TOTAL</th>
+			<th width="16%">CUSTOMER</th><th width="22%">DESCRIPTION</th><th width="6%">FOREIGN CURRENCY</th><th width="7%">TOTAL(USD)</th>
 			<th width="7%">RATE</th><th width="8%">DPP PPN</th><th width="10%">NO SERI FAKTUR PAJAK</th>
 			%for o in get_invoice_ids(data['form']):
-				%for line in o.invoice_line:
-					<tr>
-						<td style="text-align:center;" > ${ get_formate_date(o.date_invoice) } </td>
-						<td style="text-align:center;"> ${ o.number or '' } </td>
-						<td style="text-align:center;"> ${ o.branch_id.branch_code or '' } </td>
-						<td style="text-align:left;"> ${ o.partner_id.name or '' } </td>
-						<td style="text-align:left;"> ${ line.name or '' } </td>
-						<td style="text-align:center;"> ${ o.currency_id.name or '' }  
-							<font color="white">${ set_currency_data(o.currency_id.name,line.price_subtotal) } </font> 
-						</td>
-						<td style="text-align:right;"> ${ line.price_subtotal or '0.0' } </td>
-						<td style="text-align:right;">
-							<font color="white">${ set_exchange_rate(o) } </font> 
-							${ o.exchange_rate or '0.0' }						 	
-						</td>
-						<td style="text-align:right;"> ${ (line.price_subtotal) * (o.exchange_rate) } </td>
-						<td style="text-align:right; border-right:1px solid gray;"> ${ o.nomor_seri or '' } </td>
-					</tr>
-				%endfor
+				<tr>
+					<td style="text-align:center;" > ${ get_formate_date(o.date_invoice) } </td>
+					<td style="text-align:center;"> ${ o.number or '' } </td>
+					<td style="text-align:center;"> ${ o.branch_id.branch_code or '' } </td>
+					<td style="text-align:left;"> ${ ((o.partner_id.is_company == True) and (o.partner_id.name)) or o.partner_id.parent_id.name } </td>
+					<td style="text-align:left;"> ${ str(get_product_code(o.invoice_line)).replace('[','').replace(']','').replace("u'",'').replace("'",'') or '' } </td>
+					<td style="text-align:center;"> ${ o.currency_id.name or '' }  
+						<font color="white">${ set_currency_data(o.currency_id.name,o.amount_untaxed) } </font> 
+					</td>
+					<td style="text-align:right;"> ${ get_currency_subtotal(o) } </td>
+					<td style="text-align:right;">
+						<font color="white">${ set_exchange_rate(o) } </font> 
+						${ o.exchange_rate or '0.0' }						 	
+					</td>
+					<td style="text-align:right;"> ${ get_currency_subtotal_dpp(o) } </td>
+					<td style="text-align:right; border-right:1px solid gray;"> ${ o.nomor_seri or '' } </td>
+				</tr>
 			%endfor
 		</table>
 		<table width="220%">
+				<tr>
+					<td width="8%" style="border:none;"><font color="white"></font></td>
+					<td width="10%" style="border:none;"><font color="white"></font></td>
+					<td width="10%" style="border:none;"><font color="white"></font></td>
+					<td width="14%" style="border:none;"><font color="white"></font></td>
+					<td width="20%" style="text-align:center; border:none;"><b>Total</b></td>
+					<td width="6%" style="border:none;"></td>
+					<td width="7%" style="text-align:right; border:none;"></td>
+					<td width="7%" style="border:none;"><font color="white"></font></td>
+					<td width="8%" style="text-align:right; border:none;" ><b>${ get_dpp_total_curr() }</b></td>
+					<td width="10%" style="text-align:right; border:none;"><font color="white"></font></td>
+				</tr>
 			%for key in get_currency_data():
 				<tr>
 					<td width="8%" style="border:none;"><font color="white"></font></td>
 					<td width="10%" style="border:none;"><font color="white"></font></td>
 					<td width="10%" style="border:none;"><font color="white"></font></td>
 					<td width="14%" style="border:none;"><font color="white"></font></td>
-					<td width="20%" style="text-align:center; border:none;"><b>${ get_string() }</b></td>
+					<td width="20%" style="text-align:center; border:none;"></b></td>
 					<td width="6%" style="border:none;">${ key }</td>
 					<td width="7%" style="text-align:right; border:none;">${ get_currency_total(key) }</td>
 					<td width="7%" style="border:none;"><font color="white"></font></td>
-					<td width="8%" style="text-align:right; border:none;" >${ get_dpp_total(data['form']) }</td>
+					<td width="8%" style="text-align:right; border:none;" ></td>
 					<td width="10%" style="text-align:right; border:none;"><font color="white"></font></td>
 				</tr>
 			%endfor
@@ -121,7 +131,7 @@
 					<td width="20%" style="border:none;"><font color="white"></font></td>
 					<td width="6%" style="border:none;"><font color="white"></font></td>
 					<td width="7%" style="text-align:right; border-top:1px solid black; border-left:none;border-bottom:none;" >
-						${ get_dpp() }
+						<b>${ get_dpp_total_curr() }</b>
 					</td>
 					<td width="7%" style="border:none;"><font color="white"></font></td>
 					<td width="8%" style="border:none;"><font color="white"></font></td>

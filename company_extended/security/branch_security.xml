@@ -48,6 +48,15 @@
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="groups" eval="[(4, ref('company_extended.group_branch_user_manager'))]"/>
     </record>
+    
+
+    <record id="stock_warehouse_orderpoint_branch_manager_rule" model="ir.rule">
+        <field name="name">Stock Warehouse Orderpoint Manager</field>
+        <field name="model_id" ref="model_stock_warehouse_orderpoint"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('company_extended.group_branch_user_manager'))]"/>
+    </record>
 
 	
     <record id="account_branch_global_rule" model="ir.rule">
@@ -86,6 +95,14 @@
     <record id="crossovered_budget_branch_rule" model="ir.rule">
         <field name="name">Budget Branch</field>
         <field name="model_id" ref="model_crossovered_budget"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('branch_id','=',user.branch_id.id), ('branch_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('company_extended.group_branch_user'))]"/>
+    </record>
+    
+    <record id="stock_warehouse_orderpoint_branch_rule_user" model="ir.rule">
+        <field name="name">Orderpoint Branch</field>
+        <field name="model_id" ref="model_stock_warehouse_orderpoint"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|', ('branch_id','=',user.branch_id.id), ('branch_id', '=', False)]</field>
         <field name="groups" eval="[(4, ref('company_extended.group_branch_user'))]"/>

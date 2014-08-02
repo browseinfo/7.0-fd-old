@@ -22,7 +22,7 @@
         </record>
         
         <record id="action_account_date_wizard" model="ir.actions.act_window">
-            <field name="name">CONTOH IMPOR REPORT</field>
+            <field name="name">CONTOH IMPOR</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.report.wizard</field>
             <field name="view_type">form</field>
@@ -55,7 +55,7 @@
         </record>
 
         <record id="action_account_ekspor_report_wizard" model="ir.actions.act_window">
-            <field name="name">CONTOH EKSPOR REPORT</field>
+            <field name="name">CONTOH EKSPOR</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.ekspor.report.wizard</field>
             <field name="view_type">form</field>

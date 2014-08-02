@@ -1,0 +1,282 @@
+<?xml version="1.0"?>
+<document filename="Invoice Report.pdf">
+  <template pageSize="(842.0,595.0)" title="Invoice Report" author="Browseinfo" allowSplitting="20">
+     
+    <pageTemplate id="first">
+          <frame id="first" x="28.0" y="28.0" width="786" height="525"/>
+    </pageTemplate>  
+      
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    
+    
+    <blockTableStyle id="Table_Above_Below">
+      <blockAlignment value="CENTER"/>
+      <blockValign value="CENTER"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000"/>
+    </blockTableStyle>
+    
+    <blockTableStyle id="Table_Above">
+      <blockAlignment value="CENTER"/>
+      <blockValign value="CENTER"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000"/>
+    </blockTableStyle>
+    
+    <blockTableStyle id="Table_Below">
+      <blockAlignment value="CENTER"/>
+      <blockValign value="CENTER"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000"/>
+    </blockTableStyle>
+      
+    <blockTableStyle id="Table_Grid">
+      <blockAlignment value="CENTER"/>
+      <blockValign value="CENTER"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc"/>
+    </blockTableStyle>
+    
+    <blockTableStyle id="Table_Simple">
+      <blockAlignment value="CENTER"/>
+      <blockValign value="CENTER"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000"/>
+    </blockTableStyle>
+    
+      
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    
+    <paraStyle name="ps_center" fontName="Helvetica" alignment="CENTER" />
+    <paraStyle name="ps_left" fontName="Helvetica" alignment="LEFT" />
+    <paraStyle name="ps_right" fontName="Helvetica" alignment="RIGHT" />
+    <paraStyle name="ps_center_bold" fontName="Helvetica-Bold" alignment="CENTER" />
+    <paraStyle name="ps_left_bold" fontName="Helvetica-Bold" alignment="LEFT" />
+    <paraStyle name="ps_right_bold" fontName="Helvetica-Bold" alignment="RIGHT" />
+    
+    
+    <paraStyle name="Standard" fontName="Helvetica"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Helvetica"/>
+    <paraStyle name="Preformatted Text" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Table Contents" fontName="Helvetica"/>
+    <images/>
+    
+  </stylesheet>
+  <story>
+  	<para>[[repeatIn(objects,'o')]]</para>
+  	<pto>
+  
+  	<pto_header>
+  		<blockTable colWidths="120.0,110.0,100.0,100.0,60.0,120.0,105.0,70.0" style="Table_Below">
+	    	<tr>
+	    		<td>
+		           <para style="ps_left_bold">Customer</para>
+		        </td>
+		        <td>
+		           <para style="ps_left_bold">Family Code</para>
+		        </td>
+		        <td>
+		           <para style="ps_right_bold">Total Qty</para>
+		        </td>
+		        <td>
+		           <para style="ps_right_bold">Total Amount</para>
+		        </td>
+		        <td>
+		           <para style="ps_right_bold">Currency</para>
+		        </td>
+		        <td>
+		           <para style="ps_right_bold">Total Amount (US)</para>
+		        </td>
+		        <td>
+		           <para style="ps_right_bold">Total Profit (US)</para>
+		        </td>
+		        <td>
+		           <para style="ps_right_bold">Profit %</para>
+		        </td>
+		    </tr>
+	    </blockTable>
+  	</pto_header>
+  
+    <para><font color="white"> </font></para>
+    
+    <para><font color="white"> </font></para>
+	
+	<blockTable colWidths="430.0,80.0,80.0,80.0,80.0" style="Standard_Outline">
+    	<tr>
+    		<td>
+    			<para style="ps_left_bold" fontSize="15.0" >Customer Total Sales Amount Report (Invoice)</para>
+    		</td>
+    		<td>
+    			<para style="ps_center_bold" fontSize="9.0"> Issue Date </para>
+    		</td>
+    		<td>
+    			<blockTable colWidths="100.0" style="Table_Simple">
+    				<tr>
+	    				<td>
+	    					<para style="ps_center" fontSize="9.0"> [[ get_start_date(data) ]] </para>
+	    				</td>
+    				</tr>
+    			</blockTable>
+    		</td>
+    		<td>
+    			<para style="ps_center_bold" fontSize="9.0"> <font color="white"> ..... </font> To </para>
+    		</td>
+    		<td>
+    			<blockTable colWidths="100.0" style="Table_Simple">
+    				<tr>
+	    				<td>
+	    					<para style="ps_center" fontSize="9.0"> [[ get_end_date(data) ]] </para>
+	    				</td>
+    				</tr>
+    			</blockTable>
+    		</td>
+    	</tr>
+    </blockTable>
+    
+    
+    
+    <para><font color="white"> </font></para>
+    <para><font color="white"> </font></para>
+    
+    
+    <blockTable colWidths="120.0,110.0,100.0,100.0,60.0,120.0,105.0,70.0" style="Table_Below">
+    	<tr>
+    		<td>
+	           <para style="ps_left_bold">Customer</para>
+	        </td>
+	        <td>
+	           <para style="ps_left_bold">Family Code</para>
+	        </td>
+	        <td>
+	           <para style="ps_right_bold">Total Qty</para>
+	        </td>
+	        <td>
+	           <para style="ps_right_bold">Total Amount</para>
+	        </td>
+	        <td>
+	           <para style="ps_right_bold">Currency</para>
+	        </td>
+	        <td>
+	           <para style="ps_right_bold">Total Amount (US)</para>
+	        </td>
+	        <td>
+	           <para style="ps_right_bold">Total Profit (US)</para>
+	        </td>
+	        <td>
+	           <para style="ps_right_bold">Profit %</para>
+	        </td>
+	    </tr>
+    </blockTable>
+    
+    
+    <section>
+	    <para>[[ repeatIn(get_order_lines(o),'obj')]]</para>
+		<para style="P6" fontSize="10.0"> [[ obj['ref'] ]] </para>
+			<section>
+	    		<para>[[ repeatIn(obj['values'],'obj_1')]]</para>
+	    			<blockTable colWidths="120.0,110.0,100.0,100.0,60.0,120.0,105.0,70.0" style="Standard_Outline">
+						<tr>
+							<td>
+					           <para><font color="white"> </font></para>
+					        </td>
+							<td>
+					           <para style="ps_left">[[ obj_1['family_code'] ]]</para>
+					        </td>
+					        <td>
+					           <para style="ps_right">[[ obj_1['qty'] ]]</para>
+					        </td>
+					        <td>
+					           <para style="ps_right">[[ obj_1['amount'] ]]</para>
+					        </td>
+					        <td>
+					           <para style="ps_right">[[ obj_1['currency'] ]]</para>
+					        </td>
+					        <td>
+					           <para style="ps_right">[[ obj_1['amount_us'] ]]</para>
+					        </td>
+					        <td>
+					           <para style="ps_right">[[ obj_1['profit_us'] ]]</para>
+					        </td>
+					        <td>
+					           <para style="ps_right">[[ obj_1['profit_per'] ]]</para>
+					        </td>
+						</tr>
+					</blockTable>
+			</section>
+			<blockTable colWidths="120.0,110.0,100.0,100.0,60.0,120.0,105.0,70.0" style="Standard_Outline">
+				<tr>
+					<td>
+						<para><font color="white"> </font></para>
+					</td>
+					<td>
+						<para style="ps_left_bold"> Customer Total </para>
+					</td>
+					<td>
+						<para style="ps_right_bold"> [[ obj['total'] ]]</para>
+					</td>
+					<td>
+						<para style="ps_right_bold"> [[ obj['sum_total'] ]]</para>
+					</td>
+					<td>
+						<para><font color="white"> </font></para>
+					</td>
+					<td>
+						<para style="ps_right_bold"> [[ obj['total_amount_us'] ]]</para>
+					</td>
+					<td>
+						<para style="ps_right_bold"> [[ obj['total_profit_us'] ]]</para>
+					</td>
+					<td>
+						<para style="ps_right_bold"> [[ obj['total_profit_per'] ]]</para>
+					</td>
+				</tr>
+			</blockTable>
+    </section>
+    
+    <blockTable colWidths="120.0,110.0,100.0,100.0,60.0,120.0,105.0,70.0" style="Table_Above">
+		<tr>
+			<td>
+				<para><font color="white"> </font></para>
+			</td>
+			<td>
+				<para style="ps_left_bold"> Grand Total </para>
+			</td>
+			<td>
+				<para style="ps_right_bold"> [[ get_total_qty() ]]</para>
+			</td>
+			<td>
+				<para style="ps_right_bold"> [[ get_total_amount() ]]</para>
+			</td>
+			<td>
+				<para><font color="white"> </font></para>
+			</td>
+			<td>
+				<para style="ps_right_bold"> [[ get_total_amount_us() ]]</para>
+			</td>
+			<td>
+				<para style="ps_right_bold"> [[ get_total_profit_us() ]]</para>
+			</td>
+			<td>
+				<para style="ps_right_bold"> [[ get_total_profit_per() ]]</para>
+			</td>
+		</tr>
+	</blockTable>
+	
+	    
+    
+    </pto>
+  </story>
+</document>

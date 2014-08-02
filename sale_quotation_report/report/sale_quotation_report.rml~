@@ -5,8 +5,8 @@
 		<frame id="first" x1="1.3cm" y1="5.0cm" height="22.0cm" width="19.0cm"/>
 		<stylesheet> <!-- Set here the default font to use for all <para> tags --> 
 			<paraStyle name='Normal' fontName="DejaVu Sans"/>
-            <paraStyle name="main_footer" fontSize="7.0" alignment="RIGHT"/>
-            <paraStyle name="main_footer1" fontSize="6.0" alignment="LEFT"/>
+            <paraStyle name="main_footer" fontSize="7.0" alignment="LEFT"/>
+            <paraStyle name="main_footer1" fontSize="7.0" alignment="LEFT"/>
             <paraStyle name="company_name" fontSize="16.0" alignment="CENTER"/>
             <paraStyle name="company_address" fontSize="8.0" alignment="CENTER"/>
             <paraStyle name="main_header" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/> 
@@ -18,26 +18,23 @@
  				<para><font color="white"> </font></para>
  				<para style="company_address">[[ company.street ]]</para>
  				<para style="company_address">[[ company.street2 ]] [[ company.city ]] [[ company.country_id.name ]]</para>
- 				<para style="company_address">Tele. [[ company.phone ]] Fax. [[ company.city ]]</para>
+ 				<para style="company_address">Tele. [[ company.phone ]] Fax. [[ company.fax ]]</para>
          	</place>
          	<lines>1.3cm 26.9cm 20cm 26.9cm</lines>
-         	<place x="9.0cm" y="2.5cm" height="0.5cm" width="8.0cm">
-         		<para style="main_footer"> GB PT.INDUSTRI INDONESIA</para>
-         	</place>
-         	<place x="2.0cm" y="2.5cm" height="0.5cm" width="8.0cm">
-         		<para style="main_footer1">I confirm that the above goods mentioned were received in</para>
+         	<place x="2.0cm" y="3.0cm" height="0.5cm" width="8.0cm">
+         		<para style="main_footer1">We are awaiting for your acceptable of this proposal.</para>
          	</place>
          	<place x="2.0cm" y="2.2cm" height="0.5cm" width="8.0cm">
-         		<para style="main_footer1">good condition.</para>
+         		<para style="main_footer1">Yours faithfully,</para>
          	</place>
-         	<place x="10.2cm" y="1.0cm" height="0.5cm" width="8.0cm">
+         	<place x="2.0cm" y="1.0cm" height="0.5cm" width="8.0cm">
          		<para style="main_footer"> <b>________________________________________________</b> </para>
          	</place>
-         	<place x="0.0cm" y="1.0cm" height="0.5cm" width="8.0cm">
-         		<para style="main_footer"> <b>________________________________________________</b> </para>
+         	<place x="4.0cm" y="0.6cm" height="0.5cm" width="8.0cm">
+         		<para style="main_footer"><b>[[ o.user_id.name or ' ' ]]</b></para>
          	</place>
-         	<place x="0.0cm" y="0.6cm" height="0.5cm" width="8.0cm">
-         		<para style="main_footer">Customer Signature and Official Stamp<font color="white">.........</font></para>
+         	<place x="4.0cm" y="0.3cm" height="0.5cm" width="8.0cm">
+         		<para style="main_footer">General Manager</para>
          	</place> 
 		</pageGraphics> 
 	</pageTemplate>
@@ -170,14 +167,14 @@
   			<td><para style="terp_default_8">Ref. No.</para></td>
   			<td><para style="terp_default_8">: [[ o.name or ' ' ]]</para></td>
   			<td><para style="terp_default_8">Date Of Issued</para></td>
-  			<td><para style="terp_default_8">: [[ o.date_order or ' ' ]]</para></td>
+  			<td><para style="terp_default_8">: [[ get_order_date(o.date_order) ]]</para></td>
   		</tr>
   	</blockTable>
   	<para><font color="white"> </font></para>
   	<blockTable colWidths="60.0,300.0,80.0,100.0" rowHeights="10,10,10,10,10" >
   		<tr>
   			<td><para style="terp_default_8">To.</para></td>
-  			<td><para style="terp_default_8">: [[ o.partner_id.name or ' ' ]]</para></td>
+  			<td><para style="terp_default_8">: <b>[[ ((o.partner_id.is_company == True) and (o.partner_id.name)) or o.partner_id.parent_id.name ]]</b></para></td>
   			<td><para><font color="white"> </font></para></td>
   			<td><para><font color="white"> </font></para></td>
   		</tr>
@@ -219,14 +216,14 @@
   	<para><font color="white"> </font></para>
   	<blockTable colWidths="60.0,300.0,80.0,100.0" rowHeights="10,10">
   		<tr>
-  			<td><para style="terp_default_8">Attn.</para></td>
-  			<td><para style="terp_default_8">: [[ str([obj.name for obj in o.partner_id.child_ids]).replace('[','').replace(']','').replace("u'",'').replace("'",'') or o.partner_id.name ]] </para></td>
+  			<td><para style="terp_default_8"><b>Attn.</b></para></td>
+  			<td><para style="terp_default_8"><b>: [[ str([obj.name for obj in o.partner_id.child_ids]).replace('[','').replace(']','').replace("u'",'').replace("'",'') or o.partner_id.name ]] </b></para></td>
   			<td><para><font color="white"> </font></para></td>
   			<td><para><font color="white"> </font></para></td>
   		</tr>
   		<tr>
-  			<td><para style="terp_default_8">Cc.</para></td>
-  			<td><para style="terp_default_8">: [[ o.user_id.name or ' ' ]]</para></td>
+  			<td><para style="terp_default_8"><b>Cc.</b></para></td>
+  			<td><para style="terp_default_8"><b>: [[ o.user_id.name or ' ' ]]</b></para></td>
   			<td><para><font color="white"> </font></para></td>
   			<td><para><font color="white"> </font></para></td>
   		</tr>
@@ -261,11 +258,11 @@
 		<para style="P9">[[ repeatIn(o.order_line,'line') ]]</para>
 		<blockTable colWidths="50.0,100.0,180.0,100.0,100.0" style="Table41">
 			<tr>
-				<td><para style="terp_default_8">[[ get_index() ]]</para></td>
-			  	<td><para style="terp_default_8">[[ line.product_id.default_code or ' ' ]]</para></td>
-			  	<td><para style="terp_default_8">[[ line.product_id.name or ' ' ]]</para></td>
-			  	<td><para style="terp_default_8_right">[[ get_qty(line.product_uom_qty) ]]</para></td>
-			  	<td><para style="terp_default_8_right">[[ line.price_unit or ' ' ]]</para></td>
+				<td><para style="terp_default_8"> [[ get_index() ]] </para></td>
+			  	<td><para style="terp_default_8">[[ line.product_id.default_code or ' ' ]] </para></td>
+			  	<td><para style="terp_default_8"> [[ line.product_id.name or ' ' ]] </para></td>
+			  	<td><para style="terp_default_8_right"> [[ get_qty(line.product_uom_qty) ]] </para></td>
+			  	<td><para style="terp_default_8_right"> [[ line.price_unit or ' ' ]] </para></td>
 			  </tr>
 		</blockTable>
 	</section>

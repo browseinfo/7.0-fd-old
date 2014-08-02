@@ -145,9 +145,11 @@ class sale_order(osv.osv):
             'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
             'date_invoice': context.get('date_invoice', False),
             'company_id': order.company_id.id,
+            'user_id': order.user_id and order.user_id.id or False,
+            'branch_id': order.branch_id.id,
+            'custom_invoice_no': order.invoice_no or '',
             'discount_method': order.discount_method,
-            'discount_amount': order.discount_amount,
-            'user_id': order.user_id and order.user_id.id or False
+            'discount_amount': order.discount_amount or 0.0,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
@@ -155,33 +157,6 @@ class sale_order(osv.osv):
         return invoice_vals
 
 sale_order()
-
-class sale_order_line(osv.osv):
-    _inherit = 'sale.order.line'
-    
-    def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
-        tax_obj = self.pool.get('account.tax')
-        cur_obj = self.pool.get('res.currency')
-        res = {}
-        if context is None:
-            context = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            price = line.price_unit
-            if line.discount_method =='fix':
-                price = line.price_unit - line.discount
-            if line.discount_method =='per':   
-                price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
-            cur = line.order_id.pricelist_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
-        return res
-    
-    _columns = {
-        'discount_method': fields.selection([('fix', 'Fixed'),('per', 'Percentage')], 'Discount Method'),
-        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
-        }
-
-sale_order_line()
 
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
@@ -272,32 +247,4 @@ class account_invoice(osv.osv):
 
 account_invoice()
 
-class account_invoice_line(osv.osv):
-    _inherit = 'account.invoice.line'
-
-    def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict):
-        res = {}
-        tax_obj = self.pool.get('account.tax')
-        cur_obj = self.pool.get('res.currency')
-        for line in self.browse(cr, uid, ids):
-            print "============line.discount_method======", line.discount_method
-            price = line.price_unit
-            if line.discount_method =='fix':
-                price = line.price_unit - line.discount
-            if line.discount_method =='per':
-                price = line.price_unit * (1-(line.discount or 0.0)/100.0)
-            taxes = tax_obj.compute_all(cr, uid, line.invoice_line_tax_id, price, line.quantity, product=line.product_id, partner=line.invoice_id.partner_id)
-            res[line.id] = taxes['total']
-            if line.invoice_id:
-                cur = line.invoice_id.currency_id
-                res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
-        return res
-
-    _columns = {
-        'discount_method': fields.selection([('fix', 'Fixed'),('per', 'Percentage')], 'Discount Method'),
-         'price_subtotal': fields.function(_amount_line, string='Amount', type="float",
-            digits_compute= dp.get_precision('Account'), store=True),
-        }
-    
-account_invoice_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

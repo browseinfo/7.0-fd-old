@@ -30,8 +30,12 @@ class account_customer_invoice(report_sxw.rml_parse):
             'time': time,
             'set_qty':self.set_qty,
             'get_total_qty':self.get_total_qty,
+            'get_branch_code':self.get_branch_code,
         })
     
+    def get_branch_code(self,branch_id):
+        branch_code = self.pool.get('res.branch').browse(self.cr,self.uid,branch_id.id).branch_code
+        return branch_code
     
     def set_qty(self,qty):
         qty = int(qty)

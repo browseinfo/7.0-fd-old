@@ -19,6 +19,7 @@
 #
 ############################################################################
 import time
+import datetime
 from openerp.report import report_sxw
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -40,6 +41,7 @@ class stock_inventory_in_out_report(report_sxw.rml_parse):
     def set_context(self, objects, data, ids, report_type=None):
         self.date_from = data['form'].get('startdtae', time.strftime('%Y-%m-%d'))
         self.date_to = data['form'].get('enddtae', time.strftime('%Y-%m-%d'))
+        self.branch = data['form'].get('branch_id')
         return super(stock_inventory_in_out_report, self).set_context(objects, data, ids, report_type=report_type)
 
     def sum_total(self):
@@ -50,16 +52,17 @@ class stock_inventory_in_out_report(report_sxw.rml_parse):
 
     def date_format(self, datedetail):
         if datedetail:
-            a = time.strptime(datedetail,'%Y-%m-%d')
-            b = time.strftime('%d%B%Y', a)
-            return b
+            date = datetime.datetime.strptime(datedetail, '%Y-%m-%d')
+            date = date.strftime('%d-%b-%Y')
+            return date
         else:
             return ''
 
     def _get_branch(self, branch):
-        print "branch=============", branch
-        if branch:
-            return branch
+        branch_obj = self.pool.get('res.branch')
+        if self.branch[0]:
+            ob_name = branch_obj.browse(self.cr, self.uid, self.branch[0])
+            return ob_name.name
         
     def merge_lists(self,l1, l2, key):
         merged = {}
@@ -79,19 +82,17 @@ class stock_inventory_in_out_report(report_sxw.rml_parse):
         self.regi_total = 0.0
         self.all_total = 0.0
         new = {}
-        self.cr.execute("select lot_stock_id from stock_warehouse where id= %s and branch_id=%s", (data.warehouse_id.id,data.branch_id.id,))
-        warehouse_id = self.cr.fetchone()
         self.cr.execute("select pt.id, pp.default_code,pt.name, sum(sm.product_uos_qty) as in_qty, pu.name as uom from stock_move as sm "\
                 "left join stock_picking as sp on sm.picking_id = sp.id "\
                 "left join product_product as pp on sm.product_id = pp.id "\
                 "left join product_template as pt on pp.product_tmpl_id = pt.id "\
                 "left join product_uom as pu on pt.uom_id = pu.id "\
-                "left join stock_location as lc on sm.location_dest_id = lc.id "\
-                "where sm.location_dest_id= %s "\
+                "where sm.branch_id= %s "\
+                "and sm.state = 'done'"\
                 "and sp.type = 'in'"\
                 "and (sm.create_date <= %s)" \
                 "group by pt.id, pp.default_code, pt.name,pt.standard_price, pu.name order by pt.name",
-                        ( warehouse_id[0],self.date_to))
+                        ( data.branch_id.id,self.date_to))
         in_stock_lines = self.cr.dictfetchall()
         
         self.cr.execute("select pt.id, pp.default_code,pt.name, sum(sm.product_uos_qty) as out_qty, pu.name as uom from stock_move as sm "\
@@ -99,12 +100,12 @@ class stock_inventory_in_out_report(report_sxw.rml_parse):
                 "left join product_product as pp on sm.product_id = pp.id "\
                 "left join product_template as pt on pp.product_tmpl_id = pt.id "\
                 "left join product_uom as pu on pt.uom_id = pu.id "\
-                "left join stock_location as lc on sm.location_id = lc.id "\
-                "where sm.location_id= %s "\
+                "where sm.branch_id= %s "\
+                "and sm.state = 'done'"\
                 "and sp.type = 'out'"\
                 "and (sm.create_date <= %s)"\
                 "group by pt.id, pp.default_code,pt.name,pt.standard_price, pu.name  order by pt.name",
-                        ( warehouse_id[0],self.date_to))
+                        ( data.branch_id.id,self.date_to))
 
         stock_lines = self.cr.dictfetchall()
 
@@ -125,12 +126,12 @@ class stock_inventory_in_out_report(report_sxw.rml_parse):
                 "left join product_product as pp on sm.product_id = pp.id "\
                 "left join product_template as pt on pp.product_tmpl_id = pt.id "\
                 "left join product_uom as pu on pt.uom_id = pu.id "\
-                "left join stock_location as lc on sm.location_dest_id = lc.id "\
-                "where sm.location_dest_id= %s "\
+                "where sm.branch_id= %s"\
+                "and sm.state = 'done'"\
                 "and sp.type = 'in'"\
                 "and (sm.create_date <= %s) and (sm.create_date >= %s)" \
                 "group by pt.id, pp.default_code, pt.name,pt.standard_price, pu.name order by pt.name",
-                        ( warehouse_id[0],self.date_to,self.date_from))
+                        ( data.branch_id.id,self.date_to,self.date_from))
 
         in_lines = self.cr.dictfetchall()
         
@@ -140,12 +141,12 @@ class stock_inventory_in_out_report(report_sxw.rml_parse):
                 "left join product_product as pp on sm.product_id = pp.id "\
                 "left join product_template as pt on pp.product_tmpl_id = pt.id "\
                 "left join product_uom as pu on pt.uom_id = pu.id "\
-                "left join stock_location as lc on sm.location_id = lc.id "\
-                "where sm.location_id= %s "\
+                "where sm.branch_id= %s"\
+                "and sm.state = 'done'"\
                 "and sp.type = 'out'"\
                 "and (sm.create_date <= %s) and (sm.create_date >= %s)" \
                 "group by pt.id, pp.default_code,pt.name,pt.standard_price, pu.name  order by pt.name",
-                        ( warehouse_id[0],self.date_to,self.date_from))
+                        ( data.branch_id.id,self.date_to,self.date_from))
 
         pick_lines = self.cr.dictfetchall()
 
@@ -200,10 +201,10 @@ class stock_inventory_in_out_report(report_sxw.rml_parse):
                     'selish': inv_qty,
                     'katering': katering,
                    })
-        
+            
         return getres
 
 
-report_sxw.report_sxw('report.stock.inventory.in.out.report.webkit', 'stock.inventory.in.out.wizard', 'addons/stock_inventory_in_out_report/report/stock_inventory_in_out_report.mako', parser=stock_inventory_in_out_report,header=False)
+report_sxw.report_sxw('report.stock.inventory.in.out.report.webkit', 'stock.inventory.in.out.wizard', 'addons/stock_inventory_in_out_report/report/stock_inventory_in_out_report.rml', parser=stock_inventory_in_out_report,header="internal landscape")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

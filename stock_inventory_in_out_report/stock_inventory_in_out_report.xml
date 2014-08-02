@@ -1,52 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
-    <report id="stock_inventory_in_out_report_al"
+    <!--report id="stock_inventory_in_out_report_al"
             name="stock.inventory.in.out.report.webkit"
             auto="False"
             model="stock.inventory.in.out.wizard"
             file="stock_inventory_in_out_report/report/stock_inventory_in_out_report.mako"
             string="LAPORAN BULANAN GB JAN'14(MUTASI BRG)"
             webkit_header=""
-            report_type="webkit"/>
+            report_type="webkit"/-->
             
-            
-    <report id="stock_inventory_al"
+    <report auto="False" 
+            id="stock_inventory_in_out_report_al_rml" 
+            model="stock.inventory.in.out.wizard" 
+            name="stock.inventory.in.out.report.webkit" 
+            rml="stock_inventory_in_out_report/report/stock_inventory_in_out_report.rml" 
+            string="LAPORAN BULANAN GB JAN'14(MUTASI BRG)"
+            header="False"/>        
+    
+    
+    <!--report id="stock_inventory_al"
             name="stock.inventory.report.webkit"
             auto="False"
             model="stock.inventory.wizard"
             file="stock_inventory_in_out_report/report/stock_inventory_report_asset.mako"
             string="CNTH LAP.4 BLNAN(MUTASI MESIN)"
             webkit_header=""
-            report_type="webkit"/>
+            report_type="webkit"/-->
 
-
-    <report id="stock_inventory_scrap_location"
+	<report auto="False" 
+            id="stock_inventory_al_rml" 
+            model="stock.inventory.wizard" 
+            name="stock.inventory.report.webkit" 
+            rml="stock_inventory_in_out_report/report/stock_inventory_report_asset.rml" 
+            string="CNTH LAP.4 BLNAN(MUTASI MESIN)"
+            header="False"/>
+    
+    
+    <!--report id="stock_inventory_scrap_location"
             name="stock.inventory.scrap.location.webkit"
             auto="False"
             model="stock.inventory.scrap.location.wizard"
-            file="stock_inventory_in_out_report/report/stock_inventory_report_asset.mako"
+            file="stock_inventory_in_out_report/report/stock_inventory_scrap_location.mako"
             string="CNTH Lap 4 BLanan(BRG SCRAP)"
             webkit_header=""
-            report_type="webkit"/>
+            report_type="webkit"/-->
 
-    <report id="stock_inventory_rawmaterial"
+    <report auto="False" 
+            id="stock_inventory_scrap_location_rml" 
+            model="stock.inventory.scrap.location.wizard" 
+            name="stock.inventory.scrap.location.webkit" 
+            rml="stock_inventory_in_out_report/report/stock_inventory_scrap_location.rml" 
+            string="CNTH Lap 4 BLanan(BRG SCRAP)"
+            header="False"/>
+    
+    
+    <!--report id="stock_inventory_rawmaterial"
             name="stock.inventory.raw.material.webkit"
             auto="False"
             model="stock.inventory.raw.material.wizard"
             file="stock_inventory_in_out_report/report/stock_inventory_rawmaterial_report.mako"
             string="CNTH LAP 4 BLNAN(BAHAN BAKU)"
             webkit_header=""
-            report_type="webkit"/>
-
-    <report id="stock_inventory_finishgoods"
+            report_type="webkit"/-->
+	
+	<report auto="False" 
+            id="stock_inventory_rawmaterial_rml" 
+            model="stock.inventory.raw.material.wizard" 
+            name="stock.inventory.raw.material.webkit" 
+            rml="stock_inventory_in_out_report/report/stock_inventory_rawmaterial_report.rml" 
+            string="CNTH LAP 4 BLNAN(BAHAN BAKU)"
+            header="False"/>
+    
+    
+    <!--report id="stock_inventory_finishgoods"
             name="stock.inventory.finish.goods.webkit"
             auto="False"
             model="stock.inventory.finish.goods.wizard"
             file="stock_inventory_in_out_report/report/stock_inventory_finishgoods_report.mako"
             string="CNTH LAP 4 BLNAN(BRG JADI)"
             webkit_header=""
-            report_type="webkit"/>
-
+            report_type="webkit"/-->
+	
+	<report auto="False" 
+            id="stock_inventory_finishgoods_rml" 
+            model="stock.inventory.finish.goods.wizard" 
+            name="stock.inventory.finish.goods.webkit" 
+            rml="stock_inventory_in_out_report/report/stock_inventory_finishgoods_report.rml" 
+            string="CNTH LAP 4 BLNAN(BRG JADI)"
+            header="False"/>
+	
   </data>
 </openerp>

@@ -396,7 +396,7 @@
           <para style="P9">Kode dan Nomor Seri Faktur Pajak : </para>
         </td>
         <td>
-          <para style="P9">[[o.nomor_seri or ' ']]</para>
+          <para style="P9"> <b> [[o.nomor_seri or ' ']] </b></para>
         </td>
         <td>
           <para style="P10">Invoice : </para>
@@ -432,7 +432,7 @@
           <para style="P9">Nama</para>
         </td>
         <td>
-          <para style="P8">:  [[o.company_id and o.company_id.name ]]</para>
+          <para style="P8">:  [[ o.company_id.name ]]</para>
         </td>
       </tr>
       <tr>
@@ -448,7 +448,7 @@
           <para style="P9">NPWP</para>
         </td>
         <td>
-          <para style="P9">:  [[ o.company_id and o.company_id.npwp ]]</para>
+          <para style="P9">: <b> [[ o.company_id and o.company_id.npwp ]] </b> </para>
         </td>
       </tr>
     </blockTable>
@@ -465,7 +465,7 @@
           <para style="P9">Nama</para>
         </td>
         <td>
-          <para style="P8">: [[ o.partner_id and o.partner_id.name or ' ']]</para>
+          <para style="P8">: <b> [[ ((o.partner_id.is_company == True) and (o.partner_id.name)) or o.partner_id.parent_id.name ]] </b> </para>
         </td>
       </tr>
       <tr>
@@ -473,15 +473,19 @@
           <para style="P9">Almat</para>
         </td>
         <td>
-          <para style="P9">: [[ o.partner_id and display_address(o.partner_id) or ' ']]</para>
+          <para style="P9"> [[ o.partner_id.street ]] [[ o.partner_id.city ]] [[ o.partner_id.zip ]]</para>
+          <para style="P9"> [[ o.partner_id.country_id.name ]] </para>
         </td>
+        <!--td>
+          <para style="P9">: <b> [[ display_address(o.partner_id) or ' ']] </b> </para>
+        </td-->
       </tr>
       <tr>
         <td>
           <para style="P9">NPWP</para>
         </td>
         <td>
-          <para style="P9">: [[ o.partner_id and o.partner_id.npwp ]]</para>
+          <para style="P9">: <b> [[ o.partner_id and o.partner_id.npwp ]] </b> </para>
         </td>
       </tr>
     </blockTable>
@@ -887,7 +891,7 @@
           <para style="P4">Nilai Tukar Kurs:</para>
         </td>
         <td>
-          <para style="P4">[[ o.exchange_rate or ' ']] <font face="Helvetica">[[o.currency_id.name or ' ']]</font></para>
+          <para style="P4">[[ o.exchange_rate or ' ']] /1 <font face="Helvetica">[[o.currency_id.name or ' ']]</font></para>
         </td>
         <td>
           <para style="P15">

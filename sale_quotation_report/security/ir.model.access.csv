@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_delivery_delivery_user,delivery_delivery_user,model_delivery_delivery,base.group_user,1,1,1,0
+access_delivery_delivery_manager,delivery_delivery_manager,model_delivery_delivery,base.user_root,1,1,1,1
+access_maker_maker_user,maker_maker_user,model_maker_maker,base.group_user,1,1,1,0
+access_maker_maker_manager,maker_maker_manager,model_maker_maker,base.user_root,1,1,1,1
+access_lead_time_user,lead_time_user,model_lead_time,base.group_user,1,1,1,0
+access_lead_time_manager,lead_time_manager,model_lead_time,base.user_root,1,1,1,1

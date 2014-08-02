@@ -190,9 +190,7 @@
           <para style="P6">:</para>
         </td>
         <td>
-          <para style="P9">
-            <font color="white"> </font>
-          </para>
+            <para style="P8">[[ o.number or '' ]]</para>
         </td>
       </tr>
       <tr>
@@ -202,7 +200,7 @@
           </para>
         </td>
         <td>
-          <para style="P8">PENGELUARAN</para>
+          <para style="P8">PENERIMAAN</para>
         </td>
         <td>
           <para style="P9">

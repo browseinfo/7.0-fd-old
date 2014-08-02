@@ -34,7 +34,7 @@
 		
 		<menuitem action="action_sale_daybook_wizard" id="sale_daybook_wizard"
 				  parent="sale_day_book_report.menu_day_book_report" 
-				  name = "Sales Day Book Report" />
+				  name = "Sales Day Book" />
         
     </data>
 </openerp>

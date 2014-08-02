@@ -37,14 +37,19 @@ class purchase_report(report_sxw.rml_parse):
             'get_order_date': self._get_order_date,
             'get_delivery_date': self._get_delivery_date,
             'get_seq': self._get_seq,
+            'get_qty':self._get_qty,
         })
+        
+    def _get_qty(self,line_qty):
+        qty = int(line_qty)
+        return qty
         
     def _qty_total(self, obj):
         total = 0.0
         for line in obj.order_line:
             if line.product_qty:
                 total += line.product_qty 
-        return total
+        return int(total)
                 
     def _get_order_date(self, date):
         ds = (datetime.strptime(date, '%Y-%m-%d')).strftime('%d-%b-%Y')

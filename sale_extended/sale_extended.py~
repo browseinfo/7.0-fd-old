@@ -22,6 +22,7 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FO
 from datetime import datetime, date
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+from openerp import netsvc
 
 class sale_order(osv.Model):
     _inherit = 'sale.order'
@@ -36,16 +37,6 @@ class sale_order(osv.Model):
             today_date = datetime.now()
             vals['date_ext'] = today_date
         return super(sale_order, self).create(cr, uid, vals, context=context)
-
-    def onchange_branch_id(self, cr, uid, ids, shop_id, branch_id, context=None):
-        v = {}
-        shop_branch_id = self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context).branch_id.id
-
-        if shop_id:
-            if shop_branch_id != branch_id:
-                raise osv.except_osv(_('Branch Mismatched!'), _('Please select shop related Branch.'))
-        return True
-        
 
     def _get_branch(self, cr, uid, context=None):
         if context is None:
@@ -63,45 +54,38 @@ class sale_order(osv.Model):
     _defaults = {
         'branch_id': _get_branch,
     }
-
-    def _prepare_invoice(self, cr, uid, order, lines, context=None):
-        if context is None:
-            context = {}
-        journal_ids = self.pool.get('account.journal').search(cr, uid,
-            [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)],
-            limit=1)
-        if not journal_ids:
-            raise osv.except_osv(_('Error!'),
-                _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
-        invoice_vals = {
-            'name': order.client_order_ref or '',
-            'origin': order.name,
-            'type': 'out_invoice',
-            'reference': order.client_order_ref or order.name,
-            'account_id': order.partner_id.property_account_receivable.id,
-            'partner_id': order.partner_invoice_id.id,
-            'journal_id': journal_ids[0],
-            'invoice_line': [(6, 0, lines)],
-            'currency_id': order.pricelist_id.currency_id.id,
-            'comment': order.note,
-            'payment_term': order.payment_term and order.payment_term.id or False,
-            'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
-            'date_invoice': context.get('date_invoice', False),
+    
+    def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
+        location_id = order.shop_id.warehouse_id.lot_stock_id.id
+        output_id = order.shop_id.warehouse_id.lot_output_id.id
+        return {
+            'name': line.name,
+            'picking_id': picking_id,
+            'product_id': line.product_id.id,
+            'date': date_planned,
+            'date_expected': date_planned,
+            'product_qty': line.product_uom_qty,
+            'product_uom': line.product_uom.id,
+            'product_uos_qty': (line.product_uos and line.product_uos_qty) or line.product_uom_qty,
+            'product_uos': (line.product_uos and line.product_uos.id)\
+                    or line.product_uom.id,
+            'product_packaging': line.product_packaging.id,
+            'partner_id': line.address_allotment_id.id or order.partner_shipping_id.id,
+            'location_id': location_id,
+            'location_dest_id': output_id,
+            'sale_line_id': line.id,
+            'tracking_id': False,
+            'state': 'draft',
+            #'state': 'waiting',
             'company_id': order.company_id.id,
-            'user_id': order.user_id and order.user_id.id or False,
-            'branch_id': order.branch_id.id,
-            'custom_invoice_no': order.invoice_no or ''
+            'price_unit': line.product_id.standard_price or 0.0,
+            'branch_id': order.branch_id.id or False
         }
-
-        # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
-        invoice_vals.update(self._inv_get(cr, uid, order, context=context))
-        return invoice_vals
         
     def _prepare_order_picking(self, cr, uid, order, context=None):
         result = super(sale_order, self)._prepare_order_picking(cr, uid, order, context=context)
         result.update({'branch_id': order.branch_id.id})
         return result
-
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
         result = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, context=context)
@@ -110,6 +94,185 @@ class sale_order(osv.Model):
 
 sale_order()
 
+class sale_order_line_make_invoice(osv.osv_memory):
+    _inherit= 'sale.order.line.make.invoice'
+    
+    def make_invoices(self, cr, uid, ids, context=None):
+        """
+             To make invoices.
+
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs
+             @param context: A standard dictionary
+
+             @return: A dictionary which of fields with values.
+
+        """
+        if context is None: context = {}
+        res = False
+        invoices = {}
+
+    #TODO: merge with sale.py/make_invoice
+        def make_invoice(order, lines):
+            """
+                 To make invoices.
+
+                 @param order:
+                 @param lines:
+
+                 @return:
+
+            """
+            a = order.partner_id.property_account_receivable.id
+            if order.partner_id and order.partner_id.property_payment_term.id:
+                pay_term = order.partner_id.property_payment_term.id
+            else:
+                pay_term = False
+            inv = {
+                'name': order.client_order_ref or '',
+                'origin': order.name,
+                'type': 'out_invoice',
+                'reference': "P%dSO%d" % (order.partner_id.id, order.id),
+                'account_id': a,
+                'partner_id': order.partner_invoice_id.id,
+                'invoice_line': [(6, 0, lines)],
+                'currency_id' : order.pricelist_id.currency_id.id,
+                'comment': order.note,
+                'payment_term': pay_term,
+                'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
+                'user_id': order.user_id and order.user_id.id or False,
+                'company_id': order.company_id and order.company_id.id or False,
+                'date_invoice': fields.date.today(),
+                'branch_id': order.branch_id.id or False,
+            	'custom_invoice_no': order.invoice_no or '',
+                'discount_method': order.discount_method,
+                'discount_amount': order.discount_amount or 0.0,
+            }
+            inv_id = self.pool.get('account.invoice').create(cr, uid, inv)
+            return inv_id
+
+        sales_order_line_obj = self.pool.get('sale.order.line')
+        sales_order_obj = self.pool.get('sale.order')
+        wf_service = netsvc.LocalService('workflow')
+        for line in sales_order_line_obj.browse(cr, uid, context.get('active_ids', []), context=context):
+            if (not line.invoiced) and (line.state not in ('draft', 'cancel')):
+                if not line.order_id in invoices:
+                    invoices[line.order_id] = []
+                line_id = sales_order_line_obj.invoice_line_create(cr, uid, [line.id])
+                for lid in line_id:
+                    invoices[line.order_id].append(lid)
+        for order, il in invoices.items():
+            res = make_invoice(order, il)
+            cr.execute('INSERT INTO sale_order_invoice_rel \
+                    (order_id,invoice_id) values (%s,%s)', (order.id, res))
+            flag = True
+            data_sale = sales_order_obj.browse(cr, uid, order.id, context=context)
+            for line in data_sale.order_line:
+                if not line.invoiced:
+                    flag = False
+                    break
+            if flag:
+                wf_service.trg_validate(uid, 'sale.order', order.id, 'manual_invoice', cr)
+
+        if not invoices:
+            raise osv.except_osv(_('Warning!'), _('Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n1.The state of this sales order line is either "draft" or "cancel"!\n2.The Sales Order Line is Invoiced!'))
+        if context.get('open_invoices', False):
+            return self.open_invoices(cr, uid, ids, res, context=context)
+        return {'type': 'ir.actions.act_window_close'}
+        
+class sale_advance_payment_inv(osv.osv_memory):
+    _inherit = 'sale.advance.payment.inv'
+
+    def _prepare_advance_invoice_vals(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        sale_obj = self.pool.get('sale.order')
+        ir_property_obj = self.pool.get('ir.property')
+        fiscal_obj = self.pool.get('account.fiscal.position')
+        inv_line_obj = self.pool.get('account.invoice.line')
+        wizard = self.browse(cr, uid, ids[0], context)
+        sale_ids = context.get('active_ids', [])
+
+        result = []
+        for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
+            val = inv_line_obj.product_id_change(cr, uid, [], wizard.product_id.id,
+                    uom_id=False, partner_id=sale.partner_id.id, fposition_id=sale.fiscal_position.id)
+            res = val['value']
+
+            # determine and check income account
+            if not wizard.product_id.id :
+                prop = ir_property_obj.get(cr, uid,
+                            'property_account_income_categ', 'product.category', context=context)
+                prop_id = prop and prop.id or False
+                account_id = fiscal_obj.map_account(cr, uid, sale.fiscal_position or False, prop_id)
+                if not account_id:
+                    raise osv.except_osv(_('Configuration Error!'),
+                            _('There is no income account defined as global property.'))
+                res['account_id'] = account_id
+            if not res.get('account_id'):
+                raise osv.except_osv(_('Configuration Error!'),
+                        _('There is no income account defined for this product: "%s" (id:%d).') % \
+                            (wizard.product_id.name, wizard.product_id.id,))
+
+            # determine invoice amount
+            if wizard.amount <= 0.00:
+                raise osv.except_osv(_('Incorrect Data'),
+                    _('The value of Advance Amount must be positive.'))
+            if wizard.advance_payment_method == 'percentage':
+                inv_amount = sale.amount_total * wizard.amount / 100
+                if not res.get('name'):
+                    res['name'] = _("Advance of %s %%") % (wizard.amount)
+            else:
+                inv_amount = wizard.amount
+                if not res.get('name'):
+                    #TODO: should find a way to call formatLang() from rml_parse
+                    symbol = sale.pricelist_id.currency_id.symbol
+                    if sale.pricelist_id.currency_id.position == 'after':
+                        res['name'] = _("Advance of %s %s") % (inv_amount, symbol)
+                    else:
+                        res['name'] = _("Advance of %s %s") % (symbol, inv_amount)
+
+            # determine taxes
+            if res.get('invoice_line_tax_id'):
+                res['invoice_line_tax_id'] = [(6, 0, res.get('invoice_line_tax_id'))]
+            else:
+                res['invoice_line_tax_id'] = False
+
+            # create the invoice
+            inv_line_values = {
+                'name': res.get('name'),
+                'origin': sale.name,
+                'account_id': res['account_id'],
+                'price_unit': inv_amount,
+                'quantity': wizard.qtty or 1.0,
+                'discount': False,
+                'uos_id': res.get('uos_id', False),
+                'product_id': wizard.product_id.id,
+                'invoice_line_tax_id': res.get('invoice_line_tax_id'),
+                'account_analytic_id': sale.project_id.id or False,
+            }
+            inv_values = {
+                'name': sale.client_order_ref or sale.name,
+                'origin': sale.name,
+                'type': 'out_invoice',
+                'reference': sale.client_order_ref or sale.name,
+                'account_id': sale.partner_id.property_account_receivable.id,
+                'partner_id': sale.partner_invoice_id.id,
+                'invoice_line': [(0, 0, inv_line_values)],
+                'currency_id': sale.pricelist_id.currency_id.id,
+                'comment': '',
+                'branch_id': sale.branch_id.id,
+                'payment_term': sale.payment_term.id,
+                'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id,
+            	'custom_invoice_no': sale.invoice_no or '',
+                'discount_method': sale.discount_method,
+                'discount_amount': sale.discount_amount or 0.0,
+
+            }
+            result.append((sale.id, inv_values))
+        return result
 
 class sale_order_line(osv.Model):
     _inherit = 'sale.order.line'
@@ -198,22 +361,16 @@ class sale_order_line(osv.Model):
         if not uom2:
             uom2 = product_obj.uom_id
         # get unit price
-
         if not pricelist:
             warn_msg = _('You have to select a pricelist or a customer in the sales form !\n'
                     'Please set one before choosing a product.')
             warning_msgs += _("No Pricelist ! : ") + warn_msg +"\n\n"
         else:
-            pricelist_curr = product_pricelist.browse(cr, uid, pricelist)
-            if product_obj.company_id.currency_id.id == product_obj.sale_cur_id.id:
-                price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-                            product, qty or 1.0, partner_id, {
-                                'uom': uom or result.get('product_uom'),
-                                'date': date_order,
-                                })[pricelist]
-            else:
-                print "\n\n\nelse"
-                price = res_currency.compute(cr, uid, product_obj.sale_cur_id.id, pricelist_curr.currency_id.id, product_obj.list_price)
+            price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
+                    product, qty or 1.0, partner_id, {
+                        'uom': uom or result.get('product_uom'),
+                        'date': date_order,
+                        })[pricelist]
             if price is False:
                 warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist.")
@@ -226,97 +383,13 @@ class sale_order_line(osv.Model):
                        'title': _('Configuration Error!'),
                        'message' : warning_msgs
                     }
+        
+        price_list = self.pool.get('product.pricelist').browse(cr, uid, pricelist)
+        result['type'] = product_obj.procure_method
+        result['cost'] = product_obj.standard_price * price_list.currency_id.rate_silent
+        
         return {'value': result, 'domain': domain, 'warning': warning}
 
 sale_order_line()
 
-class account_invoice_line(osv.Model):
-    _inherit = 'account.invoice.line'
-
-    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
-        res_currency = self.pool.get('res.currency')
-        if context is None:
-            context = {}
-        company_id = company_id if company_id != None else context.get('company_id',False)
-        context = dict(context)
-        context.update({'company_id': company_id, 'force_company': company_id})
-        if not partner_id:
-            raise osv.except_osv(_('No Partner Defined!'),_("You must first select a partner!") )
-        if not product:
-            if type in ('in_invoice', 'in_refund'):
-                return {'value': {}, 'domain':{'product_uom':[]}}
-            else:
-                return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
-        part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-        fpos_obj = self.pool.get('account.fiscal.position')
-        fpos = fposition_id and fpos_obj.browse(cr, uid, fposition_id, context=context) or False
-
-        if part.lang:
-            context.update({'lang': part.lang})
-        result = {}
-        res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-
-        if type in ('out_invoice','out_refund'):
-            a = res.property_account_income.id
-            if not a:
-                a = res.categ_id.property_account_income_categ.id
-        else:
-            a = res.property_account_expense.id
-            if not a:
-                a = res.categ_id.property_account_expense_categ.id
-        a = fpos_obj.map_account(cr, uid, fpos, a)
-        if a:
-            result['account_id'] = a
-
-        if type in ('out_invoice', 'out_refund'):
-            taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
-        else:
-            taxes = res.supplier_taxes_id and res.supplier_taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
-        tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
-
-        if type in ('in_invoice', 'in_refund'):
-            result.update( {'price_unit': price_unit or res.standard_price,'invoice_line_tax_id': tax_id} )
-        else:
-            result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
-        result['name'] = res.partner_ref
-
-        result['uos_id'] = uom_id or res.uom_id.id
-        if res.description:
-            result['name'] += '\n'+res.description
-
-        domain = {'uos_id':[('category_id','=',res.uom_id.category_id.id)]}
-
-        res_final = {'value':result, 'domain':domain}
-
-        if not company_id or not currency_id:
-            return res_final
-
-        company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
-        currency = self.pool.get('res.currency').browse(cr, uid, currency_id, context=context)
-
-        if company.currency_id.id != currency.id:
-            if type in ('in_invoice', 'in_refund'):
-                if  company.currency_id.id == res.pur_cur_id.id:
-                    res_final['value']['price_unit'] = res.standard_price
-                    new_price = res_final['value']['price_unit'] * currency.rate
-                    res_final['value']['price_unit'] = new_price
-                else:
-                    res_final['value']['price_unit'] = res_currency.compute(cr, uid, res.pur_cur_id.id,currency.id, res.standard_price)
-
-            if type in ('out_invoice', 'out_refund'):
-                if  company.currency_id.id == res.sale_cur_id.id:
-                    res_final['value']['price_unit'] = res.standard_price
-                    new_price = res_final['value']['price_unit'] * currency.rate
-                    res_final['value']['price_unit'] = new_price
-                else:
-                    res_final['value']['price_unit'] = res_currency.compute(cr, uid, res.sale_cur_id.id,currency.id, res.list_price)
-
-
-        if result['uos_id'] and result['uos_id'] != res.uom_id.id:
-            selected_uom = self.pool.get('product.uom').browse(cr, uid, result['uos_id'], context=context)
-            new_price = self.pool.get('product.uom')._compute_price(cr, uid, res.uom_id.id, res_final['value']['price_unit'], result['uos_id'])
-            res_final['value']['price_unit'] = new_price
-        return res_final
-
-account_invoice_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

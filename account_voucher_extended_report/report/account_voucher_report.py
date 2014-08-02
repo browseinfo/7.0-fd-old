@@ -74,7 +74,7 @@ class account_report(report_sxw.rml_parse):
             return ' '
         else:
             amount = amount_to_text(total)
-            word = str(amount) + ' Only'
+            word = str(amount)
             return word
         
 

@@ -19,6 +19,7 @@
 #
 ############################################################################
 import time
+import datetime
 from openerp.report import report_sxw
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -50,9 +51,9 @@ class stock_inventory_rawmaterial_report(report_sxw.rml_parse):
 
     def date_format(self, datedetail):
         if datedetail:
-            a = time.strptime(datedetail,'%Y-%m-%d')
-            b = time.strftime('%d%B%Y', a)
-            return b
+            date = datetime.datetime.strptime(datedetail, '%Y-%m-%d')
+            date = date.strftime('%d-%b-%Y')
+            return date
         else:
             return ''
 
@@ -80,7 +81,7 @@ class stock_inventory_rawmaterial_report(report_sxw.rml_parse):
         self.regi_total = 0.0
         self.all_total = 0.0
         new = {}
-        self.cr.execute("select sl.id from stock_location sl where scrap_location='True' and branch_id=%s", (data.branch_id.id,))
+        self.cr.execute("select sl.id from stock_location sl where scrap_location='True'")
         warehouse_id = self.cr.fetchone()
         if warehouse_id:
             self.cr.execute("select pt.id, pp.default_code,pt.name, sum(sm.product_uos_qty) as in_qty, pu.name as uom from stock_move as sm "\
@@ -90,12 +91,13 @@ class stock_inventory_rawmaterial_report(report_sxw.rml_parse):
                     "left join product_uom as pu on pt.uom_id = pu.id "\
                     "left join stock_location as lc on sm.location_dest_id = lc.id "\
                     "where sm.location_dest_id= %s "\
+                    "and sm.branch_id= %s "\
                     "and pp.raw_material = 'True'"\
                     "and sm.state = 'done'"\
                     "and sp.type = 'in'"\
                     "and (sm.create_date <= %s)" \
                     "group by pt.id, pp.default_code, pt.name,pt.standard_price, pu.name order by pt.name",
-                            ( warehouse_id[0],self.date_to))
+                            ( warehouse_id[0],data.branch_id.id,self.date_to))
             in_stock_lines = self.cr.dictfetchall()
             self.cr.execute("select pt.id, pp.default_code,pt.name, sum(sm.product_uos_qty) as out_qty, pu.name as uom from stock_move as sm "\
                     "left join stock_picking as sp on sm.picking_id = sp.id "\
@@ -104,12 +106,13 @@ class stock_inventory_rawmaterial_report(report_sxw.rml_parse):
                     "left join product_uom as pu on pt.uom_id = pu.id "\
                     "left join stock_location as lc on sm.location_id = lc.id "\
                     "where sm.location_id= %s "\
+                    "and sm.branch_id= %s "\
                     "and pp.raw_material = 'True'"\
                     "and sm.state = 'done'"\
                     "and sp.type = 'out'"\
                     "and (sm.create_date <= %s)"\
                     "group by pt.id, pp.default_code,pt.name,pt.standard_price, pu.name  order by pt.name",
-                            ( warehouse_id[0],self.date_to))
+                            ( warehouse_id[0],data.branch_id.id,self.date_to))
     
             stock_lines = self.cr.dictfetchall()
             new = self.merge_lists(in_stock_lines, stock_lines, 'id')
@@ -131,12 +134,13 @@ class stock_inventory_rawmaterial_report(report_sxw.rml_parse):
                     "left join product_uom as pu on pt.uom_id = pu.id "\
                     "left join stock_location as lc on sm.location_dest_id = lc.id "\
                     "where sm.location_dest_id= %s "\
+                    "and sm.branch_id= %s "\
                     "and pp.raw_material = 'True'"\
                     "and sm.state = 'done'"\
                     "and sp.type = 'in'"\
                     "and (sm.create_date <= %s) and (sm.create_date >= %s)" \
                     "group by pt.id, pp.default_code, pt.name,pt.standard_price, pu.name order by pt.name",
-                            ( warehouse_id[0],self.date_to,self.date_from))
+                            ( warehouse_id[0],data.branch_id.id,self.date_to,self.date_from))
     
             in_lines = self.cr.dictfetchall()
             
@@ -148,16 +152,15 @@ class stock_inventory_rawmaterial_report(report_sxw.rml_parse):
                     "left join product_uom as pu on pt.uom_id = pu.id "\
                     "left join stock_location as lc on sm.location_id = lc.id "\
                     "where sm.location_id= %s "\
+                    "and sm.branch_id= %s "\
                     "and pp.raw_material = 'True'"\
                     "and sm.state = 'done'"\
                     "and sp.type = 'out'"\
                     "and (sm.create_date <= %s) and (sm.create_date >= %s)" \
                     "group by pt.id, pp.default_code,pt.name,pt.standard_price, pu.name  order by pt.name",
-                            ( warehouse_id[0],self.date_to,self.date_from))
+                            ( warehouse_id[0],data.branch_id.id,self.date_to,self.date_from))
     
             pick_lines = self.cr.dictfetchall()
-    
-            
             
             
             result = self.merge_lists(in_lines, pick_lines, 'id')
@@ -210,6 +213,6 @@ class stock_inventory_rawmaterial_report(report_sxw.rml_parse):
         return getres
 
 
-report_sxw.report_sxw('report.stock.inventory.raw.material.webkit', 'stock.inventory.raw.material.wizard', 'addons/stock_inventory_in_out_report/report/stock_inventory_rawmaterial_report.mako', parser=stock_inventory_rawmaterial_report,header=False)
+report_sxw.report_sxw('report.stock.inventory.raw.material.webkit', 'stock.inventory.raw.material.wizard', 'addons/stock_inventory_in_out_report/report/stock_inventory_rawmaterial_report.rml', parser=stock_inventory_rawmaterial_report,header="internal landscape")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

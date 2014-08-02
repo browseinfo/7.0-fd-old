@@ -31,7 +31,6 @@ class purchase_wizard(osv.osv_memory):
     _columns = {
         'start_date': fields.date('Start Date', required=True),
         'end_date': fields.date('End Date', required=True),
-        'branch_id':fields.many2one('res.branch','Branch')
     }
 
     def purchase_amount_report(self, cr, uid, ids, context=None):

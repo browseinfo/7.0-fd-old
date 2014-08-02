@@ -28,15 +28,8 @@
                      <field name="discount_amt" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('hide_discount', '=', False)]}"/>
                 </field>
                 <field name="amount_tax" position="after">
-				<field name="hide_discount" invisible="1"/>    
+					<field name="hide_discount" invisible="1"/>    
 				</field>          
-                <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="after">
-                    <field name="discount_method" />
-                </xpath>
-                <xpath expr="//field[@name='order_line']/form//field[@name='discount']" position="replace">
-                    <field name="discount" class="oe_inline" string="Discount"/>
-                    <label string="%%" attrs="{'invisible': [('discount_method', '!=', 'per')]}" class="oe_inline"/>
-                </xpath>
             </field>
         </record>
 
@@ -63,12 +56,6 @@
                 <field name="amount_untaxed" position="after">
                      <field name="discount_amt" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 </field>
-                <xpath expr="//field[@name='invoice_line']/tree//field[@name='price_unit']" position="after">
-                    <field name="discount_method" />
-                </xpath>
-                <xpath expr="//field[@name='invoice_line']/tree//field[@name='discount']" position="replace">
-                    <field name="discount" string="Discount"/>
-                </xpath>
             </field>
         </record>
 

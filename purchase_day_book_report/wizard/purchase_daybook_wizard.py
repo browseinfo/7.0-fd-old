@@ -4,7 +4,7 @@
 #    Sales and Account Invoice Discount Management
 #    Copyright (C) 2013-2014 BrowseInfo(<http://www.browseinfo.in>).
 #    $autor:
-#   
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -31,21 +31,23 @@ class purchase_day_book_wizard(osv.osv_memory):
     _columns={
         'start_date': fields.date('Start Period', required=True),
         'end_date': fields.date('End Period', required=True),
+        'branch_id':fields.many2one('res.branch','Branch',required=True),
     }
     def print_report(self,cr, uid, ids, context=None):
         if context is None:
            context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
-        
+
         datas = {
              'ids': [data.get('id')],
              'model': 'purchase.day.book.wizard',
              'form': data
         }
-        print "\n\ndatas",datas
+        self_browse = self.browse(cr, uid, ids)
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'purchase.day.book',
             'datas': datas,
+            'name': self_browse[0].branch_id.branch_code +' '+'Purchase Day Book Report'
             }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -4,6 +4,7 @@
         <report auto="False" id="report_purchase_day_book" model="purchase.day.book.wizard" name="purchase.day.book"
                 rml="purchase_day_book_report/report/purchase_daybook_report.mako"
 				string="Purchase Day Book" 
+				header="False"
 				webkit_header=""
 				report_type="webkit"  />
     </data>

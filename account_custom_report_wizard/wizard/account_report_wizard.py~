@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Sales and Account Invoice Discount Management
-#    Copyright (C) 2013-2014 BrowseInfo(<http://www.browseinfo.in>).
-#    $autor:
-#   
+#    This module uses OpenERP, Open Source Management Solution Framework.
+#    Copyright (C) 2014-Today BrowseInfo (<http://www.browseinfo.in>)
+#
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
 
@@ -77,10 +76,12 @@ class account_report_wizard(osv.osv_memory):
             'model': 'account.report.wizard',
             'form': data
             }
+        self_browse = self.browse(cr, uid, ids)
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.supplier.invoice.report',
             'datas': datas,
+            'name': 'CONTOH IMPOR REPORT' + '(' + self_browse[0].branch_id.branch_code + ')'
             }
 class account_ekspor_report_wizard(osv.osv_memory):
     _name = "account.ekspor.report.wizard"
@@ -101,9 +102,11 @@ class account_ekspor_report_wizard(osv.osv_memory):
             'model': 'account.ekspor.report.wizard',
             'form': data
             }
+        self_browse = self.browse(cr, uid, ids)
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.customer.invoice.report',
             'datas': datas,
+            'name': 'CONTOH EKSPOR REPORT' + '(' + self_browse[0].branch_id.branch_code + ')'
             }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
