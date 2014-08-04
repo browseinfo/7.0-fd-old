@@ -37,8 +37,10 @@ class stock_move(osv.Model):
         if vals.get('picking_id'):
             current_obj = self.pool.get('stock.picking').browse(cr, uid, [vals.get('picking_id')], context=context)[0]
             vals['branch_id'] = current_obj.branch_id.id
+        elif vals.get('branch_id'):
+            vals['branch_id'] = vals.get('branch_id')
         else:
-            vals['branch_id'] = self.pool.get('res.users').browse(cr, uid, uid, context=context).branch_id and user_pool.browse(cr, uid, uid, context=context).branch_id.id or False
+            vals['branch_id'] = self.pool.get('res.users').browse(cr, uid, uid, context=context).branch_id and self.pool.get('res.users').browse(cr, uid, uid, context=context).branch_id.id or False
         return super(stock_move, self).create(cr, uid, vals, context=context)
     
     _columns = {
