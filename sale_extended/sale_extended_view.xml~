@@ -9,6 +9,7 @@
 			<field name="arch" type="xml">
 				<field name="client_order_ref" position="before">
 				    <field name="branch_id"/>
+				    <field name="exchange_rate"/>
 				</field>
 				<xpath expr="//field[@name='date_order']" position="after">
 		            <field name="date_ext"/>
@@ -26,5 +27,20 @@
                 </xpath>
 			</field>
 		</record>
+		
+		<record id="view_change_order_form_inherit_extended" model="ir.ui.view">
+            <field name="name">sale.product.change.order.extended</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale_stock.view_order_form_inherit"/>
+			<field name="arch" type="xml">
+				<field name="product_id" position="replace">
+				   <field name="product_id"
+				       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
+				       groups="base.group_user" 
+				       on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,False,product_uos_qty,False,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, parent.exchange_rate, context)"/>
+			   </field>
+			</field>
+		</record>
+		
     </data>
 </openerp>

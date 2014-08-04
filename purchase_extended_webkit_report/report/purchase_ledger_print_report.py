@@ -132,7 +132,6 @@ class purchase_ledger_report(report_sxw.rml_parse):
         "AND ai.partner_id = %s"\
         "group by ai.id,ai.partner_id", (self.start_date, self.end_date, obj.id))
         temp = [x[0] for x in self.cr.fetchall()]
-        print "\n\n===========temp==========", temp
         if temp:
             for inv in inv_obj.browse(self.cr, self.uid, temp):
                 self.sub_total_qty = 0

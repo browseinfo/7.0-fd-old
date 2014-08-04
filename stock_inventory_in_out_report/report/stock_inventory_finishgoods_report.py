@@ -82,22 +82,24 @@ class stock_inventory_finishgood_report(report_sxw.rml_parse):
         self.all_total = 0.0
         new = {}
         self.cr.execute("select sl.id from stock_location sl where scrap_location='True'")
-        warehouse_id = self.cr.fetchone()
-        if warehouse_id:
+        warehouse_id = self.cr.fetchall()
+        warehouse_ids = [x[0] for x in warehouse_id]
+        wh_id = tuple(warehouse_ids)
+        if wh_id:
             self.cr.execute("select pt.id, pp.default_code,pt.name, sum(sm.product_uos_qty) as in_qty, pu.name as uom from stock_move as sm "\
                     "left join stock_picking as sp on sm.picking_id = sp.id "\
                     "left join product_product as pp on sm.product_id = pp.id "\
                     "left join product_template as pt on pp.product_tmpl_id = pt.id "\
                     "left join product_uom as pu on pt.uom_id = pu.id "\
                     "left join stock_location as lc on sm.location_dest_id = lc.id "\
-                    "where sm.location_dest_id= %s "\
+                    "where sm.location_dest_id in %s "\
                     "and sm.branch_id= %s "\
                     "and pp.finish_goods = 'True'"\
                     "and sm.state = 'done'"\
                     "and sp.type = 'in'"\
                     "and (sm.create_date <= %s)" \
                     "group by pt.id, pp.default_code, pt.name,pt.standard_price, pu.name order by pt.name",
-                            ( warehouse_id[0],data.branch_id.id,self.date_to))
+                            (wh_id,data.branch_id.id,self.date_to))
             in_stock_lines = self.cr.dictfetchall()
             self.cr.execute("select pt.id, pp.default_code,pt.name, sum(sm.product_uos_qty) as out_qty, pu.name as uom from stock_move as sm "\
                     "left join stock_picking as sp on sm.picking_id = sp.id "\
@@ -105,14 +107,14 @@ class stock_inventory_finishgood_report(report_sxw.rml_parse):
                     "left join product_template as pt on pp.product_tmpl_id = pt.id "\
                     "left join product_uom as pu on pt.uom_id = pu.id "\
                     "left join stock_location as lc on sm.location_id = lc.id "\
-                    "where sm.location_id= %s "\
+                    "where sm.location_id in %s "\
                     "and sm.branch_id= %s "\
                     "and pp.finish_goods = 'True'"\
                     "and sm.state = 'done'"\
                     "and sp.type = 'out'"\
                     "and (sm.create_date <= %s)"\
                     "group by pt.id, pp.default_code,pt.name,pt.standard_price, pu.name  order by pt.name",
-                            ( warehouse_id[0],data.branch_id.id,self.date_to))
+                            (wh_id,data.branch_id.id,self.date_to))
     
             stock_lines = self.cr.dictfetchall()
             new = self.merge_lists(in_stock_lines, stock_lines, 'id')
@@ -133,14 +135,14 @@ class stock_inventory_finishgood_report(report_sxw.rml_parse):
                     "left join product_template as pt on pp.product_tmpl_id = pt.id "\
                     "left join product_uom as pu on pt.uom_id = pu.id "\
                     "left join stock_location as lc on sm.location_dest_id = lc.id "\
-                    "where sm.location_dest_id= %s "\
+                    "where sm.location_dest_id in %s "\
                     "and sm.branch_id= %s "\
                     "and pp.finish_goods = 'True'"\
                     "and sm.state = 'done'"\
                     "and sp.type = 'in'"\
                     "and (sm.create_date <= %s) and (sm.create_date >= %s)" \
                     "group by pt.id, pp.default_code, pt.name,pt.standard_price, pu.name order by pt.name",
-                            ( warehouse_id[0],data.branch_id.id,self.date_to,self.date_from))
+                            (wh_id,data.branch_id.id,self.date_to,self.date_from))
     
             in_lines = self.cr.dictfetchall()
     
@@ -150,14 +152,14 @@ class stock_inventory_finishgood_report(report_sxw.rml_parse):
                     "left join product_template as pt on pp.product_tmpl_id = pt.id "\
                     "left join product_uom as pu on pt.uom_id = pu.id "\
                     "left join stock_location as lc on sm.location_id = lc.id "\
-                    "where sm.location_id= %s "\
+                    "where sm.location_id in %s "\
                     "and sm.branch_id= %s "\
                     "and pp.finish_goods = 'True'"\
                     "and sm.state = 'done'"\
                     "and sp.type = 'out'"\
                     "and (sm.create_date <= %s) and (sm.create_date >= %s)" \
                     "group by pt.id, pp.default_code,pt.name,pt.standard_price, pu.name  order by pt.name",
-                            ( warehouse_id[0],data.branch_id.id,self.date_to,self.date_from))
+                            (wh_id,data.branch_id.id,self.date_to,self.date_from))
     
             pick_lines = self.cr.dictfetchall()
             
@@ -180,11 +182,13 @@ class stock_inventory_finishgood_report(report_sxw.rml_parse):
             if get:
                 for line in get:
                     stockinobj = self.pool.get('stock.inventory')
+                    inv_qty = 0
                     if line.get('product'):
                          self.cr.execute("select si.id from stock_inventory si where state='done' and (si.date <= %s) and (si.date >= %s)", (self.date_to, self.date_from,))
-                         invids = [ i for i in self.cr.fetchall()[0]]
-                         for si in stockinobj.browse(self.cr,self.uid, invids):
-                             inv_qty = 0
+                         invids = self.cr.fetchall()
+                         inv_id = [x[0] for x in invids]
+
+                         for si in stockinobj.browse(self.cr,self.uid, inv_id):
                              for move in si.move_ids:
                                  productname = move.product_id.name
                                  if productname == line.get('product', False):

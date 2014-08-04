@@ -46,8 +46,9 @@ class sale_order(osv.Model):
             return res_user_browse.branch_id.id
 
     _columns = {
-        'branch_id': fields.many2one('res.branch', 'Branch', required=True),
+        'branch_id': fields.many2one('res.branch', 'Branch', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'date_ext':fields.date("Modified Date", readonly=True),
+        'exchange_rate': fields.float('Exchange Rate', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
     }
     _order = "date_ext"
 
@@ -279,7 +280,7 @@ class sale_order_line(osv.Model):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, exchange_rate=0, context=None):
         res_currency = self.pool.get('res.currency')
         context = context or {}
         lang = lang or context.get('lang',False)
@@ -308,6 +309,7 @@ class sale_order_line(osv.Model):
         product_obj = product_obj.browse(cr, uid, product, context=context_partner)
 
         uom2 = False
+        price_list = self.pool.get('product.pricelist').browse(cr, uid, pricelist)
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
             if product_obj.uom_id.category_id.id != uom2.category_id.id:
@@ -366,28 +368,34 @@ class sale_order_line(osv.Model):
                     'Please set one before choosing a product.')
             warning_msgs += _("No Pricelist ! : ") + warn_msg +"\n\n"
         else:
-            price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-                    product, qty or 1.0, partner_id, {
-                        'uom': uom or result.get('product_uom'),
-                        'date': date_order,
-                        })[pricelist]
-            if price is False:
-                warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
-                        "You have to change either the product, the quantity or the pricelist.")
-
-                warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
-            else:
+            res_user_obj = self.pool.get('res.users').browse(cr, uid, [uid])[0]
+            if price_list.currency_id.id != res_user_obj.company_id.currency_id.id:
+                if exchange_rate == 0:
+                    exchange_rate = 1
+                price = product_obj.list_price * exchange_rate
                 result.update({'price_unit': price})
+            else:
+                price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
+                        product, qty or 1.0, partner_id, {
+                            'uom': uom or result.get('product_uom'),
+                            'date': date_order,
+                            })[pricelist]
+                if price is False:
+                    warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
+                            "You have to change either the product, the quantity or the pricelist.")
+
+                    warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
+                else: 
+                    result.update({'price_unit': price})
         if warning_msgs:
             warning = {
                        'title': _('Configuration Error!'),
                        'message' : warning_msgs
                     }
         
-        price_list = self.pool.get('product.pricelist').browse(cr, uid, pricelist)
         result['type'] = product_obj.procure_method
         result['cost'] = product_obj.standard_price * price_list.currency_id.rate_silent
-        
+
         return {'value': result, 'domain': domain, 'warning': warning}
 
 sale_order_line()
