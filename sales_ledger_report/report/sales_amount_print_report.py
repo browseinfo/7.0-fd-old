@@ -57,7 +57,6 @@ class sale_amount_report(report_sxw.rml_parse):
         return super(sale_amount_report, self).set_context(objects, data, self.partner_ids, report_type=report_type)
 
     def get_partner_name(self, partner_id):
-        print "partner nameeeeeeeeee", partner_id
         parnter_obj = self.pool.get('res.partner')
         name = parnter_obj.browse(self.cr, self.uid, partner_id).name
         return name or ''

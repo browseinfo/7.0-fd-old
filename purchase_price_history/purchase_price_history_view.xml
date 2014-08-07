@@ -12,10 +12,12 @@
 							<group>
 								<field name="product_price_ids" nolabel="1">
 									<tree>
-										<field name="product_id" invisible="1"/>	
+										<field name="product_id" invisible="1"/>
+										<field name="product_currency_id"/>	
 										<field name="old_price"/>	
-										<field name="new_price"/>
 										<field name="currency_id"/>
+										<field name="pur_price"/>
+										<field name="new_price"/>
 										<field name="date_ext"/>
 									</tree>
 								</field>

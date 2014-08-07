@@ -65,7 +65,6 @@ class purchase_report(report_sxw.rml_parse):
         return self.total_sum
         
     def get_subtotal_qty(self, li):
-        #print "\nBEfore SubTOTAL TOTAL", li, type(li)
         return li
         
     def get_total_qty(self):
@@ -158,8 +157,6 @@ class purchase_report(report_sxw.rml_parse):
         groups = itertools.groupby(newlist, key=operator.itemgetter('ref'))
                     
         result = [{'ref':k, 'values':[x for x in v]} for k,v in groups]
-        
-        print "\n\n======result======", result
         
         self.total_sum_qty = 0
         self.total_sum_amount = 0

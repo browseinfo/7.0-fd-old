@@ -29,9 +29,7 @@ class product_product(osv.Model):
     _columns = {
         'raw_material': fields.boolean('Raw Material'),
         'assets': fields.boolean('Assets'),
-        'supply': fields.boolean('Supply'),
-        'pur_cur_id': fields.many2one('res.currency', 'Purchase Currency'),
-        #'sale_cur_id': fields.many2one('res.currency', 'Sale Currency'),
+        'pur_cur_id': fields.many2one('res.currency', 'Purchase Currency', required=True),
         'finish_goods':fields.boolean('Finish Goods'),
     }
 

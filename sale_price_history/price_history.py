@@ -59,7 +59,6 @@ class sale_order_line(osv.osv):
                 for history in sale_line_history_obj.browse(cr, uid, history_ids, context):
                     if history:
                         if history.line_id == line and history.product_id == line.product_id:
-                            print "#######################"
                             sale_line_history_obj.write(cr, uid, [history.id], {'price_unit': line.price_unit,'price_unit_old': history.price_unit})
                             hist.append(history.id)
         return result

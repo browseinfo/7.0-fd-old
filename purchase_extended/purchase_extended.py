@@ -232,10 +232,6 @@ class purchase_order_line(osv.Model):
                         product.id, qty or 1.0, partner_id or False, {'uom': uom_id, 'date': date_order})[pricelist_id]
                 
             else:
-                #print"\nhello else"#company---product
-                #price_1 = res_currency.compute(cr, uid, product.company_id.currency_id.id, product.pur_cur_id.id, product.standard_price)
-                #print "\nprice_1",price_1
-                        #product-->pricelist
                 price = res_currency.compute(cr, uid, product.pur_cur_id.id, pricelist_curr.currency_id.id, product.standard_price)
         else:
             price = product.standard_price

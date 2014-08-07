@@ -162,7 +162,6 @@ class purchase_supplier_category_report(report_sxw.rml_parse):
                     else:
                         computation_lines[line.partner_id.name][l.product_id.categ_id.name]= l.price_subtotal  * rate
             res.append(computation_lines)
-        print "\n\nres",res
         output = {}
         for d in res:
             for k,v in d.items():
@@ -186,7 +185,6 @@ class purchase_supplier_category_report(report_sxw.rml_parse):
                         self.grand_total.update({k : update})
                 out['total'] = total
             self.new_list.append({key: out})
-        print "\n\n***grand list",self.new_list
         return self.new_list
 
 

@@ -47,7 +47,6 @@ class account_monthly_report_wizard(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
-        print "\n\ndata", data
         datas = {
              'ids': [data.get('id')],
              'model': 'account.invoice',
@@ -81,7 +80,7 @@ class account_report_wizard(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.supplier.invoice.report',
             'datas': datas,
-            'name': 'CONTOH IMPOR REPORT' + '(' + self_browse[0].branch_id.branch_code + ')'
+            'name': 'IMPOR REPORT' + '(' + self_browse[0].branch_id.branch_code + ')'
             }
 class account_ekspor_report_wizard(osv.osv_memory):
     _name = "account.ekspor.report.wizard"
@@ -107,6 +106,6 @@ class account_ekspor_report_wizard(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.customer.invoice.report',
             'datas': datas,
-            'name': 'CONTOH EKSPOR REPORT' + '(' + self_browse[0].branch_id.branch_code + ')'
+            'name': 'EKSPOR REPORT' + '(' + self_browse[0].branch_id.branch_code + ')'
             }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

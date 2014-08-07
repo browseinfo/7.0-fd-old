@@ -25,6 +25,7 @@ from dateutil.relativedelta import relativedelta
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp import netsvc
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 class res_branch(osv.Model):
     _name = 'res.branch'
@@ -111,9 +112,20 @@ class account_asset_asset(osv.Model):
    
 class stock_warehouse_orderpoint(osv.Model):
     _inherit = 'stock.warehouse.orderpoint'
+    
+    def _get_stock_orderpoint_default_branch(self, cr, uid, ids, context=None):
+        user_pool = self.pool.get('res.users')
+        branch_id = user_pool.browse(cr, uid, uid, context=context).branch_id and user_pool.browse(cr, uid, uid, context=context).branch_id.id or False
+        return branch_id
+    
     _columns = {
         'branch_id': fields.many2one('res.branch', 'Branch', required=True),
     }
+
+    _defaults = {
+        'branch_id': _get_stock_orderpoint_default_branch,
+    }
+
     
 class payment_order(osv.Model):
     _inherit = 'payment.order'
@@ -126,6 +138,19 @@ class procurement_order(osv.Model):
     _columns = {
         'branch_id': fields.many2one('res.branch', 'Branch'),
     }
+
+    def _prepare_automatic_op_procurement(self, cr, uid, product, warehouse, location_id, context=None):
+        user_branch_id = self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0]
+        return {'name': _('Automatic OP: %s') % (product.name,),
+                'origin': _('SCHEDULER'),
+                'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                'product_id': product.id,
+                'product_qty': -product.virtual_available,
+                'product_uom': product.uom_id.id,
+                'location_id': location_id,
+                'company_id': warehouse.company_id.id,
+                'branch_id': user_branch_id.branch_id and user_branch_id.branch_id.id or False ,
+                'procure_method': 'make_to_order',}
 
     def create_procurement_purchase_order(self, cr, uid, procurement, po_vals, line_vals, context=None):
         po_vals.update({'order_line': [(0,0,line_vals)], 'branch_id': procurement.branch_id.id})
@@ -187,6 +212,70 @@ class mrp_production(osv.Model):
     _columns = {
         'branch_id': fields.many2one('res.branch', 'Branch', required=True),
     }
+    
+
+    def _make_production_internal_shipment_line(self, cr, uid, production_line, shipment_id, parent_move_id, destination_location_id=False, context=None):
+        stock_move = self.pool.get('stock.move')
+        production = production_line.production_id
+        date_planned = production.date_planned
+        # Internal shipment is created for Stockable and Consumer Products
+        if production_line.product_id.type not in ('product', 'consu'):
+            return False
+        source_location_id = production.location_src_id.id
+        if not destination_location_id:
+            destination_location_id = source_location_id
+        return stock_move.create(cr, uid, {
+                        'name': production.name,
+                        'picking_id': shipment_id,
+                        'product_id': production_line.product_id.id,
+                        'product_qty': production_line.product_qty,
+                        'product_uom': production_line.product_uom.id,
+                        'product_uos_qty': production_line.product_uos and production_line.product_uos_qty or False,
+                        'product_uos': production_line.product_uos and production_line.product_uos.id or False,
+                        'date': date_planned,
+                        'move_dest_id': parent_move_id,
+                        'location_id': source_location_id,
+                        'location_dest_id': destination_location_id,
+                        'state': 'waiting',
+                        'company_id': production.company_id.id,
+                        'branch_id': production.branch_id and production.branch_id.id or False,
+                })
+
+    def _make_production_internal_shipment(self, cr, uid, production, context=None):
+        ir_sequence = self.pool.get('ir.sequence')
+        stock_picking = self.pool.get('stock.picking')
+        routing_loc = None
+        pick_type = 'internal'
+        partner_id = False
+
+        # Take routing address as a Shipment Address.
+        # If usage of routing location is a internal, make outgoing shipment otherwise internal shipment
+        if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
+            routing_loc = production.bom_id.routing_id.location_id
+            if routing_loc.usage != 'internal':
+                pick_type = 'out'
+            partner_id = routing_loc.partner_id and routing_loc.partner_id.id or False
+
+        # Take next Sequence number of shipment base on type
+        if pick_type!='internal':
+            pick_name = ir_sequence.get(cr, uid, 'stock.picking.' + pick_type)
+        else:
+            pick_name = ir_sequence.get(cr, uid, 'stock.picking')
+
+        picking_id = stock_picking.create(cr, uid, {
+            'name': pick_name,
+            'origin': (production.origin or '').split(':')[0] + ':' + production.name,
+            'type': pick_type,
+            'move_type': 'one',
+            'state': 'auto',
+            'partner_id': partner_id,
+            'auto_picking': self._get_auto_picking(cr, uid, production),
+            'company_id': production.company_id.id,
+            'branch_id': production.branch_id and production.branch_id.id or False,
+        })
+        production.write({'picking_id': picking_id}, context=context)
+        return picking_id
+
     
 class account_invoice_refund(osv.osv_memory):
     _inherit = 'account.invoice.refund'

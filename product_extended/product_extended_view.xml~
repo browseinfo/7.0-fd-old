@@ -12,17 +12,12 @@
 		                <label for="raw_material"/>
 						<field name="assets"/>
 						<label for="assets"/>
-						<field name="supply"/>
-						<label for="supply"/>
 						<field name="finish_goods"/>
 						<label for="finish_goods"/>
 		        </div>
-				<xpath expr="//field[@name='standard_price']" position="after">
-		            <field name="pur_cur_id" class="oe_inline"/>
+				<xpath expr="//group[@name='general']" position="inside">
+		            <field name="pur_cur_id" />
 		        </xpath>
-				<!--xpath expr="//field[@name='list_price']" position="after">
-		            <field name="sale_cur_id" class="oe_inline"/>
-		        </xpath-->
 			</field>
 		</record>
 

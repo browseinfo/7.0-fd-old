@@ -34,7 +34,6 @@ class sale_report(report_sxw.rml_parse):
 
 
     def date_format(self, datedetail):
-        print "#################", datedetail
         if datedetail:
             a = time.strptime(datedetail,'%Y-%m-%d')
             b = time.strftime('%d-%B-%Y', a)

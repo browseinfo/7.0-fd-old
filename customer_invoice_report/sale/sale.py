@@ -28,7 +28,6 @@ class sale_order(osv.osv):
     _inherit = 'sale.order'
 
     _columns = {
-                'exchange_rate': fields.float('Exchange Rate'),
                 
                 }
     

@@ -69,7 +69,6 @@ class purchase_wizard(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids)[0]
-        print "\n\nDaTAA", data
         datas = {
              'ids':[data.get('id')],
              'model': 'account.invoice',

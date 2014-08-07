@@ -209,7 +209,6 @@ class purchase_ledger_report(report_sxw.rml_parse):
             self.total_sum_qty += vals['total']
             self.total_sum += vals['sum_total']
             
-        print "\n\nRESULT", result
         return result
 
         

@@ -77,7 +77,7 @@
 					<td width="14%" style="border:none;"><font color="white"></font></td>
 					<td width="20%" style="text-align:center; border:none;"></b></td>
 					<td width="6%" style="border:none;">${ key }</td>
-					<td width="7%" style="text-align:right; border:none;">${ get_currency_total(key) }</td>
+					<td width="7%" style="text-align:right; border:none;"><b>${ get_currency_total(key) }</b></td>
 					<td width="7%" style="border:none;"><font color="white"></font></td>
 					<td width="8%" style="text-align:right; border:none;" ></td>
 					<td width="10%" style="text-align:right; border:none;"><font color="white"></font></td>
@@ -87,7 +87,7 @@
 		</br>
 		</br>
 		</br>
-		<table width="220%">
+		<table width="220%" style="page-break-inside:auto">
 			<th width="8%" style="border:none;"><font color="white"></font></th>
 			<th width="10%" style="border:none; text-align:left">Name</th>
 			%for key in get_currency_data():
@@ -124,7 +124,7 @@
 					<td width="10%" style="border:none;"><font color="white"></font></td>
 					%for key in get_currency_data():
 						<td width="10%" style="border-top:1px solid black; border-left:none;border-bottom:none; text-align:right">
-							${ get_currency_total(key) }
+							<b> ${ get_currency_total(key) } </b>
 						</td>
 					%endfor
 					<td width="14%" style="border:none;"><font color="white"></font></td>

@@ -7,7 +7,7 @@
         	model="account.report.wizard" 
         	name="account.supplier.invoice.report"
             rml="account_custom_report_wizard/report/account_supplier_impor_report.rml" 
-            string="CONTOH IMPOR REPORT" 
+            string="IMPOR REPORT" 
             header="False" />
                 
                 
@@ -17,7 +17,7 @@
 			model="account.ekspor.report.wizard" 
 			name="account.customer.invoice.report"
             rml="account_custom_report_wizard/report/account_customer_impor_report.rml" 
-            string="CONTOH EKSPOR REPORT" 
+            string="EKSPOR REPORT" 
             header="False" />
             
     </data>

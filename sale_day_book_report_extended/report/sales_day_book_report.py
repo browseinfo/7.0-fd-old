@@ -136,7 +136,8 @@ class sales_day_book_report(report_sxw.rml_parse):
         product_code = []
         product_code_string = ''
         for line in invoice_line:
-            product_code.append(line.product_id.default_code)
+            if line.product_id.default_code:
+                product_code.append(line.product_id.default_code)
         return product_code
         
     def get_invoice_ids(self,data):
@@ -173,19 +174,29 @@ class sales_day_book_report(report_sxw.rml_parse):
         obj_list =[]
         for ids in final_list:
             for obj in account_invoice_obj.browse(self.cr, self.uid, [ids] ):
-                obj.partner_id.name
+                partner_name = ''
+                if obj.partner_id.is_company == True:
+                    partner_name = obj.partner_id.name
+                else:
+                    partner_name = obj.partner_id.parent_id.name
                 for line in obj.invoice_line:
-                    self.currency_dict[obj.partner_id.name] = obj.currency_id.name
-                    if obj.partner_id.name in self.customer.keys():
-                        temp = self.customer[obj.partner_id.name]
-                        self.customer[obj.partner_id.name] = temp + line.price_subtotal
+                    self.currency_dict[partner_name] = obj.currency_id.name
+                    if partner_name in self.customer.keys():
+                        temp = self.customer[partner_name]
+                        self.customer[partner_name] = temp + line.price_subtotal
                     else:
-                        self.customer[obj.partner_id.name] = line.price_subtotal
+                        self.customer[partner_name] = line.price_subtotal
+        
         return self.customer
     
     def set_exchange_rate(self,obj):
-        self.rate[obj.partner_id.name] = obj.exchange_rate
-        self.customer_currency[obj.partner_id.name] = obj.currency_id.name
+        partner_name = ''
+        if obj.partner_id.is_company == True:
+            partner_name = obj.partner_id.name
+        else:
+            partner_name = obj.partner_id.parent_id.name
+        self.rate[partner_name] = obj.exchange_rate
+        self.customer_currency[partner_name] = obj.currency_id.name
         self.current_obj = obj;
         
     def get_currency(self,key):
@@ -249,7 +260,6 @@ class sales_day_book_report(report_sxw.rml_parse):
                 for line in obj.invoice_line:
                     self.ans = self.ans + line.price_subtotal
         return self.ans
-        
     def get_string(self):
         if self.repeat_dpp != 0:
             return ''
