@@ -20,20 +20,15 @@
 ##############################################################################
 
 {
-    'name': 'Master Production Planning',
+    'name': 'Stock Warehouse Branch',
     'version': '1.0',
-    'category': 'Production',
+    'category': 'Warehouse',
     'author': 'BrowseInfo',
     'website': 'http://www.browseinfo.in',
-    'depends': ['mrp','sale','sales_forecast'],
-    'data': [
-        'production_planning_view.xml',
-        'sequence_view.xml',
-    ],
+    'depends': ['base', 'company_extended', 'stock'],
+    'data': ['stock_warehouse_branch_view.xml'],
     'demo': [],
     'test': [],
     'installable': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
