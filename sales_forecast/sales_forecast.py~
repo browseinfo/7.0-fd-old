@@ -88,27 +88,6 @@ class sales_forecast(osv.Model):
            'target': 'current',
            'nodestroy': True,
        }
-   
-    def onchange_branch_id(self, cr, uid, ids, shop_id, branch_id, context=None):
-        shop_branch_id = self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context)
-        if shop_id:
-            if shop_branch_id.branch_id.id != branch_id:
-                raise osv.except_osv(_('Branch Mismatched!'), _('Please select shop related Branch.'))
-        else:
-            raise osv.except_osv(_('Shop not given!'), _('Please select Shop first.'))
-        return True
-        
-    def onchange_shop_id(self, cr, uid, ids, shop_id, context=None):
-        res = {}
-        if shop_id:
-            shop_branch_id = self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context)
-            if shop_branch_id.branch_id:
-                res = {
-                    'branch_id': shop_branch_id.branch_id.id,
-                }
-        else:
-            raise osv.except_osv(_('Shop not given!'), _('Please select Shop first.'))
-        return {'value': res}
 
 class sales_forecast_line(osv.Model):       
     _name = 'sales.forecast.line'

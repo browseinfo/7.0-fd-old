@@ -28,8 +28,8 @@
             					<field name="prerid_to"/>            					
         					</group>
         					<group>		
-        						<field name="shop_id" on_change="onchange_shop_id(shop_id)"/>
-        						<field name="branch_id" on_change="onchange_branch_id(shop_id,branch_id)"/>
+        						<field name="shop_id"/>
+        						<field name="branch_id"/>
         						<field name="company_id"/>
                         	</group>
         				</group>
