@@ -16,7 +16,7 @@
 						<label for="finish_goods"/>
 		        </div>
 				<xpath expr="//group[@name='general']" position="inside">
-		            <field name="pur_cur_id" />
+		            <field name="pur_cur_id" attrs="{'required': [('finish_goods','=', False)]}"/>
 		        </xpath>
 			</field>
 		</record>
