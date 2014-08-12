@@ -163,7 +163,7 @@ class purchase_order_line(osv.osv):
  		
  		purchase_line_obj = self.browse(cr, uid, ids[0], context=context)
  		
- 		if purchase_line_obj.invoiced:
+ 		if purchase_line_obj.state != 'draft':
  			return res
  		if purchase_line_obj.product_id:
  			from_datelist= []
